@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遗迹（Relic）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: '微软雅黑', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* 动态雪花特效 */
+        .snow {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+        }
+
+        .flake {
+            position: absolute;
+            background: #fff;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            animation: snowfall 10s linear infinite;
+        }
+
+        @keyframes snowfall {
+            0% { transform: translateY(-100vh) scale(1); opacity: 1; }
+            100% { transform: translateY(100vh) scale(0.8); opacity: 0.5; }
+        }
+
+        /* 主界面 */
+        .main {
+            height: 100vh;
+            background: url('https://example.com/authority-bg.jpg') center/cover; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .card {
+            padding: 50px;
+            background: rgba(0,0,0,0.9);
+            border-radius: 40px;
+            box-shadow: 0 0 40px rgba(255,0,0,0.6);
+            width: 85%;
+            max-width: 900px;
+        }
+
+        .card h1 {
+            font-size: 52px;
+            color: #ff0000;
+            text-shadow: 0 0 15px #ff0000;
+            margin-bottom: 40px;
+        }
+
+        .card p {
+            font-size: 24px;
+            color: #ddd;
+            margin-bottom: 60px;
+            line-height: 2;
+        }
+
+        .cta-btn {
+            padding: 20px 60px;
+            background: #ff0000;
+            color: #000;
+            font-size: 22px;
+            font-weight: 800;
+            border-radius: 50px;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px #ff0000;
+            color: #fff;
+        }
+
+        /* 弹出窗口赛博朋克设计 */
+        .popup {
+            position: relative;
+            overflow: hidden;
+            width: 1000px;
+            height: 800px;
+            background: rgba(10, 10, 10, 0.95);
+            border: 6px solid transparent;
+            border-image: linear-gradient(45deg, #ff0055, #00ffff) 30;
+            border-radius: 30px;
+            box-shadow: 0 0 120px rgba(255, 0, 85, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 50px;
+        }
+
+        .popup::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://example.com/cyber-grid.png') repeat; 
+            opacity: 0.1;
+            filter: blur(20px);
+            z-index: -1;
+        }
+
+        .popup::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 800px;
+            height: 600px;
+            background: radial-gradient(transparent, rgba(255,255,255,0.05));
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            filter: blur(50px);
+            z-index: -1;
+            animation: pulse 4s infinite;
+        }
+
+        .popup-title {
+            font-size: 72px;
+            color: #ff0055;
+            text-shadow: 0 0 20px #00ffff, 0 0 5px #fff;
+            margin-bottom: 40px;
+            animation: glitch 2s infinite;
+        }
+
+        .popup-title::after {
+            content: "遗迹";
+            position: absolute;
+            color: #00ffff;
+            left: 2px;
+            top: -2px;
+            text-shadow: -1px 0 #ff0055;
+            opacity: 0.7;
+        }
+
+        .popup-desc {
+            font-size: 24px;
+            color: #ddd;
+            line-height: 1.8;
+            margin-bottom: 60px;
+            padding: 0 60px;
+        }
+
+        .popup-btn {
+            padding: 22px 66px;
+            background: linear-gradient(45deg, #ff0055, #00ffff);
+            color: #0a0a0a;
+            font-size: 22px;
+            font-weight: 900;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .popup-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transition: left 0.4s;
+            z-index: -1;
+        }
+
+        .popup-btn:hover::before {
+            left: 0;
+        }
+
+        /* 新增动画 */
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px #00ffff, -2px -2px #ff0055; }
+            20% { text-shadow: -2px -2px #00ffff, 2px 2px #ff0055; }
+            40% { text-shadow: 2px -2px #00ffff, -2px 2px #ff0055; }
+            60% { text-shadow: -2px 2px #00ffff, 2px -2px #ff0055; }
+            80% { text-shadow: 2px 2px #00ffff, -2px -2px #ff0055; }
+            100% { text-shadow: -2px -2px #00ffff, 2px 2px #ff0055; }
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .card, .popup { width: 95%; padding: 40px; }
+            .cta-btn, .popup-btn { padding: 18px 50px; font-size: 22px; }
+            .popup-title { font-size: 56px; }
+        }
+
+        @media (max-width: 768px) {
+            .popup { 
+                height: auto; 
+                border-radius: 20px; 
+                border-width: 4px;
+            }
+            .popup-title { font-size: 48px; }
+            .popup-desc { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 雪花生成 -->
+    <div class="snow">
+        <script>
+            for (let i = 0; i < 300; i++) {
+                const flake = document.createElement('div');
+                flake.classList.add('flake');
+                flake.style.left = Math.random() * 100 + 'vw';
+                flake.style.animationDelay = Math.random() * 15 + 's';
+                document.querySelector('.snow').appendChild(flake);
+            }
+        </script>
+    </div>
+
+    <!-- 主界面 -->
+    <section class="main">
+        <div class="card">
+            <h1>遗迹</h1>
+            <p>点击进入遗迹的专属世界，探索hvh领域的极致体验。</p>
+            <button class="cta-btn" onclick="openPopup()">开启之旅</button>
+        </div>
+    </section>
+
+    <!-- 弹出窗口逻辑 -->
+    <script>
+        function openPopup() {
+            const popupWin = window.open('', '遗迹', 
+                'width=1000,height=800,toolbar=no,scrollbars=no,status=no');
+            
+            popupWin.document.write(`
+                <html>
+                <head>
+                    <style>${document.styleSheets[0].cssText}</style>
+                </head>
+                <body>
+                    <div class="popup">
+                        <h1 class="popup-title">遗迹介绍</h1>
+                        <p class="popup-desc">
+                            遗迹是专为hvh场景打造的革命性工具，秉持“挂打挂”原则，<br>
+                            坚决守护绿玩净土。我们通过尖端技术实现公平对抗，<br>
+                            让每一次对战都充满竞技乐趣。<br>
+                            持续迭代更新，只为铸就hvh领域的权威标杆。<br>
+                            🚨重要提醒：我们的密码永远为“6666”🚨
+                        </p>
+                        <button class="popup-btn" onclick="window.location.href='https://wwbq.lanzoub.com/iN7j62menmcb'">点击下载</button>
+                        <button class="popup-btn" style="background: #0a0a0a; color: #fff;" onclick="window.close()">返回主页</button>
+                    </div>
+                </body>
+                </html>
+            `);
+            
+            popupWin.document.close();
+        }
+    </script>
+</body>
+</html>
