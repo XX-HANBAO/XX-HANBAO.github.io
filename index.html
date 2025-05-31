@@ -4,285 +4,501 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>遗迹（Relic）</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: '微软雅黑', sans-serif;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background: #000;
-            color: #fff;
-            overflow: hidden;
-        }
-
-        /* 动态雪花特效 */
-        .snow {
-            position: absolute;
-            width: 100%;
-            height: 100vh;
-            pointer-events: none;
-        }
-
-        .flake {
-            position: absolute;
-            background: #fff;
-            width: 3px;
-            height: 3px;
-            border-radius: 50%;
-            animation: snowfall 10s linear infinite;
-        }
-
-        @keyframes snowfall {
-            0% { transform: translateY(-100vh) scale(1); opacity: 1; }
-            100% { transform: translateY(100vh) scale(0.8); opacity: 0.5; }
-        }
-
-        /* 主界面 */
-        .main {
-            height: 100vh;
-            background: url('https://example.com/authority-bg.jpg') center/cover; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-        }
-
-        .card {
-            padding: 50px;
-            background: rgba(0,0,0,0.9);
-            border-radius: 40px;
-            box-shadow: 0 0 40px rgba(255,0,0,0.6);
-            width: 85%;
-            max-width: 900px;
-        }
-
-        .card h1 {
-            font-size: 52px;
-            color: #ff0000;
-            text-shadow: 0 0 15px #ff0000;
-            margin-bottom: 40px;
-        }
-
-        .card p {
-            font-size: 24px;
-            color: #ddd;
-            margin-bottom: 60px;
-            line-height: 2;
-        }
-
-        .cta-btn {
-            padding: 20px 60px;
-            background: #ff0000;
-            color: #000;
-            font-size: 22px;
-            font-weight: 800;
-            border-radius: 50px;
-            transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 30px #ff0000;
-            color: #fff;
-        }
-
-        /* 弹出窗口赛博朋克设计 */
-        .popup {
-            position: relative;
-            overflow: hidden;
-            width: 1000px;
-            height: 800px;
-            background: rgba(10, 10, 10, 0.95);
-            border: 6px solid transparent;
-            border-image: linear-gradient(45deg, #ff0055, #00ffff) 30;
-            border-radius: 30px;
-            box-shadow: 0 0 120px rgba(255, 0, 85, 0.6);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 80px 50px;
-        }
-
-        .popup::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://example.com/cyber-grid.png') repeat; 
-            opacity: 0.1;
-            filter: blur(20px);
-            z-index: -1;
-        }
-
-        .popup::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 800px;
-            height: 600px;
-            background: radial-gradient(transparent, rgba(255,255,255,0.05));
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            filter: blur(50px);
-            z-index: -1;
-            animation: pulse 4s infinite;
-        }
-
-        .popup-title {
-            font-size: 72px;
-            color: #ff0055;
-            text-shadow: 0 0 20px #00ffff, 0 0 5px #fff;
-            margin-bottom: 40px;
-            animation: glitch 2s infinite;
-        }
-
-        .popup-title::after {
-            content: "遗迹";
-            position: absolute;
-            color: #00ffff;
-            left: 2px;
-            top: -2px;
-            text-shadow: -1px 0 #ff0055;
-            opacity: 0.7;
-        }
-
-        .popup-desc {
-            font-size: 24px;
-            color: #ddd;
-            line-height: 1.8;
-            margin-bottom: 60px;
-            padding: 0 60px;
-        }
-
-        .popup-btn {
-            padding: 22px 66px;
-            background: linear-gradient(45deg, #ff0055, #00ffff);
-            color: #0a0a0a;
-            font-size: 22px;
-            font-weight: 900;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .popup-btn::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.1);
-            transition: left 0.4s;
-            z-index: -1;
-        }
-
-        .popup-btn:hover::before {
-            left: 0;
-        }
-
-        /* 新增动画 */
-        @keyframes glitch {
-            0% { text-shadow: 2px 2px #00ffff, -2px -2px #ff0055; }
-            20% { text-shadow: -2px -2px #00ffff, 2px 2px #ff0055; }
-            40% { text-shadow: 2px -2px #00ffff, -2px 2px #ff0055; }
-            60% { text-shadow: -2px 2px #00ffff, 2px -2px #ff0055; }
-            80% { text-shadow: 2px 2px #00ffff, -2px -2px #ff0055; }
-            100% { text-shadow: -2px -2px #00ffff, 2px 2px #ff0055; }
-        }
-
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.1); }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
-
-        /* 响应式设计 */
-        @media (max-width: 1200px) {
-            .card, .popup { width: 95%; padding: 40px; }
-            .cta-btn, .popup-btn { padding: 18px 50px; font-size: 22px; }
-            .popup-title { font-size: 56px; }
-        }
-
-        @media (max-width: 768px) {
-            .popup { 
-                height: auto; 
-                border-radius: 20px; 
-                border-width: 4px;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ff0055',
+                        secondary: '#00ffff',
+                        dark: '#0a0a0a',
+                        neon: '#00ffff',
+                        accent: '#ff0055',
+                        darkgray: '#1a1a1a'
+                    },
+                    fontFamily: {
+                        consolas: ['Consolas', 'monospace'],
+                    },
+                    animation: {
+                        'glitch': 'glitch 2s infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'rotate': 'rotate 20s linear infinite',
+                        'shine': 'shine 1.5s infinite',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                        'border-glow': 'borderGlow 6s linear infinite'
+                    },
+                    keyframes: {
+                        glitch: {
+                            '0%, 100%': { textShadow: '2px 2px #00ffff, -2px -2px #ff0055' },
+                            '20%': { textShadow: '-2px -2px #00ffff, 2px 2px #ff0055' },
+                            '40%': { textShadow: '2px -2px #00ffff, -2px 2px #ff0055' },
+                            '60%': { textShadow: '-2px 2px #00ffff, 2px -2px #ff0055' },
+                            '80%': { textShadow: '2px 2px #00ffff, -2px -2px #ff0055' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        shine: {
+                            '0%': { boxShadow: '0 0 10px rgba(0, 255, 255, 0.5)' },
+                            '50%': { boxShadow: '0 0 25px rgba(0, 255, 255, 0.8)' },
+                            '100%': { boxShadow: '0 0 10px rgba(0, 255, 255, 0.5)' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        borderGlow: {
+                            '0%': { filter: 'blur(30px) hue-rotate(0deg)' },
+                            '100%': { filter: 'blur(30px) hue-rotate(360deg)' }
+                        }
+                    }
+                }
             }
-            .popup-title { font-size: 48px; }
-            .popup-desc { font-size: 20px; }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-glow {
+                text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            }
+            .neon-border {
+                border: 2px solid transparent;
+                border-image: linear-gradient(45deg, #ff0055, #00ffff) 1;
+            }
+            .neon-bg {
+                background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(10, 10, 10, 0.9));
+            }
+            .gradient-text {
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+                background-image: linear-gradient(45deg, #ff0055, #00ffff);
+            }
+            .btn-pulse:hover {
+                animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+            .scrollbar-hidden::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hidden {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
         }
     </style>
 </head>
-<body>
-    <!-- 雪花生成 -->
-    <div class="snow">
-        <script>
-            for (let i = 0; i < 300; i++) {
-                const flake = document.createElement('div');
-                flake.classList.add('flake');
-                flake.style.left = Math.random() * 100 + 'vw';
-                flake.style.animationDelay = Math.random() * 15 + 's';
-                document.querySelector('.snow').appendChild(flake);
-            }
-        </script>
-    </div>
-
+<body class="bg-dark text-white font-consolas overflow-hidden min-h-screen">
+    <!-- 粒子背景 -->
+    <div id="particles-js" class="fixed inset-0 z-0"></div>
+    
+    <!-- 雪花效果 -->
+    <div id="snowfall" class="fixed inset-0 pointer-events-none z-0"></div>
+    
     <!-- 主界面 -->
-    <section class="main">
-        <div class="card">
-            <h1>遗迹</h1>
-            <p>点击进入遗迹的专属世界，探索hvh领域的极致体验。</p>
-            <button class="cta-btn" onclick="openPopup()">开启之旅</button>
-        </div>
-    </section>
-
-    <!-- 弹出窗口逻辑 -->
-    <script>
-        function openPopup() {
-            const popupWin = window.open('', '遗迹', 
-                'width=1000,height=800,toolbar=no,scrollbars=no,status=no');
+    <main class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-8">
+        <div class="neon-bg backdrop-blur-lg rounded-3xl p-8 md:p-12 max-w-5xl w-full mx-auto 
+                    border border-secondary/30 shadow-lg shadow-secondary/20 animate-fade-in">
             
-            popupWin.document.write(`
-                <html>
-                <head>
-                    <style>${document.styleSheets[0].cssText}</style>
-                </head>
-                <body>
-                    <div class="popup">
-                        <h1 class="popup-title">遗迹介绍</h1>
-                        <p class="popup-desc">
-                            遗迹是专为hvh场景打造的革命性工具，秉持“挂打挂”原则，<br>
-                            坚决守护绿玩净土。我们通过尖端技术实现公平对抗，<br>
-                            让每一次对战都充满竞技乐趣。<br>
-                            持续迭代更新，只为铸就hvh领域的权威标杆。<br>
-                            🚨重要提醒：我们的密码永远为“6666”🚨
-                        </p>
-                        <button class="popup-btn" onclick="window.location.href='https://wwbq.lanzoub.com/iN7j62menmcb'">点击下载</button>
-                        <button class="popup-btn" style="background: #0a0a0a; color: #fff;" onclick="window.close()">返回主页</button>
+            <!-- 头部 -->
+            <header class="text-center mb-12">
+                <h1 class="text-[clamp(3rem,8vw,6rem)] font-bold gradient-text animate-glitch mb-4">
+                    遗迹
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+                    尖端科技打造公平竞技环境，拒绝任何破坏平衡的行为
+                </p>
+            </header>
+            
+            <!-- 按钮区域 -->
+            <div class="flex flex-col md:flex-row gap-6 justify-center mb-12">
+                <button id="openPopupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
+                                              px-12 py-6 text-2xl font-bold bg-gradient-to-r from-primary to-secondary 
+                                              text-dark transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 
+                                              hover:scale-105">
+                    <span class="relative z-10">开启之旅</span>
+                    <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
+                                 transition-transform duration-500 rounded-full"></span>
+                </button>
+                
+                <button id="joinQQGroupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
+                                              px-12 py-6 text-2xl font-bold bg-secondary text-dark 
+                                              transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
+                                              hover:scale-105">
+                    <span class="relative z-10">
+                        <i class="fa fa-qq mr-2"></i>加入官方QQ群
+                    </span>
+                    <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
+                                 transition-transform duration-500 rounded-full"></span>
+                </button>
+            </div>
+            
+            <!-- 特性列表 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="neon-bg rounded-xl p-6 border border-secondary/20 hover:border-secondary/50 
+                            transition-all duration-300 hover:shadow-lg hover:shadow-secondary/10 animate-slide-up"
+                     style="animation-delay: 0.1s">
+                    <div class="text-secondary text-3xl mb-3">
+                        <i class="fa fa-shield"></i>
                     </div>
-                </body>
-                </html>
-            `);
+                    <h3 class="text-xl font-bold mb-2">公益HVH</h3>
+                    <p class="text-gray-400">永久免费，公益软件</p>
+                </div>
+                
+                <div class="neon-bg rounded-xl p-6 border border-secondary/20 hover:border-secondary/50 
+                            transition-all duration-300 hover:shadow-lg hover:shadow-secondary/10 animate-slide-up"
+                     style="animation-delay: 0.2s">
+                    <div class="text-secondary text-3xl mb-3">
+                        <i class="fa fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">极致性能</h3>
+                    <p class="text-gray-400">优化内存管理，低资源占用，高游戏兼容性</p>
+                </div>
+                
+                <div class="neon-bg rounded-xl p-6 border border-secondary/20 hover:border-secondary/50 
+                            transition-all duration-300 hover:shadow-lg hover:shadow-secondary/10 animate-slide-up"
+                     style="animation-delay: 0.3s">
+                    <div class="text-secondary text-3xl mb-3">
+                        <i class="fa fa-users"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">专业社区</h3>
+                    <p class="text-gray-400">活跃的玩家社区，随时提供技术支持和交流</p>
+                </div>
+            </div>
             
-            popupWin.document.close();
+            <!-- 底部信息 -->
+            <footer class="text-center text-gray-500 mt-12">
+                <p>© 2025 遗迹科技. 保留所有权利.</p>
+                <p class="mt-2 text-sm">使用前请仔细阅读用户协议和隐私政策</p>
+            </footer>
+        </div>
+    </main>
+    
+    <!-- 弹出窗口 -->
+    <div id="popupOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-dark/90 
+                                 opacity-0 pointer-events-none transition-opacity duration-500">
+        <div id="popup" class="relative w-full max-w-5xl mx-4 rounded-3xl overflow-hidden 
+                             transform scale-95 transition-transform duration-500">
+            
+            <!-- 背景效果 -->
+            <div class="absolute inset-0 bg-gradient-to-br from-darkgray to-dark opacity-90"></div>
+            <div class="absolute inset-0 bg-[url('https://picsum.photos/id/1/1200/800')] bg-cover bg-center opacity-10"></div>
+            
+            <!-- 动态边框 -->
+            <div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-3xl blur opacity-70 
+                        animate-border-glow"></div>
+            
+            <!-- 内容 -->
+            <div class="relative z-10 p-8 md:p-12">
+                <!-- 关闭按钮 -->
+                <button id="closePopupBtn" class="absolute top-6 right-6 text-gray-400 hover:text-white 
+                                                transition-colors duration-300 text-2xl">
+                    <i class="fa fa-times"></i>
+                </button>
+                
+                <!-- 标题 -->
+                <div class="text-center mb-10">
+                    <h2 class="text-[clamp(2.5rem,6vw,4rem)] font-bold gradient-text animate-glitch">
+                        遗迹档案
+                    </h2>
+                </div>
+                
+                <!-- 描述 -->
+                <div class="mb-12 max-w-3xl mx-auto">
+                    <div class="neon-bg rounded-xl p-6 md:p-8 border border-secondary/30">
+                        <h3 class="text-2xl font-bold text-secondary mb-4">HVH核心工具</h3>
+                        <ul class="space-y-3 text-gray-300">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                                <span>不被检测的HVH技术 - 多层级防护机制，实时监控系统状态</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                                <span>动态内存注入技术 - 先进的内存管理，确保游戏性能不受影响</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                                <span>实时反检测系统 - 智能识别检测环境，自动调整防护策略</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="mt-6 pt-6 border-t border-gray-700">
+                            <h3 class="text-2xl font-bold text-secondary mb-4">下载说明</h3>
+                            <div class="bg-dark/50 rounded-lg p-4 border border-gray-800">
+                                <p class="text-gray-300 mb-4">请按顺序下载组件：</p>
+                                <ol class="list-decimal list-inside text-gray-300 space-y-2">
+                                    <li><span class="text-secondary font-bold">核心DLL</span> - 必须先安装，包含主要功能模块</li>
+                                    <li><span class="text-secondary font-bold">专用注入器</span> - 用于加载DLL到游戏进程中，支持拖放操作</li>
+                                    <li><span class="text-secondary font-bold">连跳配置</span> - 优化的连跳功能配置，提升游戏体验</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 下载按钮 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-center mb-12">
+                    <button id="downloadDllBtn" class="group relative overflow-hidden rounded-full 
+                                                  px-6 py-5 text-lg font-bold bg-gradient-to-r from-primary to-secondary/80 
+                                                  text-dark transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 
+                                                  hover:scale-105" onclick="openDownloadUrl('dll')">
+                        <span class="relative z-10 flex items-center justify-center">
+                            <i class="fa fa-download mr-2"></i> 核心DLL
+                        </span>
+                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
+                                     transition-transform duration-500 rounded-full"></span>
+                    </button>
+                    
+                    <button id="downloadInjectorBtn" class="group relative overflow-hidden rounded-full 
+                                                       px-6 py-5 text-lg font-bold bg-gradient-to-r from-secondary/80 to-primary/80 
+                                                       text-dark transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
+                                                       hover:scale-105" onclick="openDownloadUrl('injector')">
+                        <span class="relative z-10 flex items-center justify-center">
+                            <i class="fa fa-rocket mr-2"></i> 专用注入器
+                        </span>
+                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
+                                     transition-transform duration-500 rounded-full"></span>
+                    </button>
+                    
+                    <button id="downloadConfigBtn" class="group relative overflow-hidden rounded-full 
+                                                    px-6 py-5 text-lg font-bold bg-gradient-to-r from-secondary to-primary 
+                                                    text-dark transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
+                                                    hover:scale-105" onclick="openDownloadUrl('config')">
+                        <span class="relative z-10 flex items-center justify-center">
+                            <i class="fa fa-bolt mr-2"></i> 下载连跳
+                        </span>
+                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
+                                     transition-transform duration-500 rounded-full"></span>
+                    </button>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="flex flex-col md:flex-row gap-6 justify-center">
+                    <button id="completeInstallBtn" class="group relative overflow-hidden rounded-full 
+                                                        px-10 py-5 text-xl font-bold bg-gradient-to-r from-green-500 to-teal-400 
+                                                        text-dark transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 
+                                                        hover:scale-105">
+                        <span class="relative z-10 flex items-center justify-center">
+                            <i class="fa fa-check-circle mr-2"></i> 完成安装并关闭浏览器
+                        </span>
+                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
+                                     transition-transform duration-500 rounded-full"></span>
+                    </button>
+                    
+                    <button id="returnHomeBtn" class="group relative overflow-hidden rounded-full 
+                                                  px-10 py-5 text-xl font-bold bg-transparent border border-gray-600 
+                                                  text-gray-400 transition-all duration-300 hover:border-gray-400 
+                                                  hover:text-white hover:scale-105">
+                        <span class="relative z-10 flex items-center justify-center">
+                            <i class="fa fa-home mr-2"></i> 返回主页
+                        </span>
+                        <span class="absolute inset-0 bg-white/5 transform scale-0 group-hover:scale-100 
+                                     transition-transform duration-500 rounded-full"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 下载进度提示 -->
+    <div id="downloadNotification" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 
+                                        bg-dark/90 border border-secondary/50 rounded-lg p-4 max-w-sm w-full 
+                                        shadow-lg shadow-secondary/20 opacity-0 pointer-events-none transition-opacity duration-300 
+                                        z-50 flex items-center">
+        <div class="mr-4 text-secondary text-xl">
+            <i class="fa fa-download"></i>
+        </div>
+        <div>
+            <h4 class="font-bold text-white" id="notificationTitle">下载中</h4>
+            <p class="text-gray-400 text-sm" id="notificationMessage">请等待...</p>
+        </div>
+        <div class="ml-auto">
+            <div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+                <div id="notificationProgress" class="h-full bg-gradient-to-r from-primary to-secondary w-0 transition-all duration-300"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 粒子和雪花效果脚本 -->
+    <script>
+        // 创建粒子背景
+        function createParticles() {
+            const particlesContainer = document.createElement('div');
+            particlesContainer.className = 'absolute inset-0';
+            
+            for (let i = 0; i < 150; i++) {
+                const particle = document.createElement('div');
+                const size = Math.random() * 3 + 1;
+                
+                particle.style.position = 'absolute';
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.background = i % 5 === 0 ? '#00ffff' : i % 7 === 0 ? '#ff0055' : '#ffffff';
+                particle.style.borderRadius = '50%';
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.opacity = Math.random() * 0.7 + 0.3;
+                particle.style.animation = `float ${Math.random() * 10 + 5}s linear infinite`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+            
+            document.getElementById('particles-js').appendChild(particlesContainer);
         }
+        
+        // 创建雪花效果
+        function createSnowfall() {
+            const snowContainer = document.createElement('div');
+            snowContainer.className = 'absolute inset-0';
+            
+            for (let i = 0; i < 100; i++) {
+                const flake = document.createElement('div');
+                const size = Math.random() * 3 + 1;
+                
+                flake.style.position = 'absolute';
+                flake.style.width = `${size}px`;
+                flake.style.height = `${size}px`;
+                flake.style.background = '#ffffff';
+                flake.style.borderRadius = '50%';
+                flake.style.left = `${Math.random() * 100}%`;
+                flake.style.top = `${-Math.random() * 100}%`;
+                flake.style.opacity = Math.random() * 0.7 + 0.3;
+                flake.style.animation = `snowfall ${Math.random() * 10 + 10}s linear infinite`;
+                flake.style.animationDelay = `${Math.random() * 10}s`;
+                
+                snowContainer.appendChild(flake);
+            }
+            
+            document.getElementById('snowfall').appendChild(snowContainer);
+        }
+        
+        // 显示下载通知
+        function showDownloadNotification(title, message, progress) {
+            const notification = document.getElementById('downloadNotification');
+            document.getElementById('notificationTitle').textContent = title;
+            document.getElementById('notificationMessage').textContent = message;
+            document.getElementById('notificationProgress').style.width = `${progress}%`;
+            
+            notification.classList.remove('opacity-0');
+            notification.classList.add('opacity-100');
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                notification.classList.remove('opacity-100');
+                notification.classList.add('opacity-0');
+            }, 3000);
+        }
+        
+        // 打开下载网址
+        function openDownloadUrl(type) {
+            const downloadUrls = {
+                dll: 'https://example.com/download/core_dll',
+                injector: 'https://example.com/download/injector',
+                config: 'https://example.com/download/jump_config'
+            };
+            
+            const fileNames = {
+                dll: '核心DLL',
+                injector: '专用注入器',
+                config: '连跳配置'
+            };
+            
+            // 显示提示信息
+            showDownloadNotification(`即将打开${fileNames[type]}下载页面`, '请复制下载链接', 100);
+            
+            // 3秒后打开网址
+            setTimeout(() => {
+                window.open(downloadUrls[type], '_blank');
+            }, 1000);
+        }
+        
+        // 页面加载后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 创建粒子和雪花效果
+            createParticles();
+            createSnowfall();
+            
+            // 添加雪花飘落动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes snowfall {
+                    0% { transform: translateY(-10vh) translateX(0); }
+                    100% { transform: translateY(110vh) translateX(50px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // 主界面按钮
+            document.getElementById('openPopupBtn').addEventListener('click', () => {
+                const overlay = document.getElementById('popupOverlay');
+                const popup = document.getElementById('popup');
+                
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    popup.classList.remove('scale-95');
+                    popup.classList.add('scale-100');
+                }, 100);
+                
+                // 防止背景滚动
+                document.body.style.overflow = 'hidden';
+            });
+            
+            document.getElementById('joinQQGroupBtn').addEventListener('click', () => {
+                window.open('https://qm.qq.com/q/4WDvbWY79K', '_blank');
+            });
+            
+            // 弹出窗口按钮
+            document.getElementById('closePopupBtn').addEventListener('click', closePopup);
+            document.getElementById('returnHomeBtn').addEventListener('click', closePopup);
+            
+            function closePopup() {
+                const overlay = document.getElementById('popupOverlay');
+                const popup = document.getElementById('popup');
+                
+                popup.classList.remove('scale-100');
+                popup.classList.add('scale-95');
+                
+                setTimeout(() => {
+                    overlay.classList.add('opacity-0', 'pointer-events-none');
+                }, 300);
+                
+                // 恢复背景滚动
+                document.body.style.overflow = '';
+            }
+            
+            // 下载按钮事件已通过onclick属性设置
+            
+            document.getElementById('completeInstallBtn').addEventListener('click', () => {
+                // 关闭浏览器窗口
+                window.close();
+                
+                // 如果无法关闭（由于浏览器安全限制），则显示提示
+                setTimeout(() => {
+                    alert('如果浏览器阻止了自动关闭，请手动关闭此窗口。');
+                }, 500);
+            });
+            
+            // 点击遮罩层关闭弹窗
+            document.getElementById('popupOverlay').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('popupOverlay')) {
+                    closePopup();
+                }
+            });
+        });
     </script>
 </body>
-</html>
+</html>    
