@@ -139,7 +139,7 @@
                                               transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
                                               hover:scale-105">
                     <span class="relative z-10">
-                        <i class="fa fa-qq mr-2"></i>加入官方QQ群
+                        <i class="fa fa-telegram mr-2"></i>加入官方TG群
                     </span>
                     <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
                                  transition-transform duration-500 rounded-full"></span>
@@ -186,6 +186,64 @@
             </footer>
         </div>
     </main>
+    
+    <!-- 公告弹窗 -->
+    <div id="announcementOverlay" class="fixed inset-0 z-[60] flex items-center justify-center bg-dark/90 
+                                    opacity-0 pointer-events-none transition-opacity duration-500">
+        <div id="announcementPopup" class="relative w-full max-w-2xl mx-4 rounded-3xl overflow-hidden 
+                                       transform scale-95 transition-transform duration-500">
+            
+            <!-- 背景效果 -->
+            <div class="absolute inset-0 bg-gradient-to-br from-darkgray to-dark opacity-90"></div>
+            <div class="absolute inset-0 bg-[url('https://picsum.photos/id/1/800/600')] bg-cover bg-center opacity-10"></div>
+            
+            <!-- 动态边框 -->
+            <div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-3xl blur opacity-70 
+                        animate-border-glow"></div>
+            
+            <!-- 内容 -->
+            <div class="relative z-10 p-8 md:p-10">
+                <!-- 关闭按钮 -->
+                <button id="closeAnnouncementBtn" class="absolute top-6 right-6 text-gray-400 hover:text-white 
+                                                 transition-colors duration-300 text-2xl">
+                    <i class="fa fa-times"></i>
+                </button>
+                
+                <!-- 标题 -->
+                <div class="text-center mb-8">
+                    <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold gradient-text animate-glitch">
+                        重要公告
+                    </h2>
+                </div>
+                
+                <!-- 公告内容 -->
+                <div class="mb-10 max-w-xl mx-auto">
+                    <div class="neon-bg rounded-xl p-6 md:p-8 border border-secondary/30">
+                        <p class="text-xl text-gray-300 leading-relaxed">
+                            遗迹QQ群因为不知道什么原因，被官方整治了，需要进群的可以进TG群。
+                        </p>
+                        <p class="text-xl text-gray-300 leading-relaxed mt-4">
+                            感谢大家的理解与支持！
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 按钮 -->
+                <div class="flex justify-center">
+                    <button id="closeAnnouncementBtn2" class="group relative overflow-hidden rounded-full 
+                                                         px-10 py-4 text-lg font-bold bg-gradient-to-r from-primary to-secondary 
+                                                         text-dark transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 
+                                                         hover:scale-105">
+                        <span class="relative z-10">
+                            我知道了
+                        </span>
+                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
+                                     transition-transform duration-500 rounded-full"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- 弹出窗口 -->
     <div id="popupOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-dark/90 
@@ -426,6 +484,36 @@
             }, 1000);
         }
         
+        // 显示公告弹窗
+        function showAnnouncementPopup() {
+            const overlay = document.getElementById('announcementOverlay');
+            const popup = document.getElementById('announcementPopup');
+            
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                popup.classList.remove('scale-95');
+                popup.classList.add('scale-100');
+            }, 100);
+            
+            // 防止背景滚动
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭公告弹窗
+        function closeAnnouncementPopup() {
+            const overlay = document.getElementById('announcementOverlay');
+            const popup = document.getElementById('announcementPopup');
+            
+            popup.classList.remove('scale-100');
+            popup.classList.add('scale-95');
+            
+            setTimeout(() => {
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                // 恢复背景滚动
+                document.body.style.overflow = '';
+            }, 300);
+        }
+        
         // 页面加载后初始化
         document.addEventListener('DOMContentLoaded', () => {
             // 创建粒子和雪花效果
@@ -441,6 +529,20 @@
                 }
             `;
             document.head.appendChild(style);
+            
+            // 显示公告弹窗
+            setTimeout(showAnnouncementPopup, 500);
+            
+            // 公告弹窗按钮
+            document.getElementById('closeAnnouncementBtn').addEventListener('click', closeAnnouncementPopup);
+            document.getElementById('closeAnnouncementBtn2').addEventListener('click', closeAnnouncementPopup);
+            
+            // 点击遮罩层关闭公告弹窗
+            document.getElementById('announcementOverlay').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('announcementOverlay')) {
+                    closeAnnouncementPopup();
+                }
+            });
             
             // 主界面按钮
             document.getElementById('openPopupBtn').addEventListener('click', () => {
@@ -458,7 +560,7 @@
             });
             
             document.getElementById('joinQQGroupBtn').addEventListener('click', () => {
-                window.open('https://qm.qq.com/q/4WDvbWY79K', '_blank');
+                window.open('https://t.me/+dy8r937YxnljZTRl', '_blank');
             });
             
             // 弹出窗口按钮
@@ -501,4 +603,4 @@
         });
     </script>
 </body>
-</html>    
+</html>
