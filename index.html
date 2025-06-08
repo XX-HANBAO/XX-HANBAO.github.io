@@ -296,11 +296,10 @@
                         <div class="mt-6 pt-6 border-t border-gray-700">
                             <h3 class="text-2xl font-bold text-secondary mb-4">下载说明（访问密码：6666）</h3>
                             <div class="bg-dark/50 rounded-lg p-4 border border-gray-800">
-                                <p class="text-gray-300 mb-4">请按顺序下载组件：</p>
+                                <p class="text-gray-300 mb-4">请按照喜好下载组件：</p>
                                 <ol class="list-decimal list-inside text-gray-300 space-y-2">
-                                    <li><span class="text-secondary font-bold">核心DLL</span> - 必须先安装，包含主要功能模块</li>
-                                    <li><span class="text-secondary font-bold">专用注入器</span> - 用于加载DLL到游戏进程中，支持拖放操作</li>
-                                    <li><span class="text-secondary font-bold">连跳配置</span> - 优化的连跳功能配置，提升游戏体验</li>
+                                    <li><span class="text-secondary font-bold">遗迹整合包</span> - 包含遗迹功能注入器</li>
+                                    <li><span class="text-secondary font-bold">不检测连跳</span> - 优化的连跳功能配置，提升游戏体验</li>
                                 </ol>
                             </div>
                         </div>
@@ -308,24 +307,13 @@
                 </div>
                 
                 <!-- 下载按钮 -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-center mb-12">
-                    <button id="downloadDllBtn" class="group relative overflow-hidden rounded-full 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center mb-12">
+                    <button id="downloadRelicBtn" class="group relative overflow-hidden rounded-full 
                                                   px-6 py-5 text-lg font-bold bg-gradient-to-r from-primary to-secondary/80 
                                                   text-dark transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 
-                                                  hover:scale-105" onclick="openDownloadUrl('dll')">
+                                                  hover:scale-105" onclick="openDownloadUrl('relic')">
                         <span class="relative z-10 flex items-center justify-center">
-                            <i class="fa fa-download mr-2"></i> 核心DLL
-                        </span>
-                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
-                                     transition-transform duration-500 rounded-full"></span>
-                    </button>
-                    
-                    <button id="downloadInjectorBtn" class="group relative overflow-hidden rounded-full 
-                                                       px-6 py-5 text-lg font-bold bg-gradient-to-r from-secondary/80 to-primary/80 
-                                                       text-dark transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
-                                                       hover:scale-105" onclick="openDownloadUrl('injector')">
-                        <span class="relative z-10 flex items-center justify-center">
-                            <i class="fa fa-rocket mr-2"></i> 专用注入器
+                            <i class="fa fa-download mr-2"></i> 下载遗迹
                         </span>
                         <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
                                      transition-transform duration-500 rounded-full"></span>
@@ -464,14 +452,12 @@
         // 打开下载网址
         function openDownloadUrl(type) {
             const downloadUrls = {
-                dll: 'https://wwbq.lanzn.com/i7eTG2xve7eh',
-                injector: 'https://wwbq.lanzoup.com/ie2G72xp7y1i',
+                relic: 'https://wwbq.lanzn.com/i861J2yc92di',
                 config: 'https://wwbq.lanzoup.com/ixtgw2xmwuxi'
             };
             
             const fileNames = {
-                dll: '核心DLL',
-                injector: '专用注入器',
+                relic: '遗迹整合包',
                 config: '连跳配置'
             };
             
@@ -603,4 +589,4 @@
         });
     </script>
 </body>
-</html>
+</html>    
