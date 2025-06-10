@@ -134,12 +134,34 @@
                                  transition-transform duration-500 rounded-full"></span>
                 </button>
                 
-                <button id="joinQQGroupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
+                <button id="joinTGGroupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
                                               px-12 py-6 text-2xl font-bold bg-secondary text-dark 
                                               transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
                                               hover:scale-105">
                     <span class="relative z-10">
                         <i class="fa fa-telegram mr-2"></i>加入官方TG群
+                    </span>
+                    <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
+                                 transition-transform duration-500 rounded-full"></span>
+                </button>
+                
+                <button id="joinKOOKGroupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
+                                              px-12 py-6 text-2xl font-bold bg-secondary text-dark 
+                                              transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
+                                              hover:scale-105">
+                    <span class="relative z-10">
+                        <i class="fa fa-comments mr-2"></i>进入官方KOOK群
+                    </span>
+                    <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
+                                 transition-transform duration-500 rounded-full"></span>
+                </button>
+                
+                <button id="joinQQGroupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
+                                              px-12 py-6 text-2xl font-bold bg-secondary text-dark 
+                                              transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
+                                              hover:scale-105">
+                    <span class="relative z-10">
+                        <i class="fa fa-qq mr-2"></i>进入官方QQ群
                     </span>
                     <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
                                  transition-transform duration-500 rounded-full"></span>
@@ -220,10 +242,20 @@
                 <div class="mb-10 max-w-xl mx-auto">
                     <div class="neon-bg rounded-xl p-6 md:p-8 border border-secondary/30">
                         <p class="text-xl text-gray-300 leading-relaxed">
-                            遗迹QQ群因为不知道什么原因，被官方整治了，需要进群的可以进TG群。
+                            遗迹QQ群因特殊原因被整治，目前主要交流群为TG群和KOOK群。
+                        </p>
+                        <p class="text-xl text-gray-300 leading-relaxed mt-2">
+                            <span class="text-secondary font-bold">重要规则：</span>
+                            请避免在KOOK/QQ群内讨论任何与外挂相关的内容（包括"挂""G"等字眼），
+                            违规者将被严肃处理。
+                        </p>
+                        <p class="text-xl text-gray-300 leading-relaxed mt-2">
+                            <span class="text-secondary font-bold">风险提示：</span>
+                            开挂属于破坏游戏平衡的行为，由此导致的账号封禁等后果需自行承担。
+                            请勿因账号问题辱骂官方人员，任何恶意辱骂将被永久拉黑。
                         </p>
                         <p class="text-xl text-gray-300 leading-relaxed mt-4">
-                            感谢大家的理解与支持！
+                            感谢大家对遗迹社区的支持与维护，共同营造健康的交流环境！
                         </p>
                     </div>
                 </div>
@@ -270,7 +302,7 @@
                 <!-- 标题 -->
                 <div class="text-center mb-10">
                     <h2 class="text-[clamp(2.5rem,6vw,4rem)] font-bold gradient-text animate-glitch">
-                        遗迹档案
+                        遗迹主页
                     </h2>
                 </div>
                 
@@ -298,7 +330,7 @@
                             <div class="bg-dark/50 rounded-lg p-4 border border-gray-800">
                                 <p class="text-gray-300 mb-4">请按照喜好下载组件：</p>
                                 <ol class="list-decimal list-inside text-gray-300 space-y-2">
-                                    <li><span class="text-secondary font-bold">遗迹整合包</span> - 包含遗迹功能注入器</li>
+                                    <li><span class="text-secondary font-bold">遗迹功能注入器</span> - 包含遗迹功能注入器</li>
                                     <li><span class="text-secondary font-bold">不检测连跳</span> - 优化的连跳功能配置，提升游戏体验</li>
                                 </ol>
                             </div>
@@ -545,8 +577,16 @@
                 document.body.style.overflow = 'hidden';
             });
             
-            document.getElementById('joinQQGroupBtn').addEventListener('click', () => {
+            document.getElementById('joinTGGroupBtn').addEventListener('click', () => {
                 window.open('https://t.me/+dy8r937YxnljZTRl', '_blank');
+            });
+            
+            document.getElementById('joinKOOKGroupBtn').addEventListener('click', () => {
+                window.open('https://kook.vip/ZCSH5g', '_blank');
+            });
+            
+            document.getElementById('joinQQGroupBtn').addEventListener('click', () => {
+                window.open('https://qm.qq.com/q/DSmYyv2Rby', '_blank');
             });
             
             // 弹出窗口按钮
@@ -589,4 +629,4 @@
         });
     </script>
 </body>
-</html>    
+</html>
