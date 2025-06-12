@@ -6,7 +6,6 @@
     <title>遗迹（Relic）</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -18,29 +17,20 @@
                         dark: '#0a0a0a',
                         neon: '#00ffff',
                         accent: '#ff0055',
-                        darkgray: '#1a1a1a',
-                        particle: '#ff0055'
+                        darkgray: '#1a1a1a'
                     },
                     fontFamily: {
                         consolas: ['Consolas', 'monospace'],
-                        neon: ['Orbitron', 'sans-serif']
                     },
                     animation: {
                         'glitch': 'glitch 2s infinite',
-                        'glitch-alt': 'glitchAlt 3s infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'float': 'float 3s ease-in-out infinite',
-                        'float-slow': 'floatSlow 5s ease-in-out infinite',
-                        'float-hover': 'floatHover 0.5s ease-in-out',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'rotate': 'rotate 20s linear infinite',
                         'shine': 'shine 1.5s infinite',
-                        'fade-in': 'fadeIn 0.8s ease-out forwards',
-                        'slide-up': 'slideUp 0.8s ease-out forwards',
-                        'border-glow': 'borderGlow 8s linear infinite',
-                        'wave': 'wave 1.5s ease-in-out infinite',
-                        'pulse-border': 'pulseBorder 2s infinite',
-                        'float-hover': 'floatHover 0.5s ease-in-out',
-                        'parallax': 'parallax 60s linear infinite',
-                        'pulse-soft': 'pulseSoft 3s ease-in-out infinite'
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                        'border-glow': 'borderGlow 6s linear infinite'
                     },
                     keyframes: {
                         glitch: {
@@ -50,58 +40,26 @@
                             '60%': { textShadow: '-2px 2px #00ffff, 2px -2px #ff0055' },
                             '80%': { textShadow: '2px 2px #00ffff, -2px -2px #ff0055' }
                         },
-                        glitchAlt: {
-                            '0%, 100%': { textShadow: '1px 1px #ff0055, -1px -1px #00ffff' },
-                            '25%': { textShadow: '0 0 15px #ff0055, 0 0 25px #00ffff' },
-                            '50%': { textShadow: '-1px 1px #ff0055, 1px -1px #00ffff' },
-                            '75%': { textShadow: '0 0 8px #00ffff, 0 0 20px #ff0055' }
-                        },
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-12px)' }
-                        },
-                        floatSlow: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-8px)' }
-                        },
-                        floatHover: {
-                            '0%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-8px)' },
-                            '100%': { transform: 'translateY(0)' }
+                            '50%': { transform: 'translateY(-10px)' }
                         },
                         shine: {
-                            '0%': { boxShadow: '0 0 15px rgba(0, 255, 255, 0.6)' },
-                            '50%': { boxShadow: '0 0 30px rgba(0, 255, 255, 0.9)' },
-                            '100%': { boxShadow: '0 0 15px rgba(0, 255, 255, 0.6)' }
+                            '0%': { boxShadow: '0 0 10px rgba(0, 255, 255, 0.5)' },
+                            '50%': { boxShadow: '0 0 25px rgba(0, 255, 255, 0.8)' },
+                            '100%': { boxShadow: '0 0 10px rgba(0, 255, 255, 0.5)' }
                         },
                         fadeIn: {
                             '0%': { opacity: '0' },
                             '100%': { opacity: '1' }
                         },
                         slideUp: {
-                            '0%': { transform: 'translateY(30px)', opacity: '0' },
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
                             '100%': { transform: 'translateY(0)', opacity: '1' }
                         },
                         borderGlow: {
-                            '0%': { filter: 'blur(35px) hue-rotate(0deg)' },
-                            '100%': { filter: 'blur(35px) hue-rotate(360deg)' }
-                        },
-                        wave: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '25%': { transform: 'translateY(-8px)' },
-                            '75%': { transform: 'translateY(8px)' }
-                        },
-                        pulseBorder: {
-                            '0%, 100%': { borderColor: 'rgba(0, 255, 255, 0.2)' },
-                            '50%': { borderColor: 'rgba(0, 255, 255, 0.6)' }
-                        },
-                        parallax: {
-                            '0%': { backgroundPosition: '0 0' },
-                            '100%': { backgroundPosition: '0 1000px' }
-                        },
-                        pulseSoft: {
-                            '0%, 100%': { transform: 'scale(1)' },
-                            '50%': { transform: 'scale(1.03)' }
+                            '0%': { filter: 'blur(30px) hue-rotate(0deg)' },
+                            '100%': { filter: 'blur(30px) hue-rotate(360deg)' }
                         }
                     }
                 }
@@ -122,7 +80,7 @@
                 border-image: linear-gradient(45deg, #ff0055, #00ffff) 1;
             }
             .neon-bg {
-                background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(10, 10, 10, 0.95));
+                background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(10, 10, 10, 0.9));
             }
             .gradient-text {
                 background-clip: text;
@@ -140,122 +98,27 @@
                 -ms-overflow-style: none;
                 scrollbar-width: none;
             }
-            .text-cursor {
-                display: inline-block;
-                width: 2px;
-                background-color: currentColor;
-                margin-left: 2px;
-                animation: blink 1s infinite;
-            }
-            @keyframes blink {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0; }
-            }
-            .glow-border {
-                position: relative;
-                overflow: hidden;
-            }
-            .glow-border::after {
-                content: '';
-                position: absolute;
-                top: -3px;
-                left: -3px;
-                right: -3px;
-                bottom: -3px;
-                background: linear-gradient(45deg, #ff0055, #00ffff);
-                z-index: -1;
-                filter: blur(12px);
-                opacity: 0;
-                transition: opacity 0.4s ease;
-            }
-            .glow-border:hover::after {
-                opacity: 1;
-            }
-            .float-on-hover {
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-            }
-            .float-on-hover:hover {
-                animation: floatHover 0.6s ease-in-out;
-                box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-            }
-            .pulse-border {
-                animation: pulseBorder 2s infinite;
-            }
-            .parallax-bg {
-                background-attachment: fixed;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-                animation: parallax 120s linear infinite;
-            }
-            .audio-visualizer {
-                display: flex;
-                align-end;
-                gap: 2px;
-                height: 40px;
-            }
-            .audio-bar {
-                width: 6px;
-                background: linear-gradient(to bottom, #00ffff, #ff0055);
-                border-radius: 3px;
-                animation: audioPulse 0.5s infinite;
-                transform-origin: bottom;
-            }
-            @keyframes audioPulse {
-                0% { height: 10%; }
-                50% { height: 100%; }
-                100% { height: 10%; }
-            }
-            .neon-shadow {
-                box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), 0 0 30px rgba(255, 0, 85, 0.3);
-            }
-            .hover-scale {
-                transition: transform 0.3s ease;
-            }
-            .hover-scale:hover {
-                transform: scale(1.03);
-            }
         }
     </style>
 </head>
-<body class="bg-dark text-white font-consolas overflow-x-hidden min-h-screen">
-    <!-- 音频元素 -->
-    <audio id="bgMusic" loop>
-        <source src="https://assets.mixkit.co/music/preview/mixkit-synth-wave-80s-vibe-343.mp3" type="audio/mpeg">
-        您的浏览器不支持音频播放
-    </audio>
-    
+<body class="bg-dark text-white font-consolas overflow-hidden min-h-screen">
     <!-- 粒子背景 -->
     <div id="particles-js" class="fixed inset-0 z-0"></div>
     
     <!-- 雪花效果 -->
     <div id="snowfall" class="fixed inset-0 pointer-events-none z-0"></div>
     
-    <!-- 动态背景光效 -->
-    <div id="background-lights" class="fixed inset-0 z-0 pointer-events-none"></div>
-    
-    <!-- 音频可视化 -->
-    <div id="audioVisualizer" class="fixed bottom-10 right-10 z-30 flex items-end gap-1 opacity-0 transition-opacity duration-1000"></div>
-    
-    <!-- 音乐控制 -->
-    <div id="musicControls" class="fixed bottom-10 left-10 z-30 bg-dark/80 backdrop-blur-md rounded-full p-3 border border-secondary/30 hover-scale">
-        <button id="playPauseBtn" class="text-secondary hover:text-white transition-colors">
-            <i class="fa fa-play text-xl"></i>
-        </button>
-    </div>
-    
     <!-- 主界面 -->
     <main class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-8">
         <div class="neon-bg backdrop-blur-lg rounded-3xl p-8 md:p-12 max-w-5xl w-full mx-auto 
-                    border border-secondary/30 shadow-lg shadow-secondary/20 animate-fade-in pulse-border neon-shadow">
+                    border border-secondary/30 shadow-lg shadow-secondary/20 animate-fade-in">
             
             <!-- 头部 -->
             <header class="text-center mb-12">
-                <h1 class="text-[clamp(3rem,8vw,6rem)] font-bold gradient-text animate-glitch mb-4 glow-border">
+                <h1 class="text-[clamp(3rem,8vw,6rem)] font-bold gradient-text animate-glitch mb-4">
                     遗迹
-                    <span class="text-cursor ml-2 text-secondary"></span>
                 </h1>
-                <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto animate-fade-in" style="animation-delay: 0.3s">
+                <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
                     尖端科技打造公平竞技环境，拒绝任何破坏平衡的行为
                 </p>
             </header>
@@ -265,7 +128,7 @@
                 <button id="openPopupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
                                               px-12 py-6 text-2xl font-bold bg-gradient-to-r from-primary to-secondary 
                                               text-dark transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 
-                                              hover:scale-105 float-on-hover glow-border">
+                                              hover:scale-105">
                     <span class="relative z-10">开启之旅</span>
                     <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
                                  transition-transform duration-500 rounded-full"></span>
@@ -274,7 +137,7 @@
                 <button id="joinTGGroupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
                                               px-12 py-6 text-2xl font-bold bg-secondary text-dark 
                                               transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
-                                              hover:scale-105 float-on-hover glow-border">
+                                              hover:scale-105">
                     <span class="relative z-10">
                         <i class="fa fa-telegram mr-2"></i>加入官方TG群
                     </span>
@@ -285,7 +148,7 @@
                 <button id="joinKOOKGroupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
                                               px-12 py-6 text-2xl font-bold bg-secondary text-dark 
                                               transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
-                                              hover:scale-105 float-on-hover glow-border">
+                                              hover:scale-105">
                     <span class="relative z-10">
                         <i class="fa fa-comments mr-2"></i>进入官方KOOK群
                     </span>
@@ -296,7 +159,7 @@
                 <button id="joinQQGroupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
                                               px-12 py-6 text-2xl font-bold bg-secondary text-dark 
                                               transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
-                                              hover:scale-105 float-on-hover glow-border">
+                                              hover:scale-105">
                     <span class="relative z-10">
                         <i class="fa fa-qq mr-2"></i>进入官方QQ群
                     </span>
@@ -309,8 +172,8 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="neon-bg rounded-xl p-6 border border-secondary/20 hover:border-secondary/50 
                             transition-all duration-300 hover:shadow-lg hover:shadow-secondary/10 animate-slide-up"
-                     style="animation-delay: 0.1s; animation-fill-mode: both;">
-                    <div class="text-secondary text-3xl mb-3 animate-float">
+                     style="animation-delay: 0.1s">
+                    <div class="text-secondary text-3xl mb-3">
                         <i class="fa fa-shield"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2">公益HVH</h3>
@@ -319,8 +182,8 @@
                 
                 <div class="neon-bg rounded-xl p-6 border border-secondary/20 hover:border-secondary/50 
                             transition-all duration-300 hover:shadow-lg hover:shadow-secondary/10 animate-slide-up"
-                     style="animation-delay: 0.2s; animation-fill-mode: both;">
-                    <div class="text-secondary text-3xl mb-3 animate-float" style="animation-delay: 0.5s">
+                     style="animation-delay: 0.2s">
+                    <div class="text-secondary text-3xl mb-3">
                         <i class="fa fa-bolt"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2">极致性能</h3>
@@ -329,8 +192,8 @@
                 
                 <div class="neon-bg rounded-xl p-6 border border-secondary/20 hover:border-secondary/50 
                             transition-all duration-300 hover:shadow-lg hover:shadow-secondary/10 animate-slide-up"
-                     style="animation-delay: 0.3s; animation-fill-mode: both;">
-                    <div class="text-secondary text-3xl mb-3 animate-float" style="animation-delay: 1s">
+                     style="animation-delay: 0.3s">
+                    <div class="text-secondary text-3xl mb-3">
                         <i class="fa fa-users"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2">专业社区</h3>
@@ -347,7 +210,7 @@
     </main>
     
     <!-- 公告弹窗 -->
-    <div id="announcementOverlay" class="fixed inset-0 z-[60] flex items-center justify-center bg-dark/95 
+    <div id="announcementOverlay" class="fixed inset-0 z-[60] flex items-center justify-center bg-dark/90 
                                     opacity-0 pointer-events-none transition-opacity duration-500">
         <div id="announcementPopup" class="relative w-full max-w-2xl mx-4 rounded-3xl overflow-hidden 
                                        transform scale-95 transition-transform duration-500">
@@ -364,34 +227,34 @@
             <div class="relative z-10 p-8 md:p-10">
                 <!-- 关闭按钮 -->
                 <button id="closeAnnouncementBtn" class="absolute top-6 right-6 text-gray-400 hover:text-white 
-                                                 transition-colors duration-300 text-2xl hover:animate-wave">
+                                                 transition-colors duration-300 text-2xl">
                     <i class="fa fa-times"></i>
                 </button>
                 
                 <!-- 标题 -->
                 <div class="text-center mb-8">
-                    <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold gradient-text animate-glitch-alt">
+                    <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold gradient-text animate-glitch">
                         重要公告
                     </h2>
                 </div>
                 
                 <!-- 公告内容 -->
                 <div class="mb-10 max-w-xl mx-auto">
-                    <div class="neon-bg rounded-xl p-6 md:p-8 border border-secondary/30 animate-fade-in">
+                    <div class="neon-bg rounded-xl p-6 md:p-8 border border-secondary/30">
                         <p class="text-xl text-gray-300 leading-relaxed">
                             遗迹QQ群因特殊原因被整治，目前主要交流群为TG群和KOOK群。
                         </p>
-                        <p class="text-xl text-gray-300 leading-relaxed mt-2 font-medium">
-                            <span class="text-secondary">重要规则：</span>
+                        <p class="text-xl text-gray-300 leading-relaxed mt-2">
+                            <span class="text-secondary font-bold">重要规则：</span>
                             请避免在KOOK/QQ群内讨论任何与外挂相关的内容（包括"挂""G"等字眼），
                             违规者将被严肃处理。
                         </p>
-                        <p class="text-xl text-gray-300 leading-relaxed mt-2 font-medium">
-                            <span class="text-secondary">风险提示：</span>
+                        <p class="text-xl text-gray-300 leading-relaxed mt-2">
+                            <span class="text-secondary font-bold">风险提示：</span>
                             开挂属于破坏游戏平衡的行为，由此导致的账号封禁等后果需自行承担。
                             请勿因账号问题辱骂官方人员，任何恶意辱骂将被永久拉黑。
                         </p>
-                        <p class="text-xl text-gray-300 leading-relaxed mt-4 font-medium">
+                        <p class="text-xl text-gray-300 leading-relaxed mt-4">
                             感谢大家对遗迹社区的支持与维护，共同营造健康的交流环境！
                         </p>
                     </div>
@@ -402,7 +265,7 @@
                     <button id="closeAnnouncementBtn2" class="group relative overflow-hidden rounded-full 
                                                          px-10 py-4 text-lg font-bold bg-gradient-to-r from-primary to-secondary 
                                                          text-dark transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 
-                                                         hover:scale-105 float-on-hover glow-border">
+                                                         hover:scale-105">
                         <span class="relative z-10">
                             我知道了
                         </span>
@@ -432,13 +295,13 @@
             <div class="relative z-10 p-8 md:p-12">
                 <!-- 关闭按钮 -->
                 <button id="closePopupBtn" class="absolute top-6 right-6 text-gray-400 hover:text-white 
-                                                transition-colors duration-300 text-2xl hover:animate-wave">
+                                                transition-colors duration-300 text-2xl">
                     <i class="fa fa-times"></i>
                 </button>
                 
                 <!-- 标题 -->
                 <div class="text-center mb-10">
-                    <h2 class="text-[clamp(2.5rem,6vw,4rem)] font-bold gradient-text animate-glitch-alt">
+                    <h2 class="text-[clamp(2.5rem,6vw,4rem)] font-bold gradient-text animate-glitch">
                         遗迹主页
                     </h2>
                 </div>
@@ -446,29 +309,28 @@
                 <!-- 描述 -->
                 <div class="mb-12 max-w-3xl mx-auto">
                     <div class="neon-bg rounded-xl p-6 md:p-8 border border-secondary/30">
-                        <h3 class="text-2xl font-bold text-secondary mb-4 animate-float-slow">HVH核心工具</h3>
+                        <h3 class="text-2xl font-bold text-secondary mb-4">HVH核心工具</h3>
                         <ul class="space-y-3 text-gray-300">
                             <li class="flex items-start">
                                 <i class="fa fa-check text-secondary mt-1 mr-3"></i>
                                 <span>不被检测的HVH技术 - 多层级防护机制，实时监控系统状态</span>
                             </li>
-                            <li class="flex items-start mt-2">
+                            <li class="flex items-start">
                                 <i class="fa fa-check text-secondary mt-1 mr-3"></i>
                                 <span>动态内存注入技术 - 先进的内存管理，确保游戏性能不受影响</span>
                             </li>
-                            <li class="flex items-start mt-2">
+                            <li class="flex items-start">
                                 <i class="fa fa-check text-secondary mt-1 mr-3"></i>
                                 <span>实时反检测系统 - 智能识别检测环境，自动调整防护策略</span>
                             </li>
                         </ul>
                         
                         <div class="mt-6 pt-6 border-t border-gray-700">
-                            <h3 class="text-2xl font-bold text-secondary mb-4 animate-float-slow">下载说明（访问密码：6666）</h3>
+                            <h3 class="text-2xl font-bold text-secondary mb-4">下载说明（访问密码：6666）</h3>
                             <div class="bg-dark/50 rounded-lg p-4 border border-gray-800">
                                 <p class="text-gray-300 mb-4">请按照喜好下载组件：</p>
                                 <ol class="list-decimal list-inside text-gray-300 space-y-2">
                                     <li><span class="text-secondary font-bold">遗迹功能注入器</span> - 包含遗迹功能注入器</li>
-                                    <li><span class="text器</li>
                                     <li><span class="text-secondary font-bold">不检测连跳</span> - 优化的连跳功能配置，提升游戏体验</li>
                                 </ol>
                             </div>
@@ -481,7 +343,7 @@
                     <button id="downloadRelicBtn" class="group relative overflow-hidden rounded-full 
                                                   px-6 py-5 text-lg font-bold bg-gradient-to-r from-primary to-secondary/80 
                                                   text-dark transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 
-                                                  hover:scale-105 float-on-hover glow-border" onclick="openDownloadUrl('relic')">
+                                                  hover:scale-105" onclick="openDownloadUrl('relic')">
                         <span class="relative z-10 flex items-center justify-center">
                             <i class="fa fa-download mr-2"></i> 下载遗迹
                         </span>
@@ -492,7 +354,7 @@
                     <button id="downloadConfigBtn" class="group relative overflow-hidden rounded-full 
                                                     px-6 py-5 text-lg font-bold bg-gradient-to-r from-secondary to-primary 
                                                     text-dark transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
-                                                    hover:scale-105 float-on-hover glow-border" onclick="openDownloadUrl('config')">
+                                                    hover:scale-105" onclick="openDownloadUrl('config')">
                         <span class="relative z-10 flex items-center justify-center">
                             <i class="fa fa-bolt mr-2"></i> 下载连跳
                         </span>
@@ -506,7 +368,7 @@
                     <button id="completeInstallBtn" class="group relative overflow-hidden rounded-full 
                                                         px-10 py-5 text-xl font-bold bg-gradient-to-r from-green-500 to-teal-400 
                                                         text-dark transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 
-                                                        hover:scale-105 float-on-hover glow-border">
+                                                        hover:scale-105">
                         <span class="relative z-10 flex items-center justify-center">
                             <i class="fa fa-check-circle mr-2"></i> 完成安装并关闭浏览器
                         </span>
@@ -517,7 +379,7 @@
                     <button id="returnHomeBtn" class="group relative overflow-hidden rounded-full 
                                                   px-10 py-5 text-xl font-bold bg-transparent border border-gray-600 
                                                   text-gray-400 transition-all duration-300 hover:border-gray-400 
-                                                  hover:text-white hover:scale-105 float-on-hover glow-border">
+                                                  hover:text-white hover:scale-105">
                         <span class="relative z-10 flex items-center justify-center">
                             <i class="fa fa-home mr-2"></i> 返回主页
                         </span>
@@ -533,7 +395,7 @@
     <div id="downloadNotification" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 
                                         bg-dark/90 border border-secondary/50 rounded-lg p-4 max-w-sm w-full 
                                         shadow-lg shadow-secondary/20 opacity-0 pointer-events-none transition-opacity duration-300 
-                                        z-50 flex items-center animate-fade-in">
+                                        z-50 flex items-center">
         <div class="mr-4 text-secondary text-xl">
             <i class="fa fa-download"></i>
         </div>
@@ -555,28 +417,20 @@
             const particlesContainer = document.createElement('div');
             particlesContainer.className = 'absolute inset-0';
             
-            for (let i = 0; i < 300; i++) {
+            for (let i = 0; i < 150; i++) {
                 const particle = document.createElement('div');
-                const size = Math.random() * 5 + 1;
-                const isNeon = i % 3 === 0;
-                const isLarge = i % 15 === 0;
+                const size = Math.random() * 3 + 1;
                 
                 particle.style.position = 'absolute';
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
-                particle.style.background = isNeon ? '#00ffff' : i % 5 === 0 ? '#ff0055' : '#ffffff';
-                particle.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                particle.style.background = i % 5 === 0 ? '#00ffff' : i % 7 === 0 ? '#ff0055' : '#ffffff';
+                particle.style.borderRadius = '50%';
                 particle.style.left = `${Math.random() * 100}%`;
                 particle.style.top = `${Math.random() * 100}%`;
                 particle.style.opacity = Math.random() * 0.7 + 0.3;
                 particle.style.animation = `float ${Math.random() * 10 + 5}s linear infinite`;
-                particle.style.animationDelay = `${Math.random() * 8}s`;
-                
-                if (isLarge) {
-                    particle.style.width = `${size * 3}px`;
-                    particle.style.height = `${size * 3}px`;
-                    particle.style.animation = `float ${Math.random() * 15 + 10}s linear infinite`;
-                }
+                particle.style.animationDelay = `${Math.random() * 5}s`;
                 
                 particlesContainer.appendChild(particle);
             }
@@ -589,60 +443,25 @@
             const snowContainer = document.createElement('div');
             snowContainer.className = 'absolute inset-0';
             
-            for (let i = 0; i < 200; i++) {
+            for (let i = 0; i < 100; i++) {
                 const flake = document.createElement('div');
-                const size = Math.random() * 5 + 1;
-                const isFlake = Math.random() > 0.3;
-                const isSparkle = i % 20 === 0;
+                const size = Math.random() * 3 + 1;
                 
                 flake.style.position = 'absolute';
                 flake.style.width = `${size}px`;
                 flake.style.height = `${size}px`;
-                flake.style.background = isSparkle ? '#00ffff' : '#ffffff';
-                flake.style.borderRadius = isFlake ? '50%' : '0';
+                flake.style.background = '#ffffff';
+                flake.style.borderRadius = '50%';
                 flake.style.left = `${Math.random() * 100}%`;
                 flake.style.top = `${-Math.random() * 100}%`;
                 flake.style.opacity = Math.random() * 0.7 + 0.3;
-                flake.style.animation = `snowfall ${Math.random() * 10 + 6}s linear infinite`;
-                flake.style.animationDelay = `${Math.random() * 12}s`;
-                
-                if (isSparkle) {
-                    flake.style.boxShadow = '0 0 10px rgba(0, 255, 255, 0.7)';
-                    flake.style.animation = `snowfall ${Math.random() * 8 + 5}s linear infinite`;
-                }
+                flake.style.animation = `snowfall ${Math.random() * 10 + 10}s linear infinite`;
+                flake.style.animationDelay = `${Math.random() * 10}s`;
                 
                 snowContainer.appendChild(flake);
             }
             
             document.getElementById('snowfall').appendChild(snowContainer);
-        }
-        
-        // 创建背景光效
-        function createBackgroundLights() {
-            const lightsContainer = document.createElement('div');
-            lightsContainer.id = 'background-lights';
-            
-            for (let i = 0; i < 15; i++) {
-                const light = document.createElement('div');
-                const size = Math.random() * 120 + 60;
-                const isNeon = i % 2 === 0;
-                
-                light.style.position = 'absolute';
-                light.style.width = `${size}px`;
-                light.style.height = `${size}px`;
-                light.style.borderRadius = '50%';
-                light.style.left = `${Math.random() * 100}%`;
-                light.style.top = `${Math.random() * 100}%`;
-                light.style.opacity = Math.random() * 0.1 + 0.05;
-                light.style.background = isNeon ? 'rgba(0, 255, 255, 0.4)' : 'rgba(255, 0, 85, 0.4)';
-                light.style.animation = `float ${Math.random() * 25 + 15}s linear infinite`;
-                light.style.animationDelay = `${Math.random() * 12}s`;
-                light.style.boxShadow = isNeon ? '0 0 25px rgba(0, 255, 255, 0.6)' : '0 0 25px rgba(255, 0, 85, 0.6)';
-                
-                lightsContainer.appendChild(light);
-            }
-            
-            document.body.appendChild(lightsContainer);
         }
         
         // 显示下载通知
@@ -683,55 +502,6 @@
             }, 1000);
         }
         
-        // 初始化音频可视化
-        function initAudioVisualizer() {
-            const visualizer = document.getElementById('audioVisualizer');
-            const bgMusic = document.getElementById('bgMusic');
-            
-            // 创建音频分析器
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const analyser = audioContext.createAnalyser();
-            const source = audioContext.createMediaElementSource(bgMusic);
-            
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-            
-            analyser.fftSize = 128;
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-            
-            // 创建音频条
-            for (let i = 0; i < 20; i++) {
-                const bar = document.createElement('div');
-                bar.className = 'audio-bar';
-                bar.style.animationDelay = `${Math.random() * 1}s`;
-                visualizer.appendChild(bar);
-            }
-            
-            // 动画循环
-            function visualize() {
-                requestAnimationFrame(visualize);
-                
-                analyser.getByteFrequencyData(dataArray);
-                
-                const bars = visualizer.querySelectorAll('.audio-bar');
-                bars.forEach((bar, i) => {
-                    const height = dataArray[i % bufferLength] * 0.5;
-                    bar.style.height = `${height}px`;
-                    bar.style.animationDuration = `${0.5 + dataArray[i % bufferLength] * 0.005}s`;
-                });
-            }
-            
-            // 开始可视化
-            visualize();
-            
-            // 显示音频可视化
-            setTimeout(() => {
-                visualizer.classList.remove('opacity-0');
-                visualizer.classList.add('opacity-100');
-            }, 2000);
-        }
-        
         // 显示公告弹窗
         function showAnnouncementPopup() {
             const overlay = document.getElementById('announcementOverlay');
@@ -767,49 +537,30 @@
             // 创建粒子和雪花效果
             createParticles();
             createSnowfall();
-            createBackgroundLights();
             
             // 添加雪花飘落动画
             const style = document.createElement('style');
             style.textContent = `
                 @keyframes snowfall {
                     0% { transform: translateY(-10vh) translateX(0); }
-                    100% { transform: translateY(110vh) translateX(${Math.random() * 100 - 50}px); }
+                    100% { transform: translateY(110vh) translateX(50px); }
                 }
             `;
             document.head.appendChild(style);
             
-            // 初始化音频可视化
-            initAudioVisualizer();
+            // 显示公告弹窗
+            setTimeout(showAnnouncementPopup, 500);
             
-            // 背景音乐控制
-            const bgMusic = document.getElementById('bgMusic');
-            const playPauseBtn = document.getElementById('playPauseBtn');
+            // 公告弹窗按钮
+            document.getElementById('closeAnnouncementBtn').addEventListener('click', closeAnnouncementPopup);
+            document.getElementById('closeAnnouncementBtn2').addEventListener('click', closeAnnouncementPopup);
             
-            // 自动播放音乐（需要用户交互后才能播放）
-            let musicPlayed = false;
-            
-            function playMusic() {
-                if (!musicPlayed) {
-                    bgMusic.play().catch(e => {
-                        console.log('需要用户交互才能播放音乐:', e);
-                    });
-                    musicPlayed = true;
-                }
-            }
-            
-            playPauseBtn.addEventListener('click', () => {
-                if (bgMusic.paused) {
-                    bgMusic.play();
-                    playPauseBtn.innerHTML = '<i class="fa fa-pause text-xl"></i>';
-                } else {
-                    bgMusic.pause();
-                    playPauseBtn.innerHTML = '<i class="fa fa-play text-xl"></i>';
+            // 点击遮罩层关闭公告弹窗
+            document.getElementById('announcementOverlay').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('announcementOverlay')) {
+                    closeAnnouncementPopup();
                 }
             });
-            
-            // 点击页面任意位置触发音乐播放
-            document.addEventListener('click', playMusic);
             
             // 主界面按钮
             document.getElementById('openPopupBtn').addEventListener('click', () => {
@@ -824,22 +575,18 @@
                 
                 // 防止背景滚动
                 document.body.style.overflow = 'hidden';
-                playMusic(); // 打开弹窗时播放音乐
             });
             
             document.getElementById('joinTGGroupBtn').addEventListener('click', () => {
                 window.open('https://t.me/+dy8r937YxnljZTRl', '_blank');
-                playMusic();
             });
             
             document.getElementById('joinKOOKGroupBtn').addEventListener('click', () => {
                 window.open('https://kook.vip/ZCSH5g', '_blank');
-                playMusic();
             });
             
             document.getElementById('joinQQGroupBtn').addEventListener('click', () => {
                 window.open('https://qm.qq.com/q/DSmYyv2Rby', '_blank');
-                playMusic();
             });
             
             // 弹出窗口按钮
@@ -879,16 +626,6 @@
                     closePopup();
                 }
             });
-            
-            // 点击公告遮罩层关闭公告弹窗
-            document.getElementById('announcementOverlay').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('announcementOverlay')) {
-                    closeAnnouncementPopup();
-                }
-            });
-            
-            // 显示公告弹窗
-            setTimeout(showAnnouncementPopup, 1000);
         });
     </script>
 </body>
