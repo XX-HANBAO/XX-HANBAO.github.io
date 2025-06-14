@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>遗迹（Relic）</title>
+    <title>遗迹（Relic）- 登录系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     
@@ -17,7 +17,8 @@
                         dark: '#0a0a0a',
                         neon: '#00ffff',
                         accent: '#ff0055',
-                        darkgray: '#1a1a1a'
+                        darkgray: '#1a1a1a',
+                        success: '#00ff66'
                     },
                     fontFamily: {
                         consolas: ['Consolas', 'monospace'],
@@ -30,7 +31,9 @@
                         'shine': 'shine 1.5s infinite',
                         'fade-in': 'fadeIn 0.5s ease-out forwards',
                         'slide-up': 'slideUp 0.5s ease-out forwards',
-                        'border-glow': 'borderGlow 6s linear infinite'
+                        'border-glow': 'borderGlow 6s linear infinite',
+                        'pulse-error': 'pulseError 0.5s cubic-bezier(0.4, 0, 0.6, 1) 2',
+                        'float-error': 'floatError 0.5s ease-in-out'
                     },
                     keyframes: {
                         glitch: {
@@ -60,6 +63,15 @@
                         borderGlow: {
                             '0%': { filter: 'blur(30px) hue-rotate(0deg)' },
                             '100%': { filter: 'blur(30px) hue-rotate(360deg)' }
+                        },
+                        pulseError: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.05)' }
+                        },
+                        floatError: {
+                            '0%': { transform: 'translateX(0)' },
+                            '50%': { transform: 'translateX(-5px)' },
+                            '100%': { transform: 'translateX(0)' }
                         }
                     }
                 }
@@ -98,6 +110,15 @@
                 -ms-overflow-style: none;
                 scrollbar-width: none;
             }
+            .input-focus {
+                @apply border-secondary ring-2 ring-secondary/30;
+            }
+            .form-error {
+                @apply border-accent ring-2 ring-accent/30;
+            }
+            .floating-label {
+                @apply transition-all duration-300 pointer-events-none;
+            }
         }
     </style>
 </head>
@@ -108,103 +129,209 @@
     <!-- 雪花效果 -->
     <div id="snowfall" class="fixed inset-0 pointer-events-none z-0"></div>
     
+    <!-- 音频元素 -->
+    <audio id="input-sound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-keyboard-typing-2062.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="success-sound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-game-success-coin-2082.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="error-sound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-903.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="warning-sound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-917.mp3" type="audio/mpeg">
+    </audio>
+    
     <!-- 主界面 -->
     <main class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-8">
-        <div class="neon-bg backdrop-blur-lg rounded-3xl p-8 md:p-12 max-w-5xl w-full mx-auto 
+        <!-- 顶部导航 -->
+        <nav class="w-full max-w-7xl flex justify-between items-center py-4 px-6">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center animate-pulse-slow">
+                    <i class="fa fa-lock text-xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold gradient-text">遗迹登录系统</h1>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#" class="text-gray-400 hover:text-secondary transition-colors">首页</a>
+                <a href="#" class="text-gray-400 hover:text-secondary transition-colors">下载</a>
+                <a href="#" class="text-gray-400 hover:text-secondary transition-colors">社区</a>
+                <a href="#" class="text-gray-400 hover:text-secondary transition-colors">帮助</a>
+            </div>
+            <button class="md:hidden text-gray-400 text-2xl">
+                <i class="fa fa-bars"></i>
+            </button>
+        </nav>
+        
+        <div class="neon-bg backdrop-blur-lg rounded-3xl p-6 md:p-12 max-w-5xl w-full mx-auto 
                     border border-secondary/30 shadow-lg shadow-secondary/20 animate-fade-in">
             
             <!-- 头部 -->
             <header class="text-center mb-12">
-                <h1 class="text-[clamp(3rem,8vw,6rem)] font-bold gradient-text animate-glitch mb-4">
-                    遗迹
+                <h1 class="text-[clamp(2rem,5vw,4rem)] font-bold gradient-text animate-glitch mb-4">
+                    遗迹认证系统
                 </h1>
                 <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
-                    尖端科技打造公平竞技环境，拒绝任何破坏平衡的行为
+                    安全登录您的遗迹账户，享受极致游戏体验
                 </p>
             </header>
             
-            <!-- 按钮区域 -->
-            <div class="flex flex-col md:flex-row gap-6 justify-center mb-12">
-                <button id="openPopupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
-                                              px-12 py-6 text-2xl font-bold bg-gradient-to-r from-primary to-secondary 
-                                              text-dark transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 
-                                              hover:scale-105">
-                    <span class="relative z-10">点击进入下载界面</span>
-                    <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
-                                 transition-transform duration-500 rounded-full"></span>
-                </button>
-                
-                <button id="joinTGGroupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
-                                              px-12 py-6 text-2xl font-bold bg-secondary text-dark 
-                                              transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
-                                              hover:scale-105">
-                    <span class="relative z-10">
-                        <i class="fa fa-telegram mr-2"></i>加入官方TG群
-                    </span>
-                    <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
-                                 transition-transform duration-500 rounded-full"></span>
-                </button>
-                
-                <button id="joinKOOKGroupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
-                                              px-12 py-6 text-2xl font-bold bg-secondary text-dark 
-                                              transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
-                                              hover:scale-105">
-                    <span class="relative z-10">
-                        <i class="fa fa-comments mr-2"></i>进入官方KOOK群
-                    </span>
-                    <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
-                                 transition-transform duration-500 rounded-full"></span>
-                </button>
-                
-                <button id="joinQQGroupBtn" class="btn-pulse group relative overflow-hidden rounded-full 
-                                              px-12 py-6 text-2xl font-bold bg-secondary text-dark 
-                                              transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
-                                              hover:scale-105">
-                    <span class="relative z-10">
-                        <i class="fa fa-qq mr-2"></i>进入官方QQ群
-                    </span>
-                    <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
-                                 transition-transform duration-500 rounded-full"></span>
-                </button>
-            </div>
-            
-            <!-- 特性列表 -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="neon-bg rounded-xl p-6 border border-secondary/20 hover:border-secondary/50 
-                            transition-all duration-300 hover:shadow-lg hover:shadow-secondary/10 animate-slide-up"
-                     style="animation-delay: 0.1s">
-                    <div class="text-secondary text-3xl mb-3">
-                        <i class="fa fa-shield"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">公益HVH</h3>
-                    <p class="text-gray-400">永久免费，公益软件</p>
+            <!-- 登录卡片 -->
+            <div class="max-w-2xl mx-auto">
+                <!-- 选项卡导航 -->
+                <div class="border-b border-gray-700 flex justify-center mb-8">
+                    <button id="login-tab" class="px-8 py-4 font-bold text-primary border-b-2 border-primary">登录</button>
+                    <button id="register-tab" class="px-8 py-4 font-bold text-gray-400 hover:text-primary transition-colors">注册</button>
+                    <button id="forgot-tab" class="px-8 py-4 font-bold text-gray-400 hover:text-primary transition-colors">忘记密码</button>
                 </div>
                 
-                <div class="neon-bg rounded-xl p-6 border border-secondary/20 hover:border-secondary/50 
-                            transition-all duration-300 hover:shadow-lg hover:shadow-secondary/10 animate-slide-up"
-                     style="animation-delay: 0.2s">
-                    <div class="text-secondary text-3xl mb-3">
-                        <i class="fa fa-bolt"></i>
+                <!-- 表单内容 -->
+                <div id="login-form" class="form-content animate-slide-up">
+                    <div class="neon-bg rounded-2xl p-8 border border-secondary/20">
+                        <!-- 用户名/邮箱输入 -->
+                        <div class="input-container mb-6 relative">
+                            <input type="text" id="login-username" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
+                            <label for="login-username" class="floating-label absolute left-6 top-4 text-gray-400">用户名或邮箱</label>
+                            <i class="fa fa-user absolute right-6 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="login-username-error">请输入有效用户名或邮箱</div>
+                        </div>
+                        
+                        <!-- 密码输入 -->
+                        <div class="input-container mb-8 relative">
+                            <input type="password" id="login-password" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
+                            <label for="login-password" class="floating-label absolute left-6 top-4 text-gray-400">密码</label>
+                            <i id="toggle-password" class="fa fa-eye-slash absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-secondary transition-colors"></i>
+                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="login-password-error">密码至少6位字符</div>
+                        </div>
+                        
+                        <!-- 记住我和忘记密码 -->
+                        <div class="flex justify-between items-center mb-8">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="remember-me" class="w-5 h-5 text-secondary focus:ring-secondary border-gray-700 rounded">
+                                <label for="remember-me" class="ml-3 text-sm text-gray-400">记住我</label>
+                            </div>
+                            <a href="#" id="forgot-password-link" class="text-sm text-primary hover:text-secondary transition-colors">忘记密码?</a>
+                        </div>
+                        
+                        <!-- 登录按钮 -->
+                        <button id="login-button" class="w-full py-4 px-6 rounded-lg bg-gradient-to-r from-primary to-secondary text-dark font-bold 
+                                           shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 
+                                           hover:scale-[1.02] active:scale-[0.98] animate-pulse-slow">
+                            登录
+                            <span id="login-loading" class="loading-spinner hidden ml-2">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                        </button>
+                        
+                        <!-- 注册提示 -->
+                        <p class="text-center mt-6 text-sm text-gray-400">
+                            还没有账户? <a href="#" id="register-link" class="text-primary font-medium hover:text-secondary transition-colors">立即注册</a>
+                        </p>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">极致性能</h3>
-                    <p class="text-gray-400">优化内存管理，低资源占用，高游戏兼容性</p>
                 </div>
                 
-                <div class="neon-bg rounded-xl p-6 border border-secondary/20 hover:border-secondary/50 
-                            transition-all duration-300 hover:shadow-lg hover:shadow-secondary/10 animate-slide-up"
-                     style="animation-delay: 0.3s">
-                    <div class="text-secondary text-3xl mb-3">
-                        <i class="fa fa-users"></i>
+                <!-- 注册表单 -->
+                <div id="register-form" class="form-content hidden animate-slide-up" style="animation-delay: 0.1s">
+                    <div class="neon-bg rounded-2xl p-8 border border-secondary/20">
+                        <!-- 用户名输入 -->
+                        <div class="input-container mb-6 relative">
+                            <input type="text" id="register-username" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
+                            <label for="register-username" class="floating-label absolute left-6 top-4 text-gray-400">用户名</label>
+                            <i class="fa fa-user absolute right-6 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="register-username-error">用户名长度4-20位，仅含字母数字</div>
+                        </div>
+                        
+                        <!-- 邮箱输入 -->
+                        <div class="input-container mb-6 relative">
+                            <input type="email" id="register-email" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
+                            <label for="register-email" class="floating-label absolute left-6 top-4 text-gray-400">电子邮箱</label>
+                            <i class="fa fa-envelope absolute right-6 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="register-email-error">请输入有效邮箱地址</div>
+                        </div>
+                        
+                        <!-- 密码输入 -->
+                        <div class="input-container mb-6 relative">
+                            <input type="password" id="register-password" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
+                            <label for="register-password" class="floating-label absolute left-6 top-4 text-gray-400">密码</label>
+                            <i id="toggle-register-password" class="fa fa-eye-slash absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-secondary transition-colors"></i>
+                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="register-password-error">密码至少8位，含大小写字母和数字</div>
+                        </div>
+                        
+                        <!-- 确认密码输入 -->
+                        <div class="input-container mb-8 relative">
+                            <input type="password" id="register-confirm-password" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
+                            <label for="register-confirm-password" class="floating-label absolute left-6 top-4 text-gray-400">确认密码</label>
+                            <i id="toggle-confirm-password" class="fa fa-eye-slash absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-secondary transition-colors"></i>
+                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="register-confirm-password-error">两次输入的密码不一致</div>
+                        </div>
+                        
+                        <!-- 注册按钮 -->
+                        <button id="register-button" class="w-full py-4 px-6 rounded-lg bg-gradient-to-r from-primary to-secondary text-dark font-bold 
+                                           shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 
+                                           hover:scale-[1.02] active:scale-[0.98] animate-pulse-slow">
+                            注册
+                            <span id="register-loading" class="loading-spinner hidden ml-2">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                        </button>
+                        
+                        <!-- 已有账户提示 -->
+                        <p class="text-center mt-6 text-sm text-gray-400">
+                            已有账户? <a href="#" id="login-register-link" class="text-primary font-medium hover:text-secondary transition-colors">立即登录</a>
+                        </p>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">专业社区</h3>
-                    <p class="text-gray-400">活跃的玩家社区，随时提供技术支持和交流</p>
+                </div>
+                
+                <!-- 忘记密码表单 -->
+                <div id="forgot-form" class="form-content hidden animate-slide-up" style="animation-delay: 0.2s">
+                    <div class="neon-bg rounded-2xl p-8 border border-secondary/20">
+                        <!-- 用户名输入 -->
+                        <div class="input-container mb-6 relative">
+                            <input type="text" id="forgot-username" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
+                            <label for="forgot-username" class="floating-label absolute left-6 top-4 text-gray-400">用户名</label>
+                            <i class="fa fa-user absolute right-6 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="forgot-username-error">请输入注册时的用户名</div>
+                        </div>
+                        
+                        <!-- 新密码输入 -->
+                        <div class="input-container mb-6 relative">
+                            <input type="password" id="forgot-new-password" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
+                            <label for="forgot-new-password" class="floating-label absolute left-6 top-4 text-gray-400">新密码</label>
+                            <i id="toggle-new-password" class="fa fa-eye-slash absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-secondary transition-colors"></i>
+                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="forgot-password-error">密码至少8位，含大小写字母和数字</div>
+                        </div>
+                        
+                        <!-- 确认新密码输入 -->
+                        <div class="input-container mb-8 relative">
+                            <input type="password" id="forgot-confirm-password" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
+                            <label for="forgot-confirm-password" class="floating-label absolute left-6 top-4 text-gray-400">确认新密码</label>
+                            <i id="toggle-confirm-new-password" class="fa fa-eye-slash absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-secondary transition-colors"></i>
+                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="forgot-confirm-password-error">两次输入的密码不一致</div>
+                        </div>
+                        
+                        <!-- 重置按钮 -->
+                        <button id="forgot-button" class="w-full py-4 px-6 rounded-lg bg-gradient-to-r from-primary to-secondary text-dark font-bold 
+                                           shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 
+                                           hover:scale-[1.02] active:scale-[0.98] animate-pulse-slow">
+                            重置密码
+                            <span id="forgot-loading" class="loading-spinner hidden ml-2">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                        </button>
+                        
+                        <!-- 返回登录提示 -->
+                        <p class="text-center mt-6 text-sm text-gray-400">
+                            不需要重置? <a href="#" id="login-forgot-link" class="text-primary font-medium hover:text-secondary transition-colors">返回登录</a>
+                        </p>
+                    </div>
                 </div>
             </div>
             
             <!-- 底部信息 -->
-            <footer class="text-center text-gray-500 mt-12">
+            <footer class="text-center text-gray-500 mt-12 pt-8 border-t border-gray-800">
                 <p>© 2025 遗迹科技. 保留所有权利.</p>
-                <p class="mt-2 text-sm">使用前请仔细阅读用户协议和隐私政策</p>
+                <p class="mt-2 text-sm">登录即表示您同意我们的用户协议和隐私政策</p>
             </footer>
         </div>
     </main>
@@ -277,7 +404,7 @@
         </div>
     </div>
     
-    <!-- 弹出窗口 -->
+    <!-- 下载弹出窗口 -->
     <div id="popupOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-dark/90 
                                  opacity-0 pointer-events-none transition-opacity duration-500">
         <div id="popup" class="relative w-full max-w-5xl mx-4 rounded-3xl overflow-hidden 
@@ -302,11 +429,11 @@
                 <!-- 标题 -->
                 <div class="text-center mb-10">
                     <h2 class="text-[clamp(2.5rem,6vw,4rem)] font-bold gradient-text animate-glitch">
-                        遗迹主页
+                        遗迹下载中心
                     </h2>
                 </div>
                 
-                <!-- 描述 -->
+                <!-- 下载说明 -->
                 <div class="mb-12 max-w-3xl mx-auto">
                     <div class="neon-bg rounded-xl p-6 md:p-8 border border-secondary/30">
                         <h3 class="text-2xl font-bold text-secondary mb-4">HVH核心工具</h3>
@@ -345,7 +472,7 @@
                                                   text-dark transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 
                                                   hover:scale-105" onclick="openDownloadUrl('relic')">
                         <span class="relative z-10 flex items-center justify-center">
-                            <i class="fa fa-download mr-2"></i> 下载遗迹
+                            <i class="fa fa-download mr-2"></i> 下载注入器
                         </span>
                         <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
                                      transition-transform duration-500 rounded-full"></span>
@@ -363,27 +490,52 @@
                     </button>
                 </div>
                 
-                <!-- 操作按钮 -->
-                <div class="flex flex-col md:flex-row gap-6 justify-center">
-                    <button id="completeInstallBtn" class="group relative overflow-hidden rounded-full 
-                                                        px-10 py-5 text-xl font-bold bg-gradient-to-r from-green-500 to-teal-400 
-                                                        text-dark transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 
-                                                        hover:scale-105">
+                <!-- 社交按钮 -->
+                <div class="flex flex-col md:flex-row gap-6 justify-center mb-12">
+                    <button id="joinTGGroupBtn" class="group relative overflow-hidden rounded-full 
+                                                  px-10 py-5 text-xl font-bold bg-secondary text-dark 
+                                                  transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
+                                                  hover:scale-105" onclick="openTGGroup()">
                         <span class="relative z-10 flex items-center justify-center">
-                            <i class="fa fa-check-circle mr-2"></i> 完成安装并关闭浏览器
+                            <i class="fa fa-telegram mr-2"></i> 加入TG群
                         </span>
                         <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
                                      transition-transform duration-500 rounded-full"></span>
                     </button>
                     
-                    <button id="returnHomeBtn" class="group relative overflow-hidden rounded-full 
-                                                  px-10 py-5 text-xl font-bold bg-transparent border border-gray-600 
-                                                  text-gray-400 transition-all duration-300 hover:border-gray-400 
-                                                  hover:text-white hover:scale-105">
+                    <button id="joinQQGroupBtn" class="group relative overflow-hidden rounded-full 
+                                                  px-10 py-5 text-xl font-bold bg-secondary text-dark 
+                                                  transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
+                                                  hover:scale-105" onclick="openQQGroup()">
                         <span class="relative z-10 flex items-center justify-center">
-                            <i class="fa fa-home mr-2"></i> 返回主页
+                            <i class="fa fa-qq mr-2"></i> 加入QQ群
                         </span>
-                        <span class="absolute inset-0 bg-white/5 transform scale-0 group-hover:scale-100 
+                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
+                                     transition-transform duration-500 rounded-full"></span>
+                    </button>
+                    
+                    <button id="joinKOOKGroupBtn" class="group relative overflow-hidden rounded-full 
+                                                  px-10 py-5 text-xl font-bold bg-secondary text-dark 
+                                                  transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
+                                                  hover:scale-105" onclick="openKOOKGroup()">
+                        <span class="relative z-10 flex items-center justify-center">
+                            <i class="fa fa-comments mr-2"></i> 加入KOOK群
+                        </span>
+                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
+                                     transition-transform duration-500 rounded-full"></span>
+                    </button>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="flex flex-col md:flex-row gap-6 justify-center">
+                    <button id="closeBrowserBtn" class="group relative overflow-hidden rounded-full 
+                                                        px-10 py-5 text-xl font-bold bg-gradient-to-r from-green-500 to-teal-400 
+                                                        text-dark transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 
+                                                        hover:scale-105" onclick="closeBrowser()">
+                        <span class="relative z-10 flex items-center justify-center">
+                            <i class="fa fa-power-off mr-2"></i> 关闭浏览器
+                        </span>
+                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
                                      transition-transform duration-500 rounded-full"></span>
                     </button>
                 </div>
@@ -391,22 +543,16 @@
         </div>
     </div>
     
-    <!-- 下载进度提示 -->
-    <div id="downloadNotification" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 
-                                        bg-dark/90 border border-secondary/50 rounded-lg p-4 max-w-sm w-full 
-                                        shadow-lg shadow-secondary/20 opacity-0 pointer-events-none transition-opacity duration-300 
-                                        z-50 flex items-center">
-        <div class="mr-4 text-secondary text-xl">
-            <i class="fa fa-download"></i>
+    <!-- 通知组件 -->
+    <div id="notification" class="fixed top-6 right-6 bg-darkgray border border-secondary/30 rounded-lg p-4 max-w-sm 
+                                shadow-lg shadow-secondary/20 opacity-0 pointer-events-none transition-opacity duration-300 
+                                z-50 flex items-start">
+        <div class="mr-4 text-secondary text-xl mt-1">
+            <i id="notification-icon" class="fa fa-check-circle"></i>
         </div>
         <div>
-            <h4 class="font-bold text-white" id="notificationTitle">下载中</h4>
-            <p class="text-gray-400 text-sm" id="notificationMessage">请等待...</p>
-        </div>
-        <div class="ml-auto">
-            <div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
-                <div id="notificationProgress" class="h-full bg-gradient-to-r from-primary to-secondary w-0 transition-all duration-300"></div>
-            </div>
+            <h3 id="notification-title" class="font-bold text-white">操作成功</h3>
+            <p id="notification-message" class="text-gray-400 text-sm">您的请求已成功处理</p>
         </div>
     </div>
     
@@ -461,45 +607,84 @@
                 snowContainer.appendChild(flake);
             }
             
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    @keyframes snowfall {
+                        0% { transform: translateY(-10vh) translateX(0); }
+                        100% { transform: translateY(110vh) translateX(${Math.random() * 100}px); }
+                    }
+                </style>
+            `);
+            
             document.getElementById('snowfall').appendChild(snowContainer);
         }
         
-        // 显示下载通知
-        function showDownloadNotification(title, message, progress) {
-            const notification = document.getElementById('downloadNotification');
-            document.getElementById('notificationTitle').textContent = title;
-            document.getElementById('notificationMessage').textContent = message;
-            document.getElementById('notificationProgress').style.width = `${progress}%`;
+        // 播放输入音效
+        function playInputSound() {
+            const sound = document.getElementById('input-sound');
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log('输入音效播放失败:', e));
+        }
+        
+        // 播放成功音效
+        function playSuccessSound() {
+            const sound = document.getElementById('success-sound');
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log('成功音效播放失败:', e));
+        }
+        
+        // 播放错误音效
+        function playErrorSound() {
+            const sound = document.getElementById('error-sound');
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log('错误音效播放失败:', e));
+        }
+        
+        // 播放警告音效
+        function playWarningSound() {
+            const sound = document.getElementById('warning-sound');
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log('警告音效播放失败:', e));
+        }
+        
+        // 显示通知
+        function showNotification(type, title, message) {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notification-icon');
             
             notification.classList.remove('opacity-0');
             notification.classList.add('opacity-100');
             
-            // 3秒后自动隐藏
+            // 设置通知类型
+            if (type === 'success') {
+                icon.className = 'fa fa-check-circle text-success';
+                notification.classList.remove('border-accent', 'border-secondary/30');
+                notification.classList.add('border-success');
+                playSuccessSound();
+            } else if (type === 'error') {
+                icon.className = 'fa fa-exclamation-circle text-accent';
+                notification.classList.remove('border-success', 'border-secondary/30');
+                notification.classList.add('border-accent');
+                playErrorSound();
+            } else if (type === 'warning') {
+                icon.className = 'fa fa-exclamation-triangle text-yellow-400';
+                notification.classList.remove('border-success', 'border-accent');
+                notification.classList.add('border-yellow-400/30');
+                playWarningSound();
+            } else if (type === 'info') {
+                icon.className = 'fa fa-info-circle text-secondary';
+                notification.classList.remove('border-success', 'border-accent', 'border-yellow-400/30');
+                notification.classList.add('border-secondary/30');
+            }
+            
+            document.getElementById('notification-title').textContent = title;
+            document.getElementById('notification-message').textContent = message;
+            
+            // 3秒后隐藏
             setTimeout(() => {
                 notification.classList.remove('opacity-100');
                 notification.classList.add('opacity-0');
             }, 3000);
-        }
-        
-        // 打开下载网址
-        function openDownloadUrl(type) {
-            const downloadUrls = {
-                relic: 'https://wwbq.lanzn.com/iSpJ62ycinid',
-                config: 'https://wwbq.lanzoup.com/ixtgw2xmwuxi'
-            };
-            
-            const fileNames = {
-                relic: '遗迹整合包',
-                config: '连跳配置'
-            };
-            
-            // 显示提示信息
-            showDownloadNotification(`即将打开${fileNames[type]}下载页面`, '请复制下载链接', 100);
-            
-            // 3秒后打开网址
-            setTimeout(() => {
-                window.open(downloadUrls[type], '_blank');
-            }, 1000);
         }
         
         // 显示公告弹窗
@@ -532,101 +717,491 @@
             }, 300);
         }
         
-        // 页面加载后初始化
+        // 打开下载弹窗
+        function openDownloadPopup() {
+            const overlay = document.getElementById('popupOverlay');
+            const popup = document.getElementById('popup');
+            
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                popup.classList.remove('scale-95');
+                popup.classList.add('scale-100');
+            }, 100);
+            
+            // 防止背景滚动
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭下载弹窗
+        function closeDownloadPopup() {
+            const overlay = document.getElementById('popupOverlay');
+            const popup = document.getElementById('popup');
+            
+            popup.classList.remove('scale-100');
+            popup.classList.add('scale-95');
+            
+            setTimeout(() => {
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                // 恢复背景滚动
+                document.body.style.overflow = '';
+            }, 300);
+        }
+        
+        // 打开下载链接
+        function openDownloadUrl(type) {
+            const downloadUrls = {
+                relic: 'https://wwbq.lanzn.com/iSpJ62ycinid',
+                config: 'https://wwbq.lanzoup.com/ixtgw2xmwuxi'
+            };
+            
+            const fileNames = {
+                relic: '遗迹功能注入器',
+                config: '不检测连跳'
+            };
+            
+            showNotification('info', `下载${fileNames[type]}`, '正在打开下载页面...');
+            
+            // 打开下载链接
+            window.open(downloadUrls[type], '_blank');
+        }
+        
+        // 打开TG群
+        function openTGGroup() {
+            window.open('https://t.me/+dy8r937YxnljZTRl', '_blank');
+            showNotification('info', '打开TG群', '正在打开遗迹官方TG群...');
+        }
+        
+        // 打开QQ群
+        function openQQGroup() {
+            window.open('https://qm.qq.com/q/DSmYyv2Rby', '_blank');
+            showNotification('info', '打开QQ群', '正在打开遗迹官方QQ群...');
+        }
+        
+        // 打开KOOK群
+        function openKOOKGroup() {
+            window.open('https://kook.vip/ZCSH5g', '_blank');
+            showNotification('info', '打开KOOK群', '正在打开遗迹官方KOOK群...');
+        }
+        
+        // 关闭浏览器
+        function closeBrowser() {
+            showNotification('info', '关闭浏览器', '正在关闭浏览器...');
+            
+            // 尝试关闭浏览器
+            setTimeout(() => {
+                if (window.opener && !window.opener.closed) {
+                    window.close();
+                } else {
+                    showNotification('error', '关闭失败', '浏览器安全策略限制，无法自动关闭');
+                }
+            }, 1000);
+        }
+        
+        // 模拟用户数据存储
+        const userDatabase = {
+            users: [
+                { id: "1", username: "relic_user", email: "user@relic.com", password: "Relic12345", createdAt: "2025-01-01" }
+            ]
+        };
+        
+        // 表单切换函数
+        function showForm(formId) {
+            document.querySelectorAll('.form-content').forEach(form => {
+                form.classList.add('hidden');
+                form.classList.remove('animate-slide-up');
+            });
+            
+            document.getElementById(formId).classList.remove('hidden');
+            document.getElementById(formId).classList.add('animate-slide-up');
+            
+            // 更新选项卡样式
+            document.querySelectorAll('[id$="-tab"]').forEach(tab => {
+                tab.classList.remove('text-primary', 'border-primary');
+                tab.classList.add('text-gray-400');
+            });
+            
+            document.getElementById(`${formId.replace('-form', '')}-tab`).classList.remove('text-gray-400');
+            document.getElementById(`${formId.replace('-form', '')}-tab`).classList.add('text-primary', 'border-b-2', 'border-primary');
+            
+            // 重置表单
+            document.getElementById(formId).querySelector('form')?.reset();
+            clearFormErrors(formId);
+        }
+        
+        // 清除表单错误
+        function clearFormErrors(formId) {
+            const form = document.getElementById(formId);
+            const errorElements = form.querySelectorAll('.input-container');
+            
+            errorElements.forEach(el => {
+                el.classList.remove('form-error', 'animate-pulse-error', 'animate-float-error');
+                el.querySelector('.error-message').style.opacity = '0';
+            });
+        }
+        
+        // 显示表单错误
+        function showFormError(inputId, message) {
+            const input = document.getElementById(inputId);
+            const container = input.closest('.input-container');
+            const errorElement = container.querySelector('.error-message');
+            
+            container.classList.add('form-error', 'animate-pulse-error');
+            errorElement.style.opacity = '1';
+            errorElement.textContent = message;
+            
+            // 添加输入框晃动效果
+            input.classList.add('animate-float-error');
+            setTimeout(() => {
+                input.classList.remove('animate-float-error');
+            }, 500);
+            
+            playErrorSound();
+        }
+        
+        // 密码显示/隐藏功能
+        function setupPasswordToggle(toggleElement, passwordInput) {
+            toggleElement.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                toggleElement.classList.toggle('fa-eye-slash');
+                toggleElement.classList.toggle('fa-eye');
+            });
+        }
+        
+        // 输入框标签浮动效果
+        function setupFloatingLabels() {
+            document.querySelectorAll('.input-container input').forEach(input => {
+                const label = input.closest('.input-container').querySelector('label');
+                
+                input.addEventListener('focus', () => {
+                    label.classList.add('top-[-14px]', 'text-secondary', 'text-sm');
+                });
+                
+                input.addEventListener('blur', () => {
+                    if (input.value.trim() === '') {
+                        label.classList.remove('top-[-14px]', 'text-secondary', 'text-sm');
+                        label.classList.add('top-4', 'text-gray-400');
+                    }
+                });
+                
+                // 初始化检查
+                if (input.value.trim() !== '') {
+                    label.classList.add('top-[-14px]', 'text-secondary', 'text-sm');
+                }
+            });
+        }
+        
+        // 保存用户设置
+        function saveUserSettings(username, password, rememberMe) {
+            if (rememberMe) {
+                localStorage.setItem('rememberedUsername', username);
+                localStorage.setItem('rememberedPassword', password);
+                localStorage.setItem('rememberMe', 'true');
+            } else {
+                localStorage.removeItem('rememberedUsername');
+                localStorage.removeItem('rememberedPassword');
+                localStorage.removeItem('rememberMe');
+            }
+        }
+        
+        // 加载用户设置
+        function loadUserSettings() {
+            const rememberedUsername = localStorage.getItem('rememberedUsername');
+            const rememberedPassword = localStorage.getItem('rememberedPassword');
+            const rememberMe = localStorage.getItem('rememberMe') === 'true';
+            
+            if (rememberedUsername && rememberedPassword && rememberMe) {
+                document.getElementById('login-username').value = rememberedUsername;
+                document.getElementById('login-password').value = rememberedPassword;
+                document.getElementById('remember-me').checked = rememberMe;
+                
+                // 触发标签上浮
+                const loginUsernameLabel = document.getElementById('login-username').closest('.input-container').querySelector('label');
+                const loginPasswordLabel = document.getElementById('login-password').closest('.input-container').querySelector('label');
+                
+                loginUsernameLabel.classList.add('top-[-14px]', 'text-secondary', 'text-sm');
+                loginPasswordLabel.classList.add('top-[-14px]', 'text-secondary', 'text-sm');
+            }
+        }
+        
+        // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', () => {
             // 创建粒子和雪花效果
             createParticles();
             createSnowfall();
             
-            // 添加雪花飘落动画
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes snowfall {
-                    0% { transform: translateY(-10vh) translateX(0); }
-                    100% { transform: translateY(110vh) translateX(50px); }
-                }
-            `;
-            document.head.appendChild(style);
+            // 加载用户设置
+            loadUserSettings();
+            
+            // 设置输入框标签浮动效果
+            setupFloatingLabels();
             
             // 显示公告弹窗
-            setTimeout(showAnnouncementPopup, 500);
+            setTimeout(showAnnouncementPopup, 1000);
             
             // 公告弹窗按钮
             document.getElementById('closeAnnouncementBtn').addEventListener('click', closeAnnouncementPopup);
             document.getElementById('closeAnnouncementBtn2').addEventListener('click', closeAnnouncementPopup);
-            
-            // 点击遮罩层关闭公告弹窗
             document.getElementById('announcementOverlay').addEventListener('click', (e) => {
                 if (e.target === document.getElementById('announcementOverlay')) {
                     closeAnnouncementPopup();
                 }
             });
             
-            // 主界面按钮
-            document.getElementById('openPopupBtn').addEventListener('click', () => {
-                const overlay = document.getElementById('popupOverlay');
-                const popup = document.getElementById('popup');
+            // 选项卡切换
+            document.getElementById('login-tab').addEventListener('click', () => showForm('login-form'));
+            document.getElementById('register-tab').addEventListener('click', () => showForm('register-form'));
+            document.getElementById('forgot-tab').addEventListener('click', () => showForm('forgot-form'));
+            
+            // 注册链接
+            document.getElementById('register-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                showForm('register-form');
+            });
+            
+            document.getElementById('login-register-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                showForm('login-form');
+            });
+            
+            document.getElementById('forgot-password-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                showForm('forgot-form');
+            });
+            
+            document.getElementById('login-forgot-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                showForm('login-form');
+            });
+            
+            // 密码显示/隐藏
+            setupPasswordToggle(document.getElementById('toggle-password'), document.getElementById('login-password'));
+            setupPasswordToggle(document.getElementById('toggle-register-password'), document.getElementById('register-password'));
+            setupPasswordToggle(document.getElementById('toggle-confirm-password'), document.getElementById('register-confirm-password'));
+            setupPasswordToggle(document.getElementById('toggle-new-password'), document.getElementById('forgot-new-password'));
+            setupPasswordToggle(document.getElementById('toggle-confirm-new-password'), document.getElementById('forgot-confirm-password'));
+            
+            // 输入框提示音
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', playInputSound);
+            });
+            
+            // 登录按钮
+            document.getElementById('login-button').addEventListener('click', () => {
+                if (!validateLoginForm()) return;
                 
-                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                const username = document.getElementById('login-username').value.trim();
+                const password = document.getElementById('login-password').value.trim();
+                const rememberMe = document.getElementById('remember-me').checked;
+                
+                // 显示加载状态
+                document.getElementById('login-button').disabled = true;
+                document.getElementById('login-loading').classList.remove('hidden');
+                
+                // 模拟登录
                 setTimeout(() => {
-                    popup.classList.remove('scale-95');
-                    popup.classList.add('scale-100');
-                }, 100);
+                    const user = userDatabase.users.find(
+                        u => (u.username === username || u.email === username) && u.password === password
+                    );
+                    
+                    if (user) {
+                        // 保存用户设置
+                        saveUserSettings(username, password, rememberMe);
+                        
+                        showNotification('success', '登录成功', '正在下载遗迹注入器和连跳...');
+                        
+                        // 登录成功后打开下载弹窗
+                        setTimeout(openDownloadPopup, 1500);
+                    } else {
+                        showNotification('error', '登录失败', '用户名或密码不正确');
+                    }
+                    
+                    // 恢复按钮状态
+                    document.getElementById('login-button').disabled = false;
+                    document.getElementById('login-loading').classList.add('hidden');
+                }, 1000);
+            });
+            
+            // 注册按钮
+            document.getElementById('register-button').addEventListener('click', () => {
+                if (!validateRegisterForm()) return;
                 
-                // 防止背景滚动
-                document.body.style.overflow = 'hidden';
-            });
-            
-            document.getElementById('joinTGGroupBtn').addEventListener('click', () => {
-                window.open('https://t.me/+dy8r937YxnljZTRl', '_blank');
-            });
-            
-            document.getElementById('joinKOOKGroupBtn').addEventListener('click', () => {
-                window.open('https://kook.vip/ZCSH5g', '_blank');
-            });
-            
-            document.getElementById('joinQQGroupBtn').addEventListener('click', () => {
-                window.open('https://qm.qq.com/q/DSmYyv2Rby', '_blank');
-            });
-            
-            // 弹出窗口按钮
-            document.getElementById('closePopupBtn').addEventListener('click', closePopup);
-            document.getElementById('returnHomeBtn').addEventListener('click', closePopup);
-            
-            function closePopup() {
-                const overlay = document.getElementById('popupOverlay');
-                const popup = document.getElementById('popup');
+                const username = document.getElementById('register-username').value.trim();
+                const email = document.getElementById('register-email').value.trim();
+                const password = document.getElementById('register-password').value.trim();
                 
-                popup.classList.remove('scale-100');
-                popup.classList.add('scale-95');
+                // 显示加载状态
+                document.getElementById('register-button').disabled = true;
+                document.getElementById('register-loading').classList.remove('hidden');
                 
+                // 模拟注册
                 setTimeout(() => {
-                    overlay.classList.add('opacity-0', 'pointer-events-none');
-                }, 300);
-                
-                // 恢复背景滚动
-                document.body.style.overflow = '';
-            }
-            
-            // 下载按钮事件已通过onclick属性设置
-            
-            document.getElementById('completeInstallBtn').addEventListener('click', () => {
-                // 关闭浏览器窗口
-                window.close();
-                
-                // 如果无法关闭（由于浏览器安全限制），则显示提示
-                setTimeout(() => {
-                    alert('如果浏览器阻止了自动关闭，请手动关闭此窗口。');
-                }, 500);
+                    const newUser = {
+                        id: Date.now().toString(),
+                        username,
+                        email,
+                        password,
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    userDatabase.users.push(newUser);
+                    showNotification('success', '注册成功', '请使用新账户登录');
+                    
+                    // 存储用户数据
+                    localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+                    
+                    // 切换到登录页面
+                    showForm('login-form');
+                    
+                    // 恢复按钮状态
+                    document.getElementById('register-button').disabled = false;
+                    document.getElementById('register-loading').classList.add('hidden');
+                }, 1000);
             });
             
-            // 点击遮罩层关闭弹窗
+            // 忘记密码按钮
+            document.getElementById('forgot-button').addEventListener('click', () => {
+                if (!validateForgotForm()) return;
+                
+                const username = document.getElementById('forgot-username').value.trim();
+                const newPassword = document.getElementById('forgot-new-password').value.trim();
+                
+                // 显示加载状态
+                document.getElementById('forgot-button').disabled = true;
+                document.getElementById('forgot-loading').classList.remove('hidden');
+                
+                // 模拟重置密码
+                setTimeout(() => {
+                    const userIndex = userDatabase.users.findIndex(user => user.username === username);
+                    if (userIndex !== -1) {
+                        userDatabase.users[userIndex].password = newPassword;
+                        showNotification('success', '密码重置成功', '请使用新密码登录');
+                        
+                        // 存储更新后的数据
+                        localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+                        
+                        // 切换到登录页面
+                        showForm('login-form');
+                    } else {
+                        showNotification('error', '重置失败', '用户名不存在');
+                    }
+                    
+                    // 恢复按钮状态
+                    document.getElementById('forgot-button').disabled = false;
+                    document.getElementById('forgot-loading').classList.add('hidden');
+                }, 1000);
+            });
+            
+            // 下载弹窗按钮
+            document.getElementById('closePopupBtn').addEventListener('click', closeDownloadPopup);
             document.getElementById('popupOverlay').addEventListener('click', (e) => {
                 if (e.target === document.getElementById('popupOverlay')) {
-                    closePopup();
+                    closeDownloadPopup();
                 }
             });
         });
+        
+        // 验证登录表单
+        function validateLoginForm() {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+            let isValid = true;
+            
+            clearFormErrors('login-form');
+            
+            if (!username) {
+                showFormError('login-username', '请输入用户名或邮箱');
+                isValid = false;
+            }
+            
+            if (!password) {
+                showFormError('login-password', '请输入密码');
+                isValid = false;
+            } else if (password.length < 6) {
+                showFormError('login-password', '密码至少6位字符');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // 验证注册表单
+        function validateRegisterForm() {
+            const username = document.getElementById('register-username').value.trim();
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value.trim();
+            const confirmPassword = document.getElementById('register-confirm-password').value.trim();
+            let isValid = true;
+            
+            clearFormErrors('register-form');
+            
+            if (!username) {
+                showFormError('register-username', '请输入用户名');
+                isValid = false;
+            } else if (!/^[a-zA-Z0-9]{4,20}$/.test(username)) {
+                showFormError('register-username', '用户名长度4-20位，仅含字母数字');
+                isValid = false;
+            }
+            
+            if (!email) {
+                showFormError('register-email', '请输入邮箱地址');
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showFormError('register-email', '请输入有效邮箱地址');
+                isValid = false;
+            } else if (userDatabase.users.some(user => user.email === email)) {
+                showFormError('register-email', '该邮箱已被注册');
+                isValid = false;
+            }
+            
+            if (!password) {
+                showFormError('register-password', '请输入密码');
+                isValid = false;
+            } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(password)) {
+                showFormError('register-password', '密码至少8位，含大小写字母和数字');
+                isValid = false;
+            }
+            
+            if (password !== confirmPassword) {
+                showFormError('register-confirm-password', '两次输入的密码不一致');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // 验证忘记密码表单
+        function validateForgotForm() {
+            const username = document.getElementById('forgot-username').value.trim();
+            const newPassword = document.getElementById('forgot-new-password').value.trim();
+            const confirmPassword = document.getElementById('forgot-confirm-password').value.trim();
+            let isValid = true;
+            
+            clearFormErrors('forgot-form');
+            
+            if (!username) {
+                showFormError('forgot-username', '请输入用户名');
+                isValid = false;
+            } else if (!userDatabase.users.some(user => user.username === username)) {
+                showFormError('forgot-username', '该用户名未注册');
+                isValid = false;
+            }
+            
+            if (!newPassword) {
+                showFormError('forgot-new-password', '请输入新密码');
+                isValid = false;
+            } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(newPassword)) {
+                showFormError('forgot-new-password', '密码至少8位，含大小写字母和数字');
+                isValid = false;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showFormError('forgot-confirm-password', '两次输入的密码不一致');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
     </script>
 </body>
 </html>
