@@ -1,375 +1,632 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>遗迹（Relic）- 登录系统</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>遗迹（Relic）</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#36CBCB',
+            accent: '#FF7D00',
+            dark: '#121212',
+            light: '#F8FAFC',
+            neon: '#00F5FF',
+            'dark-gray': '#1E1E1E',
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .text-neon {
+        text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
+      }
+      .neon-border {
+        box-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
+      }
+      .pulse-slow {
+        animation: pulse 3s infinite;
+      }
+      .float {
+        animation: float 6s ease-in-out infinite;
+      }
+      .float-delay-1 {
+        animation: float 6s ease-in-out 1s infinite;
+      }
+      .float-delay-2 {
+        animation: float 6s ease-in-out 2s infinite;
+      }
+      .float-delay-3 {
+        animation: float 6s ease-in-out 3s infinite;
+      }
+    }
+  </style>
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      background-color: #000;
+      color: #f0f0f0;
+    }
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#ff0055',
-                        secondary: '#00ffff',
-                        dark: '#0a0a0a',
-                        neon: '#00ffff',
-                        accent: '#ff0055',
-                        darkgray: '#1a1a1a',
-                        success: '#00ff66'
-                    },
-                    fontFamily: {
-                        consolas: ['Consolas', 'monospace'],
-                    },
-                    animation: {
-                        'glitch': 'glitch 2s infinite',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 3s ease-in-out infinite',
-                        'rotate': 'rotate 20s linear infinite',
-                        'shine': 'shine 1.5s infinite',
-                        'fade-in': 'fadeIn 0.5s ease-out forwards',
-                        'slide-up': 'slideUp 0.5s ease-out forwards',
-                        'border-glow': 'borderGlow 6s linear infinite',
-                        'pulse-error': 'pulseError 0.5s cubic-bezier(0.4, 0, 0.6, 1) 2',
-                        'float-error': 'floatError 0.5s ease-in-out'
-                    },
-                    keyframes: {
-                        glitch: {
-                            '0%, 100%': { textShadow: '2px 2px #00ffff, -2px -2px #ff0055' },
-                            '20%': { textShadow: '-2px -2px #00ffff, 2px 2px #ff0055' },
-                            '40%': { textShadow: '2px -2px #00ffff, -2px 2px #ff0055' },
-                            '60%': { textShadow: '-2px 2px #00ffff, 2px -2px #ff0055' },
-                            '80%': { textShadow: '2px 2px #00ffff, -2px -2px #ff0055' }
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' }
-                        },
-                        shine: {
-                            '0%': { boxShadow: '0 0 10px rgba(0, 255, 255, 0.5)' },
-                            '50%': { boxShadow: '0 0 25px rgba(0, 255, 255, 0.8)' },
-                            '100%': { boxShadow: '0 0 10px rgba(0, 255, 255, 0.5)' }
-                        },
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' }
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' }
-                        },
-                        borderGlow: {
-                            '0%': { filter: 'blur(30px) hue-rotate(0deg)' },
-                            '100%': { filter: 'blur(30px) hue-rotate(360deg)' }
-                        },
-                        pulseError: {
-                            '0%, 100%': { transform: 'scale(1)' },
-                            '50%': { transform: 'scale(1.05)' }
-                        },
-                        floatError: {
-                            '0%': { transform: 'translateX(0)' },
-                            '50%': { transform: 'translateX(-5px)' },
-                            '100%': { transform: 'translateX(0)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.7;
+      }
+    }
     
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .text-glow {
-                text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
-            }
-            .neon-border {
-                border: 2px solid transparent;
-                border-image: linear-gradient(45deg, #ff0055, #00ffff) 1;
-            }
-            .neon-bg {
-                background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(10, 10, 10, 0.9));
-            }
-            .gradient-text {
-                background-clip: text;
-                -webkit-background-clip: text;
-                color: transparent;
-                background-image: linear-gradient(45deg, #ff0055, #00ffff);
-            }
-            .btn-pulse:hover {
-                animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-            }
-            .scrollbar-hidden::-webkit-scrollbar {
-                display: none;
-            }
-            .scrollbar-hidden {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-            }
-            .input-focus {
-                @apply border-secondary ring-2 ring-secondary/30;
-            }
-            .form-error {
-                @apply border-accent ring-2 ring-accent/30;
-            }
-            .floating-label {
-                @apply transition-all duration-300 pointer-events-none;
-            }
-        }
-    </style>
+    @keyframes neon-glow {
+      0% {
+        text-shadow: 0 0 5px #00F5FF, 0 0 10px #00F5FF, 0 0 15px #00F5FF;
+      }
+      50% {
+        text-shadow: 0 0 10px #00F5FF, 0 0 20px #00F5FF, 0 0 30px #00F5FF;
+      }
+      100% {
+        text-shadow: 0 0 5px #00F5FF, 0 0 10px #00F5FF, 0 0 15px #00F5FF;
+      }
+    }
+    
+    .neon-glow {
+      animation: neon-glow 2s ease-in-out infinite;
+    }
+    
+    @keyframes snow-fall {
+      0% {
+        transform: translateY(-100vh) rotate(0deg);
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+      }
+    }
+    
+    .snowflake {
+      position: fixed;
+      top: -10%;
+      pointer-events: none;
+      animation: snow-fall 15s linear infinite;
+    }
+    
+    .snowflake::before {
+      content: "❅";
+      font-size: 1rem;
+      color: white;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background-color: #165DFF;
+      transition: width 0.3s;
+    }
+    
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+  </style>
 </head>
-<body class="bg-dark text-white font-consolas overflow-hidden min-h-screen">
-    <!-- 粒子背景 -->
-    <div id="particles-js" class="fixed inset-0 z-0"></div>
-    
-    <!-- 雪花效果 -->
-    <div id="snowfall" class="fixed inset-0 pointer-events-none z-0"></div>
-    
-    <!-- 音频元素 -->
-    <audio id="input-sound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-keyboard-typing-2062.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="success-sound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-game-success-coin-2082.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="error-sound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-903.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="warning-sound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-917.mp3" type="audio/mpeg">
-    </audio>
-    
-    <!-- 主界面 -->
-    <main class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-8">
-        <!-- 顶部导航 -->
-        <nav class="w-full max-w-7xl flex justify-between items-center py-4 px-6">
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center animate-pulse-slow">
-                    <i class="fa fa-lock text-xl"></i>
-                </div>
-                <h1 class="text-2xl font-bold gradient-text">遗迹登录系统</h1>
-            </div>
-            <div class="hidden md:flex space-x-6">
-                <a href="#" class="text-gray-400 hover:text-secondary transition-colors">首页</a>
-                <a href="#" class="text-gray-400 hover:text-secondary transition-colors">下载</a>
-                <a href="#" class="text-gray-400 hover:text-secondary transition-colors">社区</a>
-                <a href="#" class="text-gray-400 hover:text-secondary transition-colors">帮助</a>
-            </div>
-            <button class="md:hidden text-gray-400 text-2xl">
-                <i class="fa fa-bars"></i>
-            </button>
-        </nav>
-        
-        <div class="neon-bg backdrop-blur-lg rounded-3xl p-6 md:p-12 max-w-5xl w-full mx-auto 
-                    border border-secondary/30 shadow-lg shadow-secondary/20 animate-fade-in">
-            
-            <!-- 头部 -->
-            <header class="text-center mb-12">
-                <h1 class="text-[clamp(2rem,5vw,4rem)] font-bold gradient-text animate-glitch mb-4">
-                    遗迹认证系统
-                </h1>
-                <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
-                    安全登录您的遗迹账户，享受极致游戏体验
-                </p>
-            </header>
-            
-            <!-- 登录卡片 -->
-            <div class="max-w-2xl mx-auto">
-                <!-- 选项卡导航 -->
-                <div class="border-b border-gray-700 flex justify-center mb-8">
-                    <button id="login-tab" class="px-8 py-4 font-bold text-primary border-b-2 border-primary">登录</button>
-                    <button id="register-tab" class="px-8 py-4 font-bold text-gray-400 hover:text-primary transition-colors">注册</button>
-                    <button id="forgot-tab" class="px-8 py-4 font-bold text-gray-400 hover:text-primary transition-colors">忘记密码</button>
-                </div>
-                
-                <!-- 表单内容 -->
-                <div id="login-form" class="form-content animate-slide-up">
-                    <div class="neon-bg rounded-2xl p-8 border border-secondary/20">
-                        <!-- 用户名/邮箱输入 -->
-                        <div class="input-container mb-6 relative">
-                            <input type="text" id="login-username" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
-                            <label for="login-username" class="floating-label absolute left-6 top-4 text-gray-400">用户名或邮箱</label>
-                            <i class="fa fa-user absolute right-6 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="login-username-error">请输入有效用户名或邮箱</div>
-                        </div>
-                        
-                        <!-- 密码输入 -->
-                        <div class="input-container mb-8 relative">
-                            <input type="password" id="login-password" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
-                            <label for="login-password" class="floating-label absolute left-6 top-4 text-gray-400">密码</label>
-                            <i id="toggle-password" class="fa fa-eye-slash absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-secondary transition-colors"></i>
-                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="login-password-error">密码至少6位字符</div>
-                        </div>
-                        
-                        <!-- 记住我和忘记密码 -->
-                        <div class="flex justify-between items-center mb-8">
-                            <div class="flex items-center">
-                                <input type="checkbox" id="remember-me" class="w-5 h-5 text-secondary focus:ring-secondary border-gray-700 rounded">
-                                <label for="remember-me" class="ml-3 text-sm text-gray-400">记住我</label>
-                            </div>
-                            <a href="#" id="forgot-password-link" class="text-sm text-primary hover:text-secondary transition-colors">忘记密码?</a>
-                        </div>
-                        
-                        <!-- 登录按钮 -->
-                        <button id="login-button" class="w-full py-4 px-6 rounded-lg bg-gradient-to-r from-primary to-secondary text-dark font-bold 
-                                           shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 
-                                           hover:scale-[1.02] active:scale-[0.98] animate-pulse-slow">
-                            登录
-                            <span id="login-loading" class="loading-spinner hidden ml-2">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </span>
-                        </button>
-                        
-                        <!-- 注册提示 -->
-                        <p class="text-center mt-6 text-sm text-gray-400">
-                            还没有账户? <a href="#" id="register-link" class="text-primary font-medium hover:text-secondary transition-colors">立即注册</a>
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- 注册表单 -->
-                <div id="register-form" class="form-content hidden animate-slide-up" style="animation-delay: 0.1s">
-                    <div class="neon-bg rounded-2xl p-8 border border-secondary/20">
-                        <!-- 用户名输入 -->
-                        <div class="input-container mb-6 relative">
-                            <input type="text" id="register-username" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
-                            <label for="register-username" class="floating-label absolute left-6 top-4 text-gray-400">用户名</label>
-                            <i class="fa fa-user absolute right-6 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="register-username-error">用户名长度4-20位，仅含字母数字</div>
-                        </div>
-                        
-                        <!-- 邮箱输入 -->
-                        <div class="input-container mb-6 relative">
-                            <input type="email" id="register-email" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
-                            <label for="register-email" class="floating-label absolute left-6 top-4 text-gray-400">电子邮箱</label>
-                            <i class="fa fa-envelope absolute right-6 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="register-email-error">请输入有效邮箱地址</div>
-                        </div>
-                        
-                        <!-- 密码输入 -->
-                        <div class="input-container mb-6 relative">
-                            <input type="password" id="register-password" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
-                            <label for="register-password" class="floating-label absolute left-6 top-4 text-gray-400">密码</label>
-                            <i id="toggle-register-password" class="fa fa-eye-slash absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-secondary transition-colors"></i>
-                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="register-password-error">密码至少8位，含大小写字母和数字</div>
-                        </div>
-                        
-                        <!-- 确认密码输入 -->
-                        <div class="input-container mb-8 relative">
-                            <input type="password" id="register-confirm-password" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
-                            <label for="register-confirm-password" class="floating-label absolute left-6 top-4 text-gray-400">确认密码</label>
-                            <i id="toggle-confirm-password" class="fa fa-eye-slash absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-secondary transition-colors"></i>
-                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="register-confirm-password-error">两次输入的密码不一致</div>
-                        </div>
-                        
-                        <!-- 注册按钮 -->
-                        <button id="register-button" class="w-full py-4 px-6 rounded-lg bg-gradient-to-r from-primary to-secondary text-dark font-bold 
-                                           shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 
-                                           hover:scale-[1.02] active:scale-[0.98] animate-pulse-slow">
-                            注册
-                            <span id="register-loading" class="loading-spinner hidden ml-2">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </span>
-                        </button>
-                        
-                        <!-- 已有账户提示 -->
-                        <p class="text-center mt-6 text-sm text-gray-400">
-                            已有账户? <a href="#" id="login-register-link" class="text-primary font-medium hover:text-secondary transition-colors">立即登录</a>
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- 忘记密码表单 -->
-                <div id="forgot-form" class="form-content hidden animate-slide-up" style="animation-delay: 0.2s">
-                    <div class="neon-bg rounded-2xl p-8 border border-secondary/20">
-                        <!-- 用户名输入 -->
-                        <div class="input-container mb-6 relative">
-                            <input type="text" id="forgot-username" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
-                            <label for="forgot-username" class="floating-label absolute left-6 top-4 text-gray-400">用户名</label>
-                            <i class="fa fa-user absolute right-6 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="forgot-username-error">请输入注册时的用户名</div>
-                        </div>
-                        
-                        <!-- 新密码输入 -->
-                        <div class="input-container mb-6 relative">
-                            <input type="password" id="forgot-new-password" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
-                            <label for="forgot-new-password" class="floating-label absolute left-6 top-4 text-gray-400">新密码</label>
-                            <i id="toggle-new-password" class="fa fa-eye-slash absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-secondary transition-colors"></i>
-                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="forgot-password-error">密码至少8位，含大小写字母和数字</div>
-                        </div>
-                        
-                        <!-- 确认新密码输入 -->
-                        <div class="input-container mb-8 relative">
-                            <input type="password" id="forgot-confirm-password" class="w-full px-6 py-4 rounded-lg bg-darkgray border border-gray-700 focus:outline-none transition-custom input-focus" placeholder=" ">
-                            <label for="forgot-confirm-password" class="floating-label absolute left-6 top-4 text-gray-400">确认新密码</label>
-                            <i id="toggle-confirm-new-password" class="fa fa-eye-slash absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-secondary transition-colors"></i>
-                            <div class="error-message absolute bottom-[-28px] left-6 text-accent text-sm opacity-0 transition-opacity duration-300" id="forgot-confirm-password-error">两次输入的密码不一致</div>
-                        </div>
-                        
-                        <!-- 重置按钮 -->
-                        <button id="forgot-button" class="w-full py-4 px-6 rounded-lg bg-gradient-to-r from-primary to-secondary text-dark font-bold 
-                                           shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 
-                                           hover:scale-[1.02] active:scale-[0.98] animate-pulse-slow">
-                            重置密码
-                            <span id="forgot-loading" class="loading-spinner hidden ml-2">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </span>
-                        </button>
-                        
-                        <!-- 返回登录提示 -->
-                        <p class="text-center mt-6 text-sm text-gray-400">
-                            不需要重置? <a href="#" id="login-forgot-link" class="text-primary font-medium hover:text-secondary transition-colors">返回登录</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 底部信息 -->
-            <footer class="text-center text-gray-500 mt-12 pt-8 border-t border-gray-800">
-                <p>© 2025 遗迹科技. 保留所有权利.</p>
-                <p class="mt-2 text-sm">登录即表示您同意我们的用户协议和隐私政策</p>
-            </footer>
+
+<body class="font-inter antialiased">
+  <!-- 雪花容器 -->
+  <div id="snow-container" class="fixed top-0 left-0 w-full h-full pointer-events-none z-50"></div>
+  
+  <!-- 顶部导航栏 -->
+  <header class="sticky top-0 z-50 bg-dark/80 backdrop-blur-md shadow-sm transition-custom neon-border">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white neon-glow">
+          <i class="fa fa-shield text-xl"></i>
         </div>
-    </main>
+        <h1 class="text-xl font-bold text-white neon-glow">遗迹<span class="text-primary">.</span></h1>
+      </div>
+      
+      <nav class="hidden md:flex items-center space-x-6">
+        <a href="#" class="nav-link text-gray-300 hover:text-primary transition-custom" data-target="hero">首页</a>
+        <a href="#" class="nav-link text-gray-300 hover:text-primary transition-custom" data-target="download">下载</a>
+        <a href="#" class="nav-link text-gray-300 hover:text-primary transition-custom" data-target="community">社区</a>
+        <a href="#" class="nav-link text-gray-300 hover:text-primary transition-custom" data-target="faq">帮助</a>
+      </nav>
+      
+      <div class="flex items-center space-x-4">
+        <button id="helpBtn" class="text-gray-300 hover:text-primary transition-custom">
+          <i class="fa fa-question-circle text-lg"></i>
+        </button>
+        <button id="exportBtn" class="hidden md:flex items-center px-5 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-custom neon-border">
+          <i class="fa fa-download mr-2"></i>下载遗迹
+        </button>
+        <button class="md:hidden text-gray-300" id="mobileMenuBtn">
+          <i class="fa fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
     
-    <!-- 公告弹窗 -->
-    <div id="announcementOverlay" class="fixed inset-0 z-[60] flex items-center justify-center bg-dark/90 
+    <!-- 移动端菜单 -->
+    <div id="mobileMenu" class="md:hidden hidden bg-dark-gray border-t border-gray-800">
+      <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+        <a href="#" class="py-2 text-gray-300 hover:text-primary transition-custom mobile-nav-link" data-target="hero">首页</a>
+        <a href="#" class="py-2 text-gray-300 hover:text-primary transition-custom mobile-nav-link" data-target="download">下载</a>
+        <a href="#" class="py-2 text-gray-300 hover:text-primary transition-custom mobile-nav-link" data-target="community">社区</a>
+        <a href="#" class="py-2 text-gray-300 hover:text-primary transition-custom mobile-nav-link" data-target="faq">帮助</a>
+        <button id="mobileExportBtn" class="mt-2 px-5 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-custom neon-border">
+          <i class="fa fa-download mr-2"></i>下载遗迹
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8">
+    <!-- 英雄区域 -->
+    <section id="hero" class="mb-12 text-center">
+      <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-white mb-4 neon-glow">生死狙击一代专用辅助工具</h2>
+      <p class="text-gray-400 max-w-2xl mx-auto text-lg mb-8">专为生死狙击一代优化的辅助工具，提供稳定连跳、精准瞄准等功能，提升游戏体验</p>
+      
+      <div id="uploadArea" class="max-w-2xl mx-auto bg-dark-gray rounded-2xl shadow-lg p-8 border-2 border-dashed border-gray-700 hover:border-primary transition-custom cursor-pointer neon-border">
+        <div class="flex flex-col items-center justify-center">
+          <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
+            <i class="fa fa-gamepad text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">点击下载生死狙击专用工具</h3>
+          <p class="text-gray-500 mb-6">高性能连跳、反抖动、弹道优化，适配生死狙击一代最新版本</p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button id="downloadBtnHero" class="px-6 py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-custom flex items-center justify-center neon-border">
+              <i class="fa fa-download mr-2"></i>遗迹核心工具
+            </button>
+            <button id="downloadConfigBtnHero" class="px-6 py-3 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-custom flex items-center justify-center neon-border">
+              <i class="fa fa-bolt mr-2"></i>超级连跳配置
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 为什么选择遗迹 -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-center mb-12 neon-glow">为什么选择遗迹工具</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
+          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
+            <i class="fa fa-shield text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">深度适配生死狙击</h3>
+          <p class="text-gray-400">针对生死狙击一代游戏机制深度优化，功能稳定不闪退，适配最新游戏版本</p>
+        </div>
+        
+        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
+          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
+            <i class="fa fa-bolt text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">极致连跳体验</h3>
+          <p class="text-gray-400">智能连跳算法，轻松实现超级连跳、旋转跳等高级操作，提升游戏机动性</p>
+        </div>
+        
+        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
+          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
+            <i class="fa fa-users text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">生死狙击玩家社区</h3>
+          <p class="text-gray-400">数千生死狙击玩家聚集的专业社区，实时交流游戏技巧和工具使用经验</p>
+        </div>
+        
+        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
+          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
+            <i class="fa fa-lock text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">安全防检测</h3>
+          <p class="text-gray-400">多层级反检测机制，针对生死狙击检测系统优化，降低被检测风险</p>
+        </div>
+        
+        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
+          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
+            <i class="fa fa-cogs text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">简单易操作</h3>
+          <p class="text-gray-400">傻瓜式操作界面，一键开启连跳、无后坐力等功能，无需复杂设置</p>
+        </div>
+        
+        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
+          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
+            <i class="fa fa-mobile text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">低配电脑适配</h3>
+          <p class="text-gray-400">优化内存占用，低配置电脑也能流畅运行，不影响游戏帧率</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 特性功能 -->
+    <section class="mb-16 bg-dark-gray rounded-2xl p-8 md:p-12 neon-border">
+      <h2 class="text-2xl font-bold text-center mb-12 neon-glow">核心功能特性 - 专为生死狙击一代设计</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-dark rounded-xl shadow-md p-6 hover:shadow-lg transition-custom neon-border">
+          <div class="flex items-start">
+            <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
+              <i class="fa fa-random text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">智能连跳系统</h3>
+              <p class="text-gray-400">自动空格连跳，可以使用F7绑定游戏窗口，F8打开游戏模式，F9更改点击速度，F3切换按键。</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-dark rounded-xl shadow-md p-6 hover:shadow-lg transition-custom neon-border">
+          <div class="flex items-start">
+            <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
+              <i class="fa fa-crosshairs text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">精准瞄准辅助</h3>
+              <p class="text-gray-400">内置弹道优化算法，自动补偿后坐力，提升射击精准度，适应不同战斗场景。</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-dark rounded-xl shadow-md p-6 hover:shadow-lg transition-custom neon-border">
+          <div class="flex items-start">
+            <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
+              <i class="fa fa-bolt text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">游戏性能优化</h3>
+              <p class="text-gray-400">优化游戏内存占用，降低CPU和GPU负载，在低配电脑上也能保持高帧率运行，避免游戏卡顿。</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-dark rounded-xl shadow-md p-6 hover:shadow-lg transition-custom neon-border">
+          <div class="flex items-start">
+            <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
+              <i class="fa fa-shield text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">多层反检测机制</h3>
+              <p class="text-gray-400">实时监控游戏检测系统，动态调整运行模式，避免被游戏安全系统识别，保障账号安全。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 加入遗迹玩家社区 -->
+    <section id="community" class="mb-16 bg-primary/10 rounded-3xl p-8 md:p-12 neon-border">
+      <div class="max-w-3xl mx-auto text-center">
+        <h2 class="text-2xl md:text-3xl font-bold mb-4 neon-glow">加入生死狙击遗迹社区</h2>
+        <p class="text-gray-400 mb-8 max-w-2xl mx-auto">与数千生死狙击玩家交流经验，获取最新工具版本和游戏技巧</p>
+        
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+          <button id="joinTGGroupBtn" class="px-6 py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-custom flex items-center justify-center neon-border">
+            <i class="fa fa-telegram mr-2"></i>生死狙击TG群
+          </button>
+          
+          <button id="joinKOOKGroupBtn" class="px-6 py-3 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-custom flex items-center justify-center neon-border">
+            <i class="fa fa-comments mr-2"></i>生死狙击KOOK群
+          </button>
+          
+          <button id="joinQQGroupBtn" class="px-6 py-3 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-custom flex items-center justify-center neon-border">
+            <i class="fa fa-qq mr-2"></i>生死狙击QQ群
+          </button>
+        </div>
+        
+        <p class="text-gray-500 text-sm">加入社区即可获取专属连跳教程和最新工具版本</p>
+      </div>
+    </section>
+    
+    <!-- 下载区域 -->
+    <section id="download" class="mb-16">
+      <div class="bg-dark-gray rounded-2xl shadow-lg overflow-hidden neon-border">
+        <div class="md:flex">
+          <div class="md:w-1/2 p-8 md:p-12 bg-primary/10">
+            <h2 class="text-2xl font-bold mb-6 neon-glow">下载生死狙击专用工具</h2>
+            <p class="text-gray-400 mb-8">选择适合您的版本下载，立即提升生死狙击游戏体验</p>
+            
+            <div class="space-y-4 mb-8">
+              <div class="flex items-center p-4 bg-dark rounded-lg shadow-sm neon-border">
+                <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
+                  <i class="fa fa-windows text-lg"></i>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-white">遗迹核心工具</h3>
+                  <p class="text-sm text-gray-500">包含静默、瞄准等完整功能的主程序</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center p-4 bg-dark rounded-lg shadow-sm neon-border">
+                <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
+                  <i class="fa fa-bolt text-lg"></i>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-white">超级连跳配置</h3>
+                  <p class="text-sm text-gray-500">优化的连跳参数配置文件，适用于各种地图</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center p-4 bg-dark rounded-lg shadow-sm neon-border">
+                <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
+                  <i class="fa fa-file-archive-o text-lg"></i>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-white">视频教程合集</h3>
+                  <p class="text-sm text-gray-500">连跳技巧、工具使用等视频教程合集</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4">
+              <button id="downloadBtnSection" class="flex-1 py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-custom flex items-center justify-center neon-border">
+                <i class="fa fa-download mr-2"></i>下载核心工具
+              </button>
+              <button id="downloadConfigBtnSection" class="flex-1 py-3 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-custom flex items-center justify-center neon-border">
+                <i class="fa fa-bolt mr-2"></i>下载连跳配置
+              </button>
+            </div>
+          </div>
+          
+          <div class="md:w-1/2 bg-[url('https://picsum.photos/id/177/800/600')] bg-cover bg-center neon-border"></div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 用户评价 -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-center mb-12 neon-glow">生死狙击玩家评价</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
+          <div class="flex items-center mb-4">
+            <img src="https://picsum.photos/id/64/100/100" alt="玩家头像" class="w-12 h-12 rounded-full object-cover mr-4">
+            <div>
+              <h4 class="font-semibold text-white">唧唧达人</h4>
+              <p class="text-sm text-gray-500">生死狙击5年牢玩家</p>
+            </div>
+          </div>
+          <div class="text-yellow-400 mb-3">
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+          </div>
+          <p class="text-gray-400">"用了遗迹工具后，我的连跳技术提升非常明显，以前在生死狙击里上不去的点位现在轻松就能跳上去，游戏体验大大提升，推荐给所有生死狙击玩家！"</p>
+        </div>
+        
+        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
+          <div class="flex items-center mb-4">
+            <img src="https://picsum.photos/id/65/100/100" alt="玩家头像" class="w-12 h-12 rounded-full object-cover mr-4">
+            <div>
+              <h4 class="font-semibold text-white">给你🐎杀了</h4>
+              <p class="text-sm text-gray-500">生死狙击战队队长</p>
+            </div>
+          </div>
+          <div class="text-yellow-400 mb-3">
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star-half-o"></i>
+          </div>
+          <p class="text-gray-400">"作为🐎+骑，我给他们推荐了遗迹工具，大家的连跳和瞄准水平都有了显著提高。工具非常稳定，适配生死狙击最新版本，没有出现过检测问题。"</p>
+        </div>
+        
+        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
+          <div class="flex items-center mb-4">
+            <img src="https://picsum.photos/id/91/100/100" alt="玩家头像" class="w-12 h-12 rounded-full object-cover mr-4">
+            <div>
+              <h4 class="font-semibold text-white">夜</h4>
+              <p class="text-sm text-gray-500">生死狙击主播</p>
+            </div>
+          </div>
+          <div class="text-yellow-400 mb-3">
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+          </div>
+          <p class="text-gray-400">"我在直播生死狙击时一直使用遗迹工具，连跳流畅不卡顿，弹道优化效果明显，观众都问我怎么做到的。社区里还有很多大神分享的连跳技巧，非常实用！"</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 常见问题 -->
+    <section id="faq" class="mb-16">
+      <h2 class="text-2xl font-bold text-center mb-12 neon-glow">常见问题 - 生死狙击专用</h2>
+      
+      <div class="max-w-3xl mx-auto space-y-4">
+        <!-- 保留的问题 -->
+        <div class="bg-dark-gray rounded-xl shadow-sm overflow-hidden neon-border">
+          <button class="faq-question w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none">
+            <span class="text-white">使用遗迹会导致生死狙击账号封禁吗？</span>
+            <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
+          </button>
+          <div class="faq-answer px-6 py-0 max-h-0 overflow-hidden transition-all duration-300">
+            <div class="py-4 text-gray-400">
+              任何游戏辅助工具都无法100%保证安全。建议您合理使用，避免在游戏中过度展示异常操作，降低被举报风险。
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-dark-gray rounded-xl shadow-sm overflow-hidden neon-border">
+          <button class="faq-question w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none">
+            <span class="text-white">遗迹工具支持生死狙击哪些地图？</span>
+            <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
+          </button>
+          <div class="faq-answer px-6 py-0 max-h-0 overflow-hidden transition-all duration-300">
+            <div class="py-4 text-gray-400">
+              遗迹工具支持生死狙击一代所有官方地图，包括经典地图（如废弃工厂、冰雪堡垒）和最新推出的地图。
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-dark-gray rounded-xl shadow-sm overflow-hidden neon-border">
+          <button class="faq-question w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none">
+            <span class="text-white">遇到问题如何获取帮助？</span>
+            <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
+          </button>
+          <div class="faq-answer px-6 py-0 max-h-0 overflow-hidden transition-all duration-300">
+            <div class="py-4 text-gray-400">
+              您可以加入我们的官方社区（TG群、KOOK群、QQ群），在那里有专业的技术人员和热心玩家会为您解答问题。社区内也有详细的使用教程和常见问题解决方案。
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-12 neon-border">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-primary neon-glow">
+              <i class="fa fa-shield text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white">遗迹<span class="text-primary">.</span></h3>
+          </div>
+          <p class="text-gray-400 mb-4">生死狙击一代专业辅助工具，提升游戏体验</p>
+          <div class="flex space-x-4">
+            <a href="https://t.me/+dy8r937YxnljZTRl" class="text-gray-400 hover:text-white transition-custom" target="_blank">
+              <i class="fa fa-telegram"></i>
+            </a>
+            <a href="https://kook.vip/ZCSH5g" class="text-gray-400 hover:text-white transition-custom" target="_blank">
+              <i class="fa fa-comments"></i>
+            </a>
+            <a href="https://qm.qq.com/q/DSmYyv2Rby" class="text-gray-400 hover:text-white transition-custom" target="_blank">
+              <i class="fa fa-qq"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-custom">
+              <i class="fa fa-github"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-4 neon-glow">产品</h4>
+          <ul class="space-y-2">
+            <li><a href="#download" class="text-gray-400 hover:text-white transition-custom">下载遗迹</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">功能介绍</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">更新日志</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">使用教程</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-4 neon-glow">资源</h4>
+          <ul class="space-y-2">
+           
+            <li><a href="#faq" class="text-gray-400 hover:text-white transition-custom">常见问题</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">技术支持</a></li>
+            <li><a href="#community" class="text-gray-400 hover:text-white transition-custom">社区论坛</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">联系我们</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-4 neon-glow">订阅更新</h4>
+          <p class="text-gray-400 mb-4">获取生死狙击工具最新版本和游戏技巧</p>
+          <form class="mb-4">
+            <div class="flex">
+              <input type="email" placeholder="您的邮箱地址" class="px-4 py-2 w-full rounded-l-lg focus:outline-none text-dark bg-gray-800 border border-gray-700">
+              <button type="submit" class="px-4 py-2 bg-primary text-white rounded-r-lg hover:bg-primary/90 transition-custom neon-border">
+                <i class="fa fa-paper-plane"></i>
+              </button>
+            </div>
+          </form>
+          <p class="text-gray-500 text-sm">我们尊重您的隐私，不会发送垃圾邮件</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-500 text-sm mb-4 md:mb-0">© 2025 遗迹科技. 保留所有权利。</p>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-500 hover:text-gray-400 text-sm transition-custom">隐私政策</a>
+          <a href="#" class="text-gray-500 hover:text-gray-400 text-sm transition-custom">服务条款</a>
+          <a href="#" class="text-gray-500 hover:text-gray-400 text-sm transition-custom">使用须知</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 公告弹窗 -->
+  <div id="announcementOverlay" class="fixed inset-0 z-[60] flex items-center justify-center bg-dark/90 
                                     opacity-0 pointer-events-none transition-opacity duration-500">
-        <div id="announcementPopup" class="relative w-full max-w-2xl mx-4 rounded-3xl overflow-hidden 
-                                       transform scale-95 transition-transform duration-500">
-            
-            <!-- 背景效果 -->
-            <div class="absolute inset-0 bg-gradient-to-br from-darkgray to-dark opacity-90"></div>
-            <div class="absolute inset-0 bg-[url('https://picsum.photos/id/1/800/600')] bg-cover bg-center opacity-10"></div>
-            
-            <!-- 动态边框 -->
-            <div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-3xl blur opacity-70 
-                        animate-border-glow"></div>
-            
+    <div id="announcementPopup" class="relative w-full max-w-2xl mx-4 rounded-2xl overflow-hidden 
+                                       transform scale-95 transition-transform duration-500 neon-border">
             <!-- 内容 -->
-            <div class="relative z-10 p-8 md:p-10">
+            <div class="relative z-10 p-8 md:p-10 bg-dark-gray">
                 <!-- 关闭按钮 -->
-                <button id="closeAnnouncementBtn" class="absolute top-6 right-6 text-gray-400 hover:text-white 
+                <button id="closeAnnouncementBtn" class="absolute top-6 right-6 text-gray-400 hover:text-gray-300 
                                                  transition-colors duration-300 text-2xl">
                     <i class="fa fa-times"></i>
                 </button>
                 
                 <!-- 标题 -->
                 <div class="text-center mb-8">
-                    <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold gradient-text animate-glitch">
-                        重要公告
-                    </h2>
+                    <h2 class="text-2xl font-bold text-white mb-2 neon-glow">重要公告</h2>
+                    <p class="text-gray-500">2025年6月15日</p>
                 </div>
                 
-                <!-- 公告内容 -->
+                <!-- 公告内容 - 已更新为指定文本 -->
                 <div class="mb-10 max-w-xl mx-auto">
-                    <div class="neon-bg rounded-xl p-6 md:p-8 border border-secondary/30">
+                    <div class="bg-dark rounded-xl p-6 md:p-8 border border-secondary/30 neon-border">
                         <p class="text-xl text-gray-300 leading-relaxed">
-                            遗迹QQ群因特殊原因被整治，目前主要交流群为TG群QQ群和KOOK群。
+                            遗迹QQ群因特殊原因被整治，目前主要交流群为TG群和KOOK群。
                         </p>
                         <p class="text-xl text-gray-300 leading-relaxed mt-2">
                             <span class="text-secondary font-bold">重要规则：</span>
@@ -389,819 +646,251 @@
                 
                 <!-- 按钮 -->
                 <div class="flex justify-center">
-                    <button id="closeAnnouncementBtn2" class="group relative overflow-hidden rounded-full 
-                                                         px-10 py-4 text-lg font-bold bg-gradient-to-r from-primary to-secondary 
-                                                         text-dark transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 
-                                                         hover:scale-105">
-                        <span class="relative z-10">
-                            我知道了
-                        </span>
-                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
-                                     transition-transform duration-500 rounded-full"></span>
+                    <button id="closeAnnouncementBtn2" class="px-10 py-4 text-lg font-bold bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-custom neon-border">
+                        我知道了
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- 下载弹出窗口 -->
-    <div id="popupOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-dark/90 
-                                 opacity-0 pointer-events-none transition-opacity duration-500">
-        <div id="popup" class="relative w-full max-w-5xl mx-4 rounded-3xl overflow-hidden 
-                             transform scale-95 transition-transform duration-500">
-            
-            <!-- 背景效果 -->
-            <div class="absolute inset-0 bg-gradient-to-br from-darkgray to-dark opacity-90"></div>
-            <div class="absolute inset-0 bg-[url('https://picsum.photos/id/1/1200/800')] bg-cover bg-center opacity-10"></div>
-            
-            <!-- 动态边框 -->
-            <div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-3xl blur opacity-70 
-                        animate-border-glow"></div>
-            
-            <!-- 内容 -->
-            <div class="relative z-10 p-8 md:p-12">
-                <!-- 关闭按钮 -->
-                <button id="closePopupBtn" class="absolute top-6 right-6 text-gray-400 hover:text-white 
-                                                transition-colors duration-300 text-2xl">
-                    <i class="fa fa-times"></i>
-                </button>
-                
-                <!-- 标题 -->
-                <div class="text-center mb-10">
-                    <h2 class="text-[clamp(2.5rem,6vw,4rem)] font-bold gradient-text animate-glitch">
-                        遗迹下载中心
-                    </h2>
-                </div>
-                
-                <!-- 下载说明 -->
-                <div class="mb-12 max-w-3xl mx-auto">
-                    <div class="neon-bg rounded-xl p-6 md:p-8 border border-secondary/30">
-                        <h3 class="text-2xl font-bold text-secondary mb-4">HVH核心工具</h3>
-                        <ul class="space-y-3 text-gray-300">
-                            <li class="flex items-start">
-                                <i class="fa fa-check text-secondary mt-1 mr-3"></i>
-                                <span>不被检测的HVH技术 - 多层级防护机制，实时监控系统状态</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fa fa-check text-secondary mt-1 mr-3"></i>
-                                <span>动态内存注入技术 - 先进的内存管理，确保游戏性能不受影响</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fa fa-check text-secondary mt-1 mr-3"></i>
-                                <span>实时反检测系统 - 智能识别检测环境，自动调整防护策略</span>
-                            </li>
-                        </ul>
-                        
-                        <div class="mt-6 pt-6 border-t border-gray-700">
-                            <h3 class="text-2xl font-bold text-secondary mb-4">下载说明（访问密码：6666）</h3>
-                            <div class="bg-dark/50 rounded-lg p-4 border border-gray-800">
-                                <p class="text-gray-300 mb-4">请按照喜好下载组件：</p>
-                                <ol class="list-decimal list-inside text-gray-300 space-y-2">
-                                    <li><span class="text-secondary font-bold">遗迹功能注入器</span> - 包含遗迹功能注入器</li>
-                                    <li><span class="text-secondary font-bold">不检测连跳</span> - 优化的连跳功能配置，提升游戏体验</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 下载按钮 -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center mb-12">
-                    <button id="downloadRelicBtn" class="group relative overflow-hidden rounded-full 
-                                                  px-6 py-5 text-lg font-bold bg-gradient-to-r from-primary to-secondary/80 
-                                                  text-dark transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 
-                                                  hover:scale-105" onclick="openDownloadUrl('relic')">
-                        <span class="relative z-10 flex items-center justify-center">
-                            <i class="fa fa-download mr-2"></i> 下载注入器
-                        </span>
-                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
-                                     transition-transform duration-500 rounded-full"></span>
-                    </button>
-                    
-                    <button id="downloadConfigBtn" class="group relative overflow-hidden rounded-full 
-                                                    px-6 py-5 text-lg font-bold bg-gradient-to-r from-secondary to-primary 
-                                                    text-dark transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
-                                                    hover:scale-105" onclick="openDownloadUrl('config')">
-                        <span class="relative z-10 flex items-center justify-center">
-                            <i class="fa fa-bolt mr-2"></i> 下载连跳
-                        </span>
-                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
-                                     transition-transform duration-500 rounded-full"></span>
-                    </button>
-                </div>
-                
-                <!-- 社交按钮 -->
-                <div class="flex flex-col md:flex-row gap-6 justify-center mb-12">
-                    <button id="joinTGGroupBtn" class="group relative overflow-hidden rounded-full 
-                                                  px-10 py-5 text-xl font-bold bg-secondary text-dark 
-                                                  transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
-                                                  hover:scale-105" onclick="openTGGroup()">
-                        <span class="relative z-10 flex items-center justify-center">
-                            <i class="fa fa-telegram mr-2"></i> 加入TG群
-                        </span>
-                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
-                                     transition-transform duration-500 rounded-full"></span>
-                    </button>
-                    
-                    <button id="joinQQGroupBtn" class="group relative overflow-hidden rounded-full 
-                                                  px-10 py-5 text-xl font-bold bg-secondary text-dark 
-                                                  transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
-                                                  hover:scale-105" onclick="openQQGroup()">
-                        <span class="relative z-10 flex items-center justify-center">
-                            <i class="fa fa-qq mr-2"></i> 加入QQ群
-                        </span>
-                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
-                                     transition-transform duration-500 rounded-full"></span>
-                    </button>
-                    
-                    <button id="joinKOOKGroupBtn" class="group relative overflow-hidden rounded-full 
-                                                  px-10 py-5 text-xl font-bold bg-secondary text-dark 
-                                                  transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 
-                                                  hover:scale-105" onclick="openKOOKGroup()">
-                        <span class="relative z-10 flex items-center justify-center">
-                            <i class="fa fa-comments mr-2"></i> 加入KOOK群
-                        </span>
-                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
-                                     transition-transform duration-500 rounded-full"></span>
-                    </button>
-                </div>
-                
-                <!-- 操作按钮 -->
-                <div class="flex flex-col md:flex-row gap-6 justify-center">
-                    <button id="closeBrowserBtn" class="group relative overflow-hidden rounded-full 
-                                                        px-10 py-5 text-xl font-bold bg-gradient-to-r from-green-500 to-teal-400 
-                                                        text-dark transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 
-                                                        hover:scale-105" onclick="closeBrowser()">
-                        <span class="relative z-10 flex items-center justify-center">
-                            <i class="fa fa-power-off mr-2"></i> 关闭浏览器
-                        </span>
-                        <span class="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 
-                                     transition-transform duration-500 rounded-full"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 通知组件 -->
-    <div id="notification" class="fixed top-6 right-6 bg-darkgray border border-secondary/30 rounded-lg p-4 max-w-sm 
-                                shadow-lg shadow-secondary/20 opacity-0 pointer-events-none transition-opacity duration-300 
-                                z-50 flex items-start">
-        <div class="mr-4 text-secondary text-xl mt-1">
-            <i id="notification-icon" class="fa fa-check-circle"></i>
+  </div>
+
+  <!-- 下载进度提示 -->
+  <div id="downloadNotification" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 
+                                        bg-dark/90 border border-gray-700 rounded-lg p-4 max-w-sm w-full 
+                                        shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 
+                                        z-50 flex items-center neon-border">
+        <div class="mr-4 text-primary text-xl">
+            <i class="fa fa-download"></i>
         </div>
         <div>
-            <h3 id="notification-title" class="font-bold text-white">操作成功</h3>
-            <p id="notification-message" class="text-gray-400 text-sm">您的请求已成功处理</p>
+            <h4 class="font-bold text-white" id="notificationTitle">下载中</h4>
+            <p class="text-gray-400 text-sm" id="notificationMessage">请等待...</p>
+        </div>
+        <div class="ml-auto">
+            <div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+                <div id="notificationProgress" class="h-full bg-primary w-0 transition-all duration-300"></div>
+            </div>
         </div>
     </div>
+
+  <script>
+    // 移动端菜单切换
+    document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      mobileMenu.classList.toggle('hidden');
+    });
     
-    <!-- 粒子和雪花效果脚本 -->
-    <script>
-        // 创建粒子背景
-        function createParticles() {
-            const particlesContainer = document.createElement('div');
-            particlesContainer.className = 'absolute inset-0';
-            
-            for (let i = 0; i < 150; i++) {
-                const particle = document.createElement('div');
-                const size = Math.random() * 3 + 1;
-                
-                particle.style.position = 'absolute';
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.background = i % 5 === 0 ? '#00ffff' : i % 7 === 0 ? '#ff0055' : '#ffffff';
-                particle.style.borderRadius = '50%';
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                particle.style.opacity = Math.random() * 0.7 + 0.3;
-                particle.style.animation = `float ${Math.random() * 10 + 5}s linear infinite`;
-                particle.style.animationDelay = `${Math.random() * 5}s`;
-                
-                particlesContainer.appendChild(particle);
-            }
-            
-            document.getElementById('particles-js').appendChild(particlesContainer);
+    // 帮助模态框（此处为公告弹窗）
+    document.getElementById('helpBtn').addEventListener('click', function() {
+      showAnnouncementPopup();
+    });
+    
+    // 公告弹窗
+    function showAnnouncementPopup() {
+      const overlay = document.getElementById('announcementOverlay');
+      const popup = document.getElementById('announcementPopup');
+      
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        popup.classList.remove('scale-95');
+        popup.classList.add('scale-100');
+      }, 100);
+      
+      // 防止背景滚动
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeAnnouncementPopup() {
+      const overlay = document.getElementById('announcementOverlay');
+      const popup = document.getElementById('announcementPopup');
+      
+      popup.classList.remove('scale-100');
+      popup.classList.add('scale-95');
+      
+      setTimeout(() => {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        // 恢复背景滚动
+        document.body.style.overflow = '';
+      }, 300);
+    }
+    
+    document.getElementById('closeAnnouncementBtn').addEventListener('click', closeAnnouncementPopup);
+    document.getElementById('closeAnnouncementBtn2').addEventListener('click', closeAnnouncementPopup);
+    
+    // 点击遮罩层关闭公告弹窗
+    document.getElementById('announcementOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('announcementOverlay')) {
+        closeAnnouncementPopup();
+      }
+    });
+    
+    // 下载按钮事件
+    function showDownloadNotification(title, message, progress) {
+      const notification = document.getElementById('downloadNotification');
+      document.getElementById('notificationTitle').textContent = title;
+      document.getElementById('notificationMessage').textContent = message;
+      document.getElementById('notificationProgress').style.width = `${progress}%`;
+      
+      notification.classList.remove('opacity-0');
+      notification.classList.add('opacity-100');
+      
+      // 3秒后自动隐藏
+      setTimeout(() => {
+        notification.classList.remove('opacity-100');
+        notification.classList.add('opacity-0');
+      }, 3000);
+    }
+    
+    function openDownloadUrl(url, title) {
+      showDownloadNotification(`正在下载${title}`, '请等待...', 100);
+      
+      // 模拟下载
+      setTimeout(() => {
+        window.open(url, '_blank');
+      }, 1000);
+    }
+    
+    // 核心工具下载链接
+    const relicDownloadUrl = 'https://wwbq.lanzn.com/iSpJ62ycinid';
+    // 连跳配置下载链接
+    const configDownloadUrl = 'https://wwbq.lanzoup.com/ixtgw2xmwuxi';
+    
+    // 英雄区域下载按钮
+    document.getElementById('downloadBtnHero').addEventListener('click', () => {
+      openDownloadUrl(relicDownloadUrl, '遗迹核心工具');
+    });
+    
+    document.getElementById('downloadConfigBtnHero').addEventListener('click', () => {
+      openDownloadUrl(configDownloadUrl, '超级连跳配置');
+    });
+    
+    // 下载区域下载按钮
+    document.getElementById('downloadBtnSection').addEventListener('click', () => {
+      openDownloadUrl(relicDownloadUrl, '遗迹核心工具');
+    });
+    
+    document.getElementById('downloadConfigBtnSection').addEventListener('click', () => {
+      openDownloadUrl(configDownloadUrl, '超级连跳配置');
+    });
+    
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      openDownloadUrl(relicDownloadUrl, '遗迹核心工具');
+    });
+    
+    document.getElementById('mobileExportBtn').addEventListener('click', () => {
+      openDownloadUrl(relicDownloadUrl, '遗迹核心工具');
+    });
+    
+    // 导航链接点击事件 - 平滑滚动
+    const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+    
+    navLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // 关闭移动端菜单
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (!mobileMenu.classList.contains('hidden')) {
+          mobileMenu.classList.add('hidden');
         }
         
-        // 创建雪花效果
-        function createSnowfall() {
-            const snowContainer = document.createElement('div');
-            snowContainer.className = 'absolute inset-0';
-            
-            for (let i = 0; i < 100; i++) {
-                const flake = document.createElement('div');
-                const size = Math.random() * 3 + 1;
-                
-                flake.style.position = 'absolute';
-                flake.style.width = `${size}px`;
-                flake.style.height = `${size}px`;
-                flake.style.background = '#ffffff';
-                flake.style.borderRadius = '50%';
-                flake.style.left = `${Math.random() * 100}%`;
-                flake.style.top = `${-Math.random() * 100}%`;
-                flake.style.opacity = Math.random() * 0.7 + 0.3;
-                flake.style.animation = `snowfall ${Math.random() * 10 + 10}s linear infinite`;
-                flake.style.animationDelay = `${Math.random() * 10}s`;
-                
-                snowContainer.appendChild(flake);
-            }
-            
-            document.head.insertAdjacentHTML('beforeend', `
-                <style>
-                    @keyframes snowfall {
-                        0% { transform: translateY(-10vh) translateX(0); }
-                        100% { transform: translateY(110vh) translateX(${Math.random() * 100}px); }
-                    }
-                </style>
-            `);
-            
-            document.getElementById('snowfall').appendChild(snowContainer);
+        const targetId = this.getAttribute('data-target');
+        const targetSection = document.getElementById(targetId);
+        
+        if (targetSection) {
+          // 滚动到目标区域
+          targetSection.scrollIntoView({
+            behavior: 'smooth'
+          });
+          
+          // 添加激活状态
+          navLinks.forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
         }
+      });
+    });
+    
+    // 滚动时更新导航激活状态
+    window.addEventListener('scroll', function() {
+      const scrollPosition = window.scrollY;
+      
+      // 定义各区域的偏移量
+      const sections = {
+        hero: document.getElementById('hero').offsetTop - 100,
+        download: document.getElementById('download').offsetTop - 100,
+        community: document.getElementById('community').offsetTop - 100,
+        faq: document.getElementById('faq').offsetTop - 100
+      };
+      
+      // 更新激活状态
+      navLinks.forEach(link => {
+        link.classList.remove('active');
         
-        // 播放输入音效
-        function playInputSound() {
-            const sound = document.getElementById('input-sound');
-            sound.currentTime = 0;
-            sound.play().catch(e => console.log('输入音效播放失败:', e));
+        const targetId = link.getAttribute('data-target');
+        if (scrollPosition >= sections[targetId]) {
+          link.classList.add('active');
         }
+      });
+    });
+    
+    // 常见问题手风琴效果
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(question => {
+      question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const icon = question.querySelector('i');
         
-        // 播放成功音效
-        function playSuccessSound() {
-            const sound = document.getElementById('success-sound');
-            sound.currentTime = 0;
-            sound.play().catch(e => console.log('成功音效播放失败:', e));
+        // 切换当前问题的展开状态
+        if (answer.style.maxHeight) {
+          answer.style.maxHeight = null;
+          icon.style.transform = 'rotate(0deg)';
+        } else {
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+          icon.style.transform = 'rotate(180deg)';
         }
+      });
+    });
+    
+    // 生成雪花效果
+    function createSnowflakes() {
+      const snowContainer = document.getElementById('snow-container');
+      const snowflakeCount = window.innerWidth > 768 ? 50 : 30; // 根据屏幕尺寸调整雪花数量
+      
+      for (let i = 0; i < snowflakeCount; i++) {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
         
-        // 播放错误音效
-        function playErrorSound() {
-            const sound = document.getElementById('error-sound');
-            sound.currentTime = 0;
-            sound.play().catch(e => console.log('错误音效播放失败:', e));
-        }
+        // 随机大小和位置
+        const size = Math.random() * 15 + 5;
+        const left = Math.random() * 100;
+        const duration = Math.random() * 10 + 10; // 雪花飘落时间
+        const delay = Math.random() * 5; // 雪花延迟飘落
         
-        // 播放警告音效
-        function playWarningSound() {
-            const sound = document.getElementById('warning-sound');
-            sound.currentTime = 0;
-            sound.play().catch(e => console.log('警告音效播放失败:', e));
-        }
+        snowflake.style.left = `${left}%`;
+        snowflake.style.animationDuration = `${duration}s`;
+        snowflake.style.animationDelay = `${delay}s`;
+        snowflake.style.fontSize = `${size}px`;
         
-        // 显示通知
-        function showNotification(type, title, message) {
-            const notification = document.getElementById('notification');
-            const icon = document.getElementById('notification-icon');
-            
-            notification.classList.remove('opacity-0');
-            notification.classList.add('opacity-100');
-            
-            // 设置通知类型
-            if (type === 'success') {
-                icon.className = 'fa fa-check-circle text-success';
-                notification.classList.remove('border-accent', 'border-secondary/30');
-                notification.classList.add('border-success');
-                playSuccessSound();
-            } else if (type === 'error') {
-                icon.className = 'fa fa-exclamation-circle text-accent';
-                notification.classList.remove('border-success', 'border-secondary/30');
-                notification.classList.add('border-accent');
-                playErrorSound();
-            } else if (type === 'warning') {
-                icon.className = 'fa fa-exclamation-triangle text-yellow-400';
-                notification.classList.remove('border-success', 'border-accent');
-                notification.classList.add('border-yellow-400/30');
-                playWarningSound();
-            } else if (type === 'info') {
-                icon.className = 'fa fa-info-circle text-secondary';
-                notification.classList.remove('border-success', 'border-accent', 'border-yellow-400/30');
-                notification.classList.add('border-secondary/30');
-            }
-            
-            document.getElementById('notification-title').textContent = title;
-            document.getElementById('notification-message').textContent = message;
-            
-            // 3秒后隐藏
-            setTimeout(() => {
-                notification.classList.remove('opacity-100');
-                notification.classList.add('opacity-0');
-            }, 3000);
-        }
+        // 随机雪花类型
+        const snowTypes = ['❅', '❆', '❄️'];
+        const snowType = snowTypes[Math.floor(Math.random() * snowTypes.length)];
+        snowflake.style.content = `'${snowType}'`;
         
-        // 显示公告弹窗
-        function showAnnouncementPopup() {
-            const overlay = document.getElementById('announcementOverlay');
-            const popup = document.getElementById('announcementPopup');
-            
-            overlay.classList.remove('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                popup.classList.remove('scale-95');
-                popup.classList.add('scale-100');
-            }, 100);
-            
-            // 防止背景滚动
-            document.body.style.overflow = 'hidden';
-        }
+        snowContainer.appendChild(snowflake);
         
-        // 关闭公告弹窗
-        function closeAnnouncementPopup() {
-            const overlay = document.getElementById('announcementOverlay');
-            const popup = document.getElementById('announcementPopup');
-            
-            popup.classList.remove('scale-100');
-            popup.classList.add('scale-95');
-            
-            setTimeout(() => {
-                overlay.classList.add('opacity-0', 'pointer-events-none');
-                // 恢复背景滚动
-                document.body.style.overflow = '';
-            }, 300);
-        }
-        
-        // 打开下载弹窗
-        function openDownloadPopup() {
-            const overlay = document.getElementById('popupOverlay');
-            const popup = document.getElementById('popup');
-            
-            overlay.classList.remove('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                popup.classList.remove('scale-95');
-                popup.classList.add('scale-100');
-            }, 100);
-            
-            // 防止背景滚动
-            document.body.style.overflow = 'hidden';
-        }
-        
-        // 关闭下载弹窗
-        function closeDownloadPopup() {
-            const overlay = document.getElementById('popupOverlay');
-            const popup = document.getElementById('popup');
-            
-            popup.classList.remove('scale-100');
-            popup.classList.add('scale-95');
-            
-            setTimeout(() => {
-                overlay.classList.add('opacity-0', 'pointer-events-none');
-                // 恢复背景滚动
-                document.body.style.overflow = '';
-            }, 300);
-        }
-        
-        // 打开下载链接
-        function openDownloadUrl(type) {
-            const downloadUrls = {
-                relic: 'https://wwbq.lanzn.com/iSpJ62ycinid',
-                config: 'https://wwbq.lanzoup.com/ixtgw2xmwuxi'
-            };
-            
-            const fileNames = {
-                relic: '遗迹功能注入器',
-                config: '不检测连跳'
-            };
-            
-            showNotification('info', `下载${fileNames[type]}`, '正在打开下载页面...');
-            
-            // 打开下载链接
-            window.open(downloadUrls[type], '_blank');
-        }
-        
-        // 打开TG群
-        function openTGGroup() {
-            window.open('https://t.me/+dy8r937YxnljZTRl', '_blank');
-            showNotification('info', '打开TG群', '正在打开遗迹官方TG群...');
-        }
-        
-        // 打开QQ群
-        function openQQGroup() {
-            window.open('https://qm.qq.com/q/DSmYyv2Rby', '_blank');
-            showNotification('info', '打开QQ群', '正在打开遗迹官方QQ群...');
-        }
-        
-        // 打开KOOK群
-        function openKOOKGroup() {
-            window.open('https://kook.vip/ZCSH5g', '_blank');
-            showNotification('info', '打开KOOK群', '正在打开遗迹官方KOOK群...');
-        }
-        
-        // 关闭浏览器
-        function closeBrowser() {
-            showNotification('info', '关闭浏览器', '正在关闭浏览器...');
-            
-            // 尝试关闭浏览器
-            setTimeout(() => {
-                if (window.opener && !window.opener.closed) {
-                    window.close();
-                } else {
-                    showNotification('error', '关闭失败', '浏览器安全策略限制，无法自动关闭');
-                }
-            }, 1000);
-        }
-        
-        // 模拟用户数据存储
-        const userDatabase = {
-            users: [
-                { id: "1", username: "relic_user", email: "user@relic.com", password: "Relic12345", createdAt: "2025-01-01" }
-            ]
-        };
-        
-        // 表单切换函数
-        function showForm(formId) {
-            document.querySelectorAll('.form-content').forEach(form => {
-                form.classList.add('hidden');
-                form.classList.remove('animate-slide-up');
-            });
-            
-            document.getElementById(formId).classList.remove('hidden');
-            document.getElementById(formId).classList.add('animate-slide-up');
-            
-            // 更新选项卡样式
-            document.querySelectorAll('[id$="-tab"]').forEach(tab => {
-                tab.classList.remove('text-primary', 'border-primary');
-                tab.classList.add('text-gray-400');
-            });
-            
-            document.getElementById(`${formId.replace('-form', '')}-tab`).classList.remove('text-gray-400');
-            document.getElementById(`${formId.replace('-form', '')}-tab`).classList.add('text-primary', 'border-b-2', 'border-primary');
-            
-            // 重置表单
-            document.getElementById(formId).querySelector('form')?.reset();
-            clearFormErrors(formId);
-        }
-        
-        // 清除表单错误
-        function clearFormErrors(formId) {
-            const form = document.getElementById(formId);
-            const errorElements = form.querySelectorAll('.input-container');
-            
-            errorElements.forEach(el => {
-                el.classList.remove('form-error', 'animate-pulse-error', 'animate-float-error');
-                el.querySelector('.error-message').style.opacity = '0';
-            });
-        }
-        
-        // 显示表单错误
-        function showFormError(inputId, message) {
-            const input = document.getElementById(inputId);
-            const container = input.closest('.input-container');
-            const errorElement = container.querySelector('.error-message');
-            
-            container.classList.add('form-error', 'animate-pulse-error');
-            errorElement.style.opacity = '1';
-            errorElement.textContent = message;
-            
-            // 添加输入框晃动效果
-            input.classList.add('animate-float-error');
-            setTimeout(() => {
-                input.classList.remove('animate-float-error');
-            }, 500);
-            
-            playErrorSound();
-        }
-        
-        // 密码显示/隐藏功能
-        function setupPasswordToggle(toggleElement, passwordInput) {
-            toggleElement.addEventListener('click', () => {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                toggleElement.classList.toggle('fa-eye-slash');
-                toggleElement.classList.toggle('fa-eye');
-            });
-        }
-        
-        // 输入框标签浮动效果
-        function setupFloatingLabels() {
-            document.querySelectorAll('.input-container input').forEach(input => {
-                const label = input.closest('.input-container').querySelector('label');
-                
-                input.addEventListener('focus', () => {
-                    label.classList.add('top-[-14px]', 'text-secondary', 'text-sm');
-                });
-                
-                input.addEventListener('blur', () => {
-                    if (input.value.trim() === '') {
-                        label.classList.remove('top-[-14px]', 'text-secondary', 'text-sm');
-                        label.classList.add('top-4', 'text-gray-400');
-                    }
-                });
-                
-                // 初始化检查
-                if (input.value.trim() !== '') {
-                    label.classList.add('top-[-14px]', 'text-secondary', 'text-sm');
-                }
-            });
-        }
-        
-        // 保存用户设置
-        function saveUserSettings(username, password, rememberMe) {
-            if (rememberMe) {
-                localStorage.setItem('rememberedUsername', username);
-                localStorage.setItem('rememberedPassword', password);
-                localStorage.setItem('rememberMe', 'true');
-            } else {
-                localStorage.removeItem('rememberedUsername');
-                localStorage.removeItem('rememberedPassword');
-                localStorage.removeItem('rememberMe');
-            }
-        }
-        
-        // 加载用户设置
-        function loadUserSettings() {
-            const rememberedUsername = localStorage.getItem('rememberedUsername');
-            const rememberedPassword = localStorage.getItem('rememberedPassword');
-            const rememberMe = localStorage.getItem('rememberMe') === 'true';
-            
-            if (rememberedUsername && rememberedPassword && rememberMe) {
-                document.getElementById('login-username').value = rememberedUsername;
-                document.getElementById('login-password').value = rememberedPassword;
-                document.getElementById('remember-me').checked = rememberMe;
-                
-                // 触发标签上浮
-                const loginUsernameLabel = document.getElementById('login-username').closest('.input-container').querySelector('label');
-                const loginPasswordLabel = document.getElementById('login-password').closest('.input-container').querySelector('label');
-                
-                loginUsernameLabel.classList.add('top-[-14px]', 'text-secondary', 'text-sm');
-                loginPasswordLabel.classList.add('top-[-14px]', 'text-secondary', 'text-sm');
-            }
-        }
-        
-        // 页面加载时初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            // 创建粒子和雪花效果
-            createParticles();
-            createSnowfall();
-            
-            // 加载用户设置
-            loadUserSettings();
-            
-            // 设置输入框标签浮动效果
-            setupFloatingLabels();
-            
-            // 显示公告弹窗
-            setTimeout(showAnnouncementPopup, 1000);
-            
-            // 公告弹窗按钮
-            document.getElementById('closeAnnouncementBtn').addEventListener('click', closeAnnouncementPopup);
-            document.getElementById('closeAnnouncementBtn2').addEventListener('click', closeAnnouncementPopup);
-            document.getElementById('announcementOverlay').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('announcementOverlay')) {
-                    closeAnnouncementPopup();
-                }
-            });
-            
-            // 选项卡切换
-            document.getElementById('login-tab').addEventListener('click', () => showForm('login-form'));
-            document.getElementById('register-tab').addEventListener('click', () => showForm('register-form'));
-            document.getElementById('forgot-tab').addEventListener('click', () => showForm('forgot-form'));
-            
-            // 注册链接
-            document.getElementById('register-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                showForm('register-form');
-            });
-            
-            document.getElementById('login-register-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                showForm('login-form');
-            });
-            
-            document.getElementById('forgot-password-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                showForm('forgot-form');
-            });
-            
-            document.getElementById('login-forgot-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                showForm('login-form');
-            });
-            
-            // 密码显示/隐藏
-            setupPasswordToggle(document.getElementById('toggle-password'), document.getElementById('login-password'));
-            setupPasswordToggle(document.getElementById('toggle-register-password'), document.getElementById('register-password'));
-            setupPasswordToggle(document.getElementById('toggle-confirm-password'), document.getElementById('register-confirm-password'));
-            setupPasswordToggle(document.getElementById('toggle-new-password'), document.getElementById('forgot-new-password'));
-            setupPasswordToggle(document.getElementById('toggle-confirm-new-password'), document.getElementById('forgot-confirm-password'));
-            
-            // 输入框提示音
-            document.querySelectorAll('input').forEach(input => {
-                input.addEventListener('input', playInputSound);
-            });
-            
-            // 登录按钮
-            document.getElementById('login-button').addEventListener('click', () => {
-                if (!validateLoginForm()) return;
-                
-                const username = document.getElementById('login-username').value.trim();
-                const password = document.getElementById('login-password').value.trim();
-                const rememberMe = document.getElementById('remember-me').checked;
-                
-                // 显示加载状态
-                document.getElementById('login-button').disabled = true;
-                document.getElementById('login-loading').classList.remove('hidden');
-                
-                // 模拟登录
-                setTimeout(() => {
-                    const user = userDatabase.users.find(
-                        u => (u.username === username || u.email === username) && u.password === password
-                    );
-                    
-                    if (user) {
-                        // 保存用户设置
-                        saveUserSettings(username, password, rememberMe);
-                        
-                        showNotification('success', '登录成功', '正在下载遗迹注入器和连跳...');
-                        
-                        // 登录成功后打开下载弹窗
-                        setTimeout(openDownloadPopup, 1500);
-                    } else {
-                        showNotification('error', '登录失败', '用户名或密码不正确');
-                    }
-                    
-                    // 恢复按钮状态
-                    document.getElementById('login-button').disabled = false;
-                    document.getElementById('login-loading').classList.add('hidden');
-                }, 1000);
-            });
-            
-            // 注册按钮
-            document.getElementById('register-button').addEventListener('click', () => {
-                if (!validateRegisterForm()) return;
-                
-                const username = document.getElementById('register-username').value.trim();
-                const email = document.getElementById('register-email').value.trim();
-                const password = document.getElementById('register-password').value.trim();
-                
-                // 显示加载状态
-                document.getElementById('register-button').disabled = true;
-                document.getElementById('register-loading').classList.remove('hidden');
-                
-                // 模拟注册
-                setTimeout(() => {
-                    const newUser = {
-                        id: Date.now().toString(),
-                        username,
-                        email,
-                        password,
-                        createdAt: new Date().toISOString()
-                    };
-                    
-                    userDatabase.users.push(newUser);
-                    showNotification('success', '注册成功', '请使用新账户登录');
-                    
-                    // 存储用户数据
-                    localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
-                    
-                    // 切换到登录页面
-                    showForm('login-form');
-                    
-                    // 恢复按钮状态
-                    document.getElementById('register-button').disabled = false;
-                    document.getElementById('register-loading').classList.add('hidden');
-                }, 1000);
-            });
-            
-            // 忘记密码按钮
-            document.getElementById('forgot-button').addEventListener('click', () => {
-                if (!validateForgotForm()) return;
-                
-                const username = document.getElementById('forgot-username').value.trim();
-                const newPassword = document.getElementById('forgot-new-password').value.trim();
-                
-                // 显示加载状态
-                document.getElementById('forgot-button').disabled = true;
-                document.getElementById('forgot-loading').classList.remove('hidden');
-                
-                // 模拟重置密码
-                setTimeout(() => {
-                    const userIndex = userDatabase.users.findIndex(user => user.username === username);
-                    if (userIndex !== -1) {
-                        userDatabase.users[userIndex].password = newPassword;
-                        showNotification('success', '密码重置成功', '请使用新密码登录');
-                        
-                        // 存储更新后的数据
-                        localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
-                        
-                        // 切换到登录页面
-                        showForm('login-form');
-                    } else {
-                        showNotification('error', '重置失败', '用户名不存在');
-                    }
-                    
-                    // 恢复按钮状态
-                    document.getElementById('forgot-button').disabled = false;
-                    document.getElementById('forgot-loading').classList.add('hidden');
-                }, 1000);
-            });
-            
-            // 下载弹窗按钮
-            document.getElementById('closePopupBtn').addEventListener('click', closeDownloadPopup);
-            document.getElementById('popupOverlay').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('popupOverlay')) {
-                    closeDownloadPopup();
-                }
-            });
+        // 雪花到达底部后重新开始
+        snowflake.addEventListener('animationiteration', () => {
+          snowflake.style.left = `${Math.random() * 100}%`;
         });
-        
-        // 验证登录表单
-        function validateLoginForm() {
-            const username = document.getElementById('login-username').value.trim();
-            const password = document.getElementById('login-password').value.trim();
-            let isValid = true;
-            
-            clearFormErrors('login-form');
-            
-            if (!username) {
-                showFormError('login-username', '请输入用户名或邮箱');
-                isValid = false;
-            }
-            
-            if (!password) {
-                showFormError('login-password', '请输入密码');
-                isValid = false;
-            } else if (password.length < 6) {
-                showFormError('login-password', '密码至少6位字符');
-                isValid = false;
-            }
-            
-            return isValid;
-        }
-        
-        // 验证注册表单
-        function validateRegisterForm() {
-            const username = document.getElementById('register-username').value.trim();
-            const email = document.getElementById('register-email').value.trim();
-            const password = document.getElementById('register-password').value.trim();
-            const confirmPassword = document.getElementById('register-confirm-password').value.trim();
-            let isValid = true;
-            
-            clearFormErrors('register-form');
-            
-            if (!username) {
-                showFormError('register-username', '请输入用户名');
-                isValid = false;
-            } else if (!/^[a-zA-Z0-9]{4,20}$/.test(username)) {
-                showFormError('register-username', '用户名长度4-20位，仅含字母数字');
-                isValid = false;
-            }
-            
-            if (!email) {
-                showFormError('register-email', '请输入邮箱地址');
-                isValid = false;
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showFormError('register-email', '请输入有效邮箱地址');
-                isValid = false;
-            } else if (userDatabase.users.some(user => user.email === email)) {
-                showFormError('register-email', '该邮箱已被注册');
-                isValid = false;
-            }
-            
-            if (!password) {
-                showFormError('register-password', '请输入密码');
-                isValid = false;
-            } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(password)) {
-                showFormError('register-password', '密码至少8位，含大小写字母和数字');
-                isValid = false;
-            }
-            
-            if (password !== confirmPassword) {
-                showFormError('register-confirm-password', '两次输入的密码不一致');
-                isValid = false;
-            }
-            
-            return isValid;
-        }
-        
-        // 验证忘记密码表单
-        function validateForgotForm() {
-            const username = document.getElementById('forgot-username').value.trim();
-            const newPassword = document.getElementById('forgot-new-password').value.trim();
-            const confirmPassword = document.getElementById('forgot-confirm-password').value.trim();
-            let isValid = true;
-            
-            clearFormErrors('forgot-form');
-            
-            if (!username) {
-                showFormError('forgot-username', '请输入用户名');
-                isValid = false;
-            } else if (!userDatabase.users.some(user => user.username === username)) {
-                showFormError('forgot-username', '该用户名未注册');
-                isValid = false;
-            }
-            
-            if (!newPassword) {
-                showFormError('forgot-new-password', '请输入新密码');
-                isValid = false;
-            } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(newPassword)) {
-                showFormError('forgot-new-password', '密码至少8位，含大小写字母和数字');
-                isValid = false;
-            }
-            
-            if (newPassword !== confirmPassword) {
-                showFormError('forgot-confirm-password', '两次输入的密码不一致');
-                isValid = false;
-            }
-            
-            return isValid;
-        }
-    </script>
+      }
+    }
+    
+    // 页面加载后显示公告和雪花
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(showAnnouncementPopup, 1000);
+      createSnowflakes();
+    });
+  </script>
 </body>
 </html>
