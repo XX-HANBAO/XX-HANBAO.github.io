@@ -3,893 +3,170 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>遗迹（Relic）</title>
+  <title>遗迹（Relic） - 下载</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind 配置 -->
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            primary: '#165DFF',
-            secondary: '#36CBCB',
-            accent: '#FF7D00',
+            primary: '#FF4D4F', // 红色主色调
             dark: '#121212',
-            light: '#F8FAFC',
-            neon: '#00F5FF',
             'dark-gray': '#1E1E1E',
-          },
-          fontFamily: {
-            inter: ['Inter', 'sans-serif'],
           },
         },
       }
     }
   </script>
-  
-  <style type="text/tailwindcss">
-    @layer utilities {
-      .content-auto {
-        content-visibility: auto;
-      }
-      .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-      .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-      }
-      .text-shadow {
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      }
-      .text-neon {
-        text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
-      }
-      .neon-border {
-        box-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
-      }
-      .pulse-slow {
-        animation: pulse 3s infinite;
-      }
-      .float {
-        animation: float 6s ease-in-out infinite;
-      }
-      .float-delay-1 {
-        animation: float 6s ease-in-out 1s infinite;
-      }
-      .float-delay-2 {
-        animation: float 6s ease-in-out 2s infinite;
-      }
-      .float-delay-3 {
-        animation: float 6s ease-in-out 3s infinite;
-      }
-    }
-  </style>
-  
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
+      font-family: system-ui, sans-serif;
       background-color: #000;
       color: #f0f0f0;
+      margin: 0;
+      padding: 0;
     }
-    
-    @keyframes pulse {
-      0%, 100% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.7;
-      }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
     }
-    
-    @keyframes neon-glow {
-      0% {
-        text-shadow: 0 0 5px #00F5FF, 0 0 10px #00F5FF, 0 0 15px #00F5FF;
-      }
-      50% {
-        text-shadow: 0 0 10px #00F5FF, 0 0 20px #00F5FF, 0 0 30px #00F5FF;
-      }
-      100% {
-        text-shadow: 0 0 5px #00F5FF, 0 0 10px #00F5FF, 0 0 15px #00F5FF;
-      }
-    }
-    
-    .neon-glow {
-      animation: neon-glow 2s ease-in-out infinite;
-    }
-    
-    @keyframes snow-fall {
-      0% {
-        transform: translateY(-100vh) rotate(0deg);
-      }
-      100% {
-        transform: translateY(100vh) rotate(360deg);
-      }
-    }
-    
-    .snowflake {
-      position: fixed;
-      top: -10%;
-      pointer-events: none;
-      animation: snow-fall 15s linear infinite;
-    }
-    
-    .snowflake::before {
-      content: "❅";
-      font-size: 1rem;
-      color: white;
-      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    }
-    
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
-    }
-    
-    html {
-      scroll-behavior: smooth;
-    }
-    
-    .nav-link {
-      position: relative;
-    }
-    
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: -4px;
-      left: 0;
-      background-color: #165DFF;
-      transition: width 0.3s;
-    }
-    
-    .nav-link:hover::after,
-    .nav-link.active::after {
-      width: 100%;
+    a {
+      text-decoration: none;
     }
   </style>
 </head>
 
-<body class="font-inter antialiased">
-  <!-- 雪花容器 -->
-  <div id="snow-container" class="fixed top-0 left-0 w-full h-full pointer-events-none z-50"></div>
-  
-  <!-- 顶部导航栏 -->
-  <header class="sticky top-0 z-50 bg-dark/80 backdrop-blur-md shadow-sm transition-custom neon-border">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-2">
-        <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white neon-glow">
-          <i class="fa fa-shield text-xl"></i>
-        </div>
-        <h1 class="text-xl font-bold text-white neon-glow">遗迹<span class="text-primary">.</span></h1>
+<body class="min-h-screen flex items-center justify-center">
+  <div class="container text-center">
+    <div class="mb-8">
+      <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-primary mx-auto mb-4">
+        <i class="fa fa-shield text-2xl"></i>
       </div>
-      
-      <nav class="hidden md:flex items-center space-x-6">
-        <a href="#" class="nav-link text-gray-300 hover:text-primary transition-custom" data-target="hero">首页</a>
-        <a href="#" class="nav-link text-gray-300 hover:text-primary transition-custom" data-target="download">下载</a>
-        <a href="#" class="nav-link text-gray-300 hover:text-primary transition-custom" data-target="community">社区</a>
-        <a href="#" class="nav-link text-gray-300 hover:text-primary transition-custom" data-target="faq">帮助</a>
-      </nav>
-      
-      <div class="flex items-center space-x-4">
-        <button id="helpBtn" class="text-gray-300 hover:text-primary transition-custom">
-          <i class="fa fa-question-circle text-lg"></i>
-        </button>
-        <button id="exportBtn" class="hidden md:flex items-center px-5 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-custom neon-border">
-          <i class="fa fa-download mr-2"></i>下载遗迹
-        </button>
-        <button class="md:hidden text-gray-300" id="mobileMenuBtn">
-          <i class="fa fa-bars text-xl"></i>
-        </button>
-      </div>
+      <h1 class="text-2xl font-bold text-white mb-2">遗迹工具</h1>
+      <p class="text-gray-400">生死狙击一代专用辅助工具</p>
     </div>
     
-    <!-- 移动端菜单 -->
-    <div id="mobileMenu" class="md:hidden hidden bg-dark-gray border-t border-gray-800">
-      <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
-        <a href="#" class="py-2 text-gray-300 hover:text-primary transition-custom mobile-nav-link" data-target="hero">首页</a>
-        <a href="#" class="py-2 text-gray-300 hover:text-primary transition-custom mobile-nav-link" data-target="download">下载</a>
-        <a href="#" class="py-2 text-gray-300 hover:text-primary transition-custom mobile-nav-link" data-target="community">社区</a>
-        <a href="#" class="py-2 text-gray-300 hover:text-primary transition-custom mobile-nav-link" data-target="faq">帮助</a>
-        <button id="mobileExportBtn" class="mt-2 px-5 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-custom neon-border">
-          <i class="fa fa-download mr-2"></i>下载遗迹
-        </button>
-      </div>
+    <!-- 图片区域 -->
+    <div class="mb-6">
+      <img src="https://www.task_id_9414914808214018_.com" alt="相关图片" class="w-full h-auto rounded-lg">
     </div>
-  </header>
-
-  <main class="container mx-auto px-4 py-8">
-    <!-- 英雄区域 -->
-    <section id="hero" class="mb-12 text-center">
-      <h2 class="text-[clamp(1.8rem,4vw,3rem)] font-bold text-white mb-4 neon-glow">生死狙击一代专用辅助工具</h2>
-      <p class="text-gray-400 max-w-2xl mx-auto text-lg mb-8">专为生死狙击一代优化的辅助工具，提供稳定连跳、精准瞄准等功能，提升游戏体验</p>
-      
-      <div id="uploadArea" class="max-w-2xl mx-auto bg-dark-gray rounded-2xl shadow-lg p-8 border-2 border-dashed border-gray-700 hover:border-primary transition-custom cursor-pointer neon-border">
-        <div class="flex flex-col items-center justify-center">
-          <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
-            <i class="fa fa-gamepad text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold text-white mb-2">点击下载生死狙击专用工具</h3>
-          <p class="text-gray-500 mb-6">高性能连跳、反抖动、弹道优化，适配生死狙击一代最新版本</p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button id="downloadBtnHero" class="px-6 py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-custom flex items-center justify-center neon-border">
-              <i class="fa fa-download mr-2"></i>遗迹核心工具
-            </button>
-            <button id="downloadConfigBtnHero" class="px-6 py-3 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-custom flex items-center justify-center neon-border">
-              <i class="fa fa-bolt mr-2"></i>超级连跳配置
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- 为什么选择遗迹 -->
-    <section class="mb-16">
-      <h2 class="text-2xl font-bold text-center mb-12 neon-glow">为什么选择遗迹工具</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
-          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
-            <i class="fa fa-shield text-xl"></i>
-          </div>
-          <h3 class="text-lg font-semibold text-white mb-2">深度适配生死狙击</h3>
-          <p class="text-gray-400">针对生死狙击一代游戏机制深度优化，功能稳定不闪退，适配最新游戏版本</p>
-        </div>
-        
-        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
-          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
-            <i class="fa fa-bolt text-xl"></i>
-          </div>
-          <h3 class="text-lg font-semibold text-white mb-2">极致连跳体验</h3>
-          <p class="text-gray-400">智能连跳算法，轻松实现超级连跳、旋转跳等高级操作，提升游戏机动性</p>
-        </div>
-        
-        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
-          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
-            <i class="fa fa-users text-xl"></i>
-          </div>
-          <h3 class="text-lg font-semibold text-white mb-2">生死狙击玩家社区</h3>
-          <p class="text-gray-400">数千生死狙击玩家聚集的专业社区，实时交流游戏技巧和工具使用经验</p>
-        </div>
-        
-        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
-          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
-            <i class="fa fa-lock text-xl"></i>
-          </div>
-          <h3 class="text-lg font-semibold text-white mb-2">安全防检测</h3>
-          <p class="text-gray-400">多层级反检测机制，针对生死狙击检测系统优化，降低被检测风险</p>
-        </div>
-        
-        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
-          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
-            <i class="fa fa-cogs text-xl"></i>
-          </div>
-          <h3 class="text-lg font-semibold text-white mb-2">简单易操作</h3>
-          <p class="text-gray-400">傻瓜式操作界面，一键开启连跳、无后坐力等功能，无需复杂设置</p>
-        </div>
-        
-        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
-          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4 neon-glow">
-            <i class="fa fa-mobile text-xl"></i>
-          </div>
-          <h3 class="text-lg font-semibold text-white mb-2">低配电脑适配</h3>
-          <p class="text-gray-400">优化内存占用，低配置电脑也能流畅运行，不影响游戏帧率</p>
-        </div>
-      </div>
-    </section>
-    
-    <!-- 特性功能 -->
-    <section class="mb-16 bg-dark-gray rounded-2xl p-8 md:p-12 neon-border">
-      <h2 class="text-2xl font-bold text-center mb-12 neon-glow">核心功能特性 - 专为生死狙击一代设计</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="bg-dark rounded-xl shadow-md p-6 hover:shadow-lg transition-custom neon-border">
-          <div class="flex items-start">
-            <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
-              <i class="fa fa-random text-lg"></i>
-            </div>
-            <div>
-              <h3 class="text-xl font-semibold text-white mb-2">智能连跳系统</h3>
-              <p class="text-gray-400">自动空格连跳，可以使用F7绑定游戏窗口，F8打开游戏模式，F9更改点击速度，F3切换按键。</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-dark rounded-xl shadow-md p-6 hover:shadow-lg transition-custom neon-border">
-          <div class="flex items-start">
-            <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
-              <i class="fa fa-crosshairs text-lg"></i>
-            </div>
-            <div>
-              <h3 class="text-xl font-semibold text-white mb-2">精准瞄准辅助</h3>
-              <p class="text-gray-400">内置弹道优化算法，自动补偿后坐力，提升射击精准度，适应不同战斗场景。</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-dark rounded-xl shadow-md p-6 hover:shadow-lg transition-custom neon-border">
-          <div class="flex items-start">
-            <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
-              <i class="fa fa-bolt text-lg"></i>
-            </div>
-            <div>
-              <h3 class="text-xl font-semibold text-white mb-2">游戏性能优化</h3>
-              <p class="text-gray-400">优化游戏内存占用，降低CPU和GPU负载，在低配电脑上也能保持高帧率运行，避免游戏卡顿。</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-dark rounded-xl shadow-md p-6 hover:shadow-lg transition-custom neon-border">
-          <div class="flex items-start">
-            <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
-              <i class="fa fa-shield text-lg"></i>
-            </div>
-            <div>
-              <h3 class="text-xl font-semibold text-white mb-2">多层反检测机制</h3>
-              <p class="text-gray-400">实时监控游戏检测系统，动态调整运行模式，避免被游戏安全系统识别，保障账号安全。</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- 加入遗迹玩家社区 -->
-    <section id="community" class="mb-16 bg-primary/10 rounded-3xl p-8 md:p-12 neon-border">
-      <div class="max-w-3xl mx-auto text-center">
-        <h2 class="text-2xl md:text-3xl font-bold mb-4 neon-glow">加入生死狙击遗迹社区</h2>
-        <p class="text-gray-400 mb-8 max-w-2xl mx-auto">与数千生死狙击玩家交流经验，获取最新工具版本和游戏技巧</p>
-        
-        <div class="flex flex-wrap justify-center gap-4 mb-8">
-          <button id="joinTGGroupBtn" class="px-6 py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-custom flex items-center justify-center neon-border">
-            <i class="fa fa-telegram mr-2"></i>生死狙击TG群
-          </button>
-          
-          <button id="joinKOOKGroupBtn" class="px-6 py-3 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-custom flex items-center justify-center neon-border">
-            <i class="fa fa-comments mr-2"></i>生死狙击KOOK群
-          </button>
-          
-          <button id="joinQQGroupBtn" class="px-6 py-3 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-custom flex items-center justify-center neon-border">
-            <i class="fa fa-qq mr-2"></i>生死狙击QQ群
-          </button>
-        </div>
-        
-        <p class="text-gray-500 text-sm">加入社区即可获取专属连跳教程和最新工具版本</p>
-      </div>
-    </section>
     
     <!-- 下载区域 -->
-    <section id="download" class="mb-16">
-      <div class="bg-dark-gray rounded-2xl shadow-lg overflow-hidden neon-border">
-        <div class="md:flex">
-          <div class="md:w-1/2 p-8 md:p-12 bg-primary/10">
-            <h2 class="text-2xl font-bold mb-6 neon-glow">下载生死狙击专用工具（访问密码永远为6666）</h2>
-            <p class="text-gray-400 mb-8">选择适合您的版本下载，立即提升生死狙击游戏体验</p>
-            
-            <div class="space-y-4 mb-8">
-              <div class="flex items-center p-4 bg-dark rounded-lg shadow-sm neon-border">
-                <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
-                  <i class="fa fa-windows text-lg"></i>
-                </div>
-                <div>
-                  <h3 class="font-semibold text-white">遗迹核心工具</h3>
-                  <p class="text-sm text-gray-500">包含静默、瞄准等完整功能的主程序</p>
-                </div>
-              </div>
-              
-              <div class="flex items-center p-4 bg-dark rounded-lg shadow-sm neon-border">
-                <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
-                  <i class="fa fa-bolt text-lg"></i>
-                </div>
-                <div>
-                  <h3 class="font-semibold text-white">超级连跳配置</h3>
-                  <p class="text-sm text-gray-500">优化的连跳参数配置文件，适用于各种地图</p>
-                </div>
-              </div>
-              
-              <div class="flex items-center p-4 bg-dark rounded-lg shadow-sm neon-border">
-                <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary mr-4 flex-shrink-0 neon-glow">
-                  <i class="fa fa-file-archive-o text-lg"></i>
-                </div>
-                <div>
-                  <h3 class="font-semibold text-white">视频教程合集</h3>
-                  <p class="text-sm text-gray-500">连跳技巧、工具使用等视频教程合集</p>
-                </div>
-              </div>
-            </div>
-            
-            <div class="flex flex-col sm:flex-row gap-4">
-              <button id="downloadBtnSection" class="flex-1 py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-custom flex items-center justify-center neon-border">
-                <i class="fa fa-download mr-2"></i>下载核心工具
-              </button>
-              <button id="downloadConfigBtnSection" class="flex-1 py-3 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-custom flex items-center justify-center neon-border">
-                <i class="fa fa-bolt mr-2"></i>下载连跳配置
-              </button>
-            </div>
-          </div>
-          
-          <div class="md:w-1/2 bg-[url('https://picsum.photos/id/177/800/600')] bg-cover bg-center neon-border"></div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- 用户评价 -->
-    <section class="mb-16">
-      <h2 class="text-2xl font-bold text-center mb-12 neon-glow">生死狙击玩家评价</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
-          <div class="flex items-center mb-4">
-            <img src="https://picsum.photos/id/64/100/100" alt="玩家头像" class="w-12 h-12 rounded-full object-cover mr-4">
-            <div>
-              <h4 class="font-semibold text-white">唧唧达人</h4>
-              <p class="text-sm text-gray-500">生死狙击5年牢玩家</p>
-            </div>
-          </div>
-          <div class="text-yellow-400 mb-3">
-            <i class="fa fa-star"></i>
-            <i class="fa fa-star"></i>
-            <i class="fa fa-star"></i>
-            <i class="fa fa-star"></i>
-            <i class="fa fa-star"></i>
-          </div>
-          <p class="text-gray-400">"用了遗迹工具后，我的连跳技术提升非常明显，以前在生死狙击里上不去的点位现在轻松就能跳上去，游戏体验大大提升，推荐给所有生死狙击玩家！"</p>
-        </div>
-        
-        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
-          <div class="flex items-center mb-4">
-            <img src="https://picsum.photos/id/65/100/100" alt="玩家头像" class="w-12 h-12 rounded-full object-cover mr-4">
-            <div>
-              <h4 class="font-semibold text-white">给你🐎杀了</h4>
-              <p class="text-sm text-gray-500">生死狙击战队队长</p>
-            </div>
-          </div>
-          <div class="text-yellow-400 mb-3">
-            <i class="fa fa-star"></i>
-            <i class="fa fa-star"></i>
-            <i class="fa fa-star"></i>
-            <i class="fa fa-star"></i>
-            <i class="fa fa-star-half-o"></i>
-          </div>
-          <p class="text-gray-400">"作为🐎+骑，我给他们推荐了遗迹工具，大家的连跳和瞄准水平都有了显著提高。工具非常稳定，适配生死狙击最新版本，没有出现过检测问题。"</p>
-        </div>
-        
-        <div class="bg-dark-gray rounded-2xl shadow-lg p-6 hover:shadow-xl transition-custom neon-border">
-          <div class="flex items-center mb-4">
-            <img src="https://picsum.photos/id/91/100/100" alt="玩家头像" class="w-12 h-12 rounded-full object-cover mr-4">
-            <div>
-              <h4 class="font-semibold text-white">夜</h4>
-              <p class="text-sm text-gray-500">生死狙击主播</p>
-            </div>
-          </div>
-          <div class="text-yellow-400 mb-3">
-            <i class="fa fa-star"></i>
-            <i class="fa fa-star"></i>
-            <i class="fa fa-star"></i>
-            <i class="fa fa-star"></i>
-            <i class="fa fa-star"></i>
-          </div>
-          <p class="text-gray-400">"我在直播生死狙击时一直使用遗迹工具，连跳流畅不卡顿，弹道优化效果明显，观众都问我怎么做到的。社区里还有很多大神分享的连跳技巧，非常实用！"</p>
-        </div>
-      </div>
-    </section>
-    
-    <!-- 常见问题 -->
-    <section id="faq" class="mb-16">
-      <h2 class="text-2xl font-bold text-center mb-12 neon-glow">常见问题 - 生死狙击专用</h2>
-      
-      <div class="max-w-3xl mx-auto space-y-4">
-        <!-- 保留的问题 -->
-        <div class="bg-dark-gray rounded-xl shadow-sm overflow-hidden neon-border">
-          <button class="faq-question w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none">
-            <span class="text-white">使用遗迹会导致生死狙击账号封禁吗？</span>
-            <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
-          </button>
-          <div class="faq-answer px-6 py-0 max-h-0 overflow-hidden transition-all duration-300">
-            <div class="py-4 text-gray-400">
-              任何游戏辅助工具都无法100%保证安全。建议您合理使用，避免在游戏中过度展示异常操作，降低被举报风险。
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-dark-gray rounded-xl shadow-sm overflow-hidden neon-border">
-          <button class="faq-question w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none">
-            <span class="text-white">遗迹工具支持生死狙击哪些地图？</span>
-            <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
-          </button>
-          <div class="faq-answer px-6 py-0 max-h-0 overflow-hidden transition-all duration-300">
-            <div class="py-4 text-gray-400">
-              遗迹工具支持生死狙击一代所有官方地图，包括经典地图（如废弃工厂、冰雪堡垒）和最新推出的地图。
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-dark-gray rounded-xl shadow-sm overflow-hidden neon-border">
-          <button class="faq-question w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none">
-            <span class="text-white">遇到问题如何获取帮助？</span>
-            <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
-          </button>
-          <div class="faq-answer px-6 py-0 max-h-0 overflow-hidden transition-all duration-300">
-            <div class="py-4 text-gray-400">
-              您可以加入我们的官方社区（TG群、KOOK群、QQ群），在那里有专业的技术人员和热心玩家会为您解答问题。社区内也有详细的使用教程和常见问题解决方案。
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- 页脚 -->
-  <footer class="bg-dark text-white py-12 neon-border">
-    <div class="container mx-auto px-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-        <div>
-          <div class="flex items-center space-x-2 mb-4">
-            <div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-primary neon-glow">
-              <i class="fa fa-shield text-xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-white">遗迹<span class="text-primary">.</span></h3>
-          </div>
-          <p class="text-gray-400 mb-4">生死狙击一代专业辅助工具，提升游戏体验</p>
-          <div class="flex space-x-4">
-            <a href="https://t.me/+dy8r937YxnljZTRl" class="text-gray-400 hover:text-white transition-custom" target="_blank">
-              <i class="fa fa-telegram"></i>
-            </a>
-            <a href="https://kook.vip/ZCSH5g" class="text-gray-400 hover:text-white transition-custom" target="_blank">
-              <i class="fa fa-comments"></i>
-            </a>
-            <a href="https://qm.qq.com/q/DSmYyv2Rby" class="text-gray-400 hover:text-white transition-custom" target="_blank">
-              <i class="fa fa-qq"></i>
-            </a>
-            <a href="#" class="text-gray-400 hover:text-white transition-custom">
-              <i class="fa fa-github"></i>
-            </a>
-          </div>
-        </div>
-        
-        <div>
-          <h4 class="text-lg font-semibold mb-4 neon-glow">产品</h4>
-          <ul class="space-y-2">
-            <li><a href="#download" class="text-gray-400 hover:text-white transition-custom">下载遗迹</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">功能介绍</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">更新日志</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">使用教程</a></li>
-          </ul>
-        </div>
-        
-        <div>
-          <h4 class="text-lg font-semibold mb-4 neon-glow">资源</h4>
-          <ul class="space-y-2">
-           
-            <li><a href="#faq" class="text-gray-400 hover:text-white transition-custom">常见问题</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">技术支持</a></li>
-            <li><a href="#community" class="text-gray-400 hover:text-white transition-custom">社区论坛</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">联系我们</a></li>
-          </ul>
-        </div>
-        
-        <div>
-          <h4 class="text-lg font-semibold mb-4 neon-glow">订阅更新</h4>
-          <p class="text-gray-400 mb-4">获取生死狙击工具最新版本和游戏技巧</p>
-          <form class="mb-4">
-            <div class="flex">
-              <input type="email" placeholder="您的邮箱地址" class="px-4 py-2 w-full rounded-l-lg focus:outline-none text-dark bg-gray-800 border border-gray-700">
-              <button type="submit" class="px-4 py-2 bg-primary text-white rounded-r-lg hover:bg-primary/90 transition-custom neon-border">
-                <i class="fa fa-paper-plane"></i>
-              </button>
-            </div>
-          </form>
-          <p class="text-gray-500 text-sm">我们尊重您的隐私，不会发送垃圾邮件</p>
-        </div>
-      </div>
-      
-      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-        <p class="text-gray-500 text-sm mb-4 md:mb-0">© 2025 遗迹科技. 保留所有权利。</p>
-        <div class="flex space-x-6">
-          <a href="#" class="text-gray-500 hover:text-gray-400 text-sm transition-custom">隐私政策</a>
-          <a href="#" class="text-gray-500 hover:text-gray-400 text-sm transition-custom">服务条款</a>
-          <a href="#" class="text-gray-500 hover:text-gray-400 text-sm transition-custom">使用须知</a>
-        </div>
-      </div>
+    <div class="mb-12">
+      <h2 class="text-xl font-semibold text-white mb-4">点击下载</h2>
+      <a href="https://wwbq.lanzn.com/iSpJ62ycinid" class="block w-full py-3 bg-dark-gray text-primary rounded-lg mb-3 hover:bg-gray-700 transition-colors flex items-center justify-center">
+        <i class="fa fa-download mr-2"></i>
+        <span class="text-red-500 font-medium">遗迹核心工具</span>
+      </a>
+      <a href="https://wwbq.lanzoup.com/ixtgw2xmwuxi" class="block w-full py-3 bg-dark-gray text-gray-300 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center">
+        <i class="fa fa-bolt mr-2"></i>
+        超级连跳配置
+      </a>
     </div>
-  </footer>
-
-  <!-- 公告弹窗 -->
-  <div id="announcementOverlay" class="fixed inset-0 z-[60] flex items-center justify-center bg-dark/90 
-                                    opacity-0 pointer-events-none transition-opacity duration-500">
-    <div id="announcementPopup" class="relative w-full max-w-2xl mx-4 rounded-2xl overflow-hidden 
-                                       transform scale-95 transition-transform duration-500 neon-border">
-            <!-- 内容 -->
-            <div class="relative z-10 p-8 md:p-10 bg-dark-gray">
-                <!-- 关闭按钮 -->
-                <button id="closeAnnouncementBtn" class="absolute top-6 right-6 text-gray-400 hover:text-gray-300 
-                                                 transition-colors duration-300 text-2xl">
-                    <i class="fa fa-times"></i>
-                </button>
-                
-                <!-- 标题 -->
-                <div class="text-center mb-8">
-                    <h2 class="text-2xl font-bold text-white mb-2 neon-glow">重要公告</h2>
-                    <p class="text-gray-500">2025年6月15日</p>
-                </div>
-                
-                <!-- 公告内容 - 已更新为指定文本 -->
-                <div class="mb-10 max-w-xl mx-auto">
-                    <div class="bg-dark rounded-xl p-6 md:p-8 border border-secondary/30 neon-border">
-                        <p class="text-xl text-gray-300 leading-relaxed">
-                            遗迹QQ群因特殊原因被整治，目前主要交流群为TG群和KOOK群。
-                        </p>
-                        <p class="text-xl text-gray-300 leading-relaxed mt-2">
-                            <span class="text-secondary font-bold">重要规则：</span>
-                            请避免在KOOK/QQ群内讨论任何与外挂相关的内容（包括"挂""G"等字眼），
-                            违规者将被严肃处理。
-                        </p>
-                        <p class="text-xl text-gray-300 leading-relaxed mt-2">
-                            <span class="text-secondary font-bold">风险提示：</span>
-                            开挂属于破坏游戏平衡的行为，由此导致的账号封禁等后果需自行承担。
-                            请勿因账号问题辱骂作者，任何恶意辱骂将被永久拉黑。
-                        </p>
-                        <p class="text-xl text-gray-300 leading-relaxed mt-4">
-                            感谢大家对遗迹社区的支持与维护，共同营造健康的交流环境！
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- 按钮 -->
-                <div class="flex justify-center">
-                    <button id="closeAnnouncementBtn2" class="px-10 py-4 text-lg font-bold bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-custom neon-border">
-                        我知道了
-                    </button>
-                </div>
-            </div>
-        </div>
+    
+    <!-- 官方群区域 -->
+    <div>
+      <h2 class="text-xl font-semibold text-white mb-4">官方交流群</h2>
+      <a href="https://t.me/+dy8r937YxnljZTRl" class="block w-full py-3 bg-dark-gray text-primary rounded-lg mb-3 hover:bg-gray-700 transition-colors flex items-center justify-center" target="_blank">
+        <i class="fa fa-telegram mr-2"></i>
+        生死狙击TG群
+      </a>
+      <a href="https://kook.vip/ZCSH5g" class="block w-full py-3 bg-dark-gray text-gray-300 rounded-lg mb-3 hover:bg-gray-700 transition-colors flex items-center justify-center" target="_blank">
+        <i class="fa fa-comments mr-2"></i>
+        生死狙击KOOK群
+      </a>
+      <a href="https://qm.qq.com/q/DSmYyv2Rby" class="block w-full py-3 bg-dark-gray text-gray-300 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center" target="_blank">
+        <i class="fa fa-qq mr-2"></i>
+        生死狙击QQ群
+      </a>
+    </div>
+    
+    <!-- 底部信息 -->
+    <div class="mt-10 text-gray-500 text-sm">
+      <p>访问密码：6666</p>
+      <p class="mt-2">© 2025 遗迹工具</p>
     </div>
   </div>
 
-  <!-- 下载进度提示 -->
-  <div id="downloadNotification" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 
-                                        bg-dark/90 border border-gray-700 rounded-lg p-4 max-w-sm w-full 
-                                        shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 
-                                        z-50 flex items-center neon-border">
-        <div class="mr-4 text-primary text-xl">
-            <i class="fa fa-download"></i>
+  <!-- 公告弹窗 -->
+  <div id="announcementOverlay" class="fixed inset-0 z-[60] flex items-center justify-center bg-dark/90 opacity-0 pointer-events-none transition-opacity duration-500">
+    <div id="announcementPopup" class="relative w-full max-w-2xl mx-4 rounded-2xl overflow-hidden transform scale-95 transition-transform duration-500">
+      <div class="relative z-10 p-6 md:p-8 bg-dark-gray">
+        <button id="closeAnnouncementBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-300 transition-colors text-xl">
+          <i class="fa fa-times"></i>
+        </button>
+        
+        <div class="text-center mb-6">
+          <h2 class="text-xl font-bold text-white mb-2">重要公告</h2>
+          <p class="text-gray-500 text-sm">2025年6月15日</p>
         </div>
-        <div>
-            <h4 class="font-bold text-white" id="notificationTitle">下载中</h4>
-            <p class="text-gray-400 text-sm" id="notificationMessage">请等待...</p>
+        
+        <div class="mb-8 text-gray-300">
+          <p class="mb-3">遗迹QQ群因特殊原因被整治，目前主要交流群为TG群和KOOK群。</p>
+          <p class="mb-3"><span class="font-bold">重要规则：</span>避免在群内讨论任何与外挂相关内容，违规者将被处理。</p>
+          <p class="mb-3"><span class="font-bold">风险提示：</span>开挂属于破坏游戏平衡行为，账号封禁后果自行承担。</p>
+          <p>感谢大家对遗迹社区的支持与维护！</p>
         </div>
-        <div class="ml-auto">
-            <div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
-                <div id="notificationProgress" class="h-full bg-primary w-0 transition-all duration-300"></div>
-            </div>
+        
+        <div class="flex justify-center">
+          <button id="closeAnnouncementBtn2" class="px-8 py-3 text-primary border border-primary rounded-lg hover:bg-primary/10 transition-colors">
+            我知道了
+          </button>
         </div>
+      </div>
     </div>
+  </div>
 
   <script>
-    // 移动端菜单切换
-    document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-      const mobileMenu = document.getElementById('mobileMenu');
-      mobileMenu.classList.toggle('hidden');
-    });
-    
-    // 帮助模态框（此处为公告弹窗）
-    document.getElementById('helpBtn').addEventListener('click', function() {
-      showAnnouncementPopup();
-    });
-    
-    // 公告弹窗
-    function showAnnouncementPopup() {
-      const overlay = document.getElementById('announcementOverlay');
-      const popup = document.getElementById('announcementPopup');
-      
-      overlay.classList.remove('opacity-0', 'pointer-events-none');
-      setTimeout(() => {
-        popup.classList.remove('scale-95');
-        popup.classList.add('scale-100');
-      }, 100);
-      
-      // 防止背景滚动
-      document.body.style.overflow = 'hidden';
+    // 下载进度提示（简化版）
+    function showDownloadNotification() {
+      alert('正在打开下载链接...');
     }
     
-    function closeAnnouncementPopup() {
-      const overlay = document.getElementById('announcementOverlay');
-      const popup = document.getElementById('announcementPopup');
-      
-      popup.classList.remove('scale-100');
-      popup.classList.add('scale-95');
-      
-      setTimeout(() => {
-        overlay.classList.add('opacity-0', 'pointer-events-none');
-        // 恢复背景滚动
-        document.body.style.overflow = '';
-      }, 300);
-    }
-    
-    document.getElementById('closeAnnouncementBtn').addEventListener('click', closeAnnouncementPopup);
-    document.getElementById('closeAnnouncementBtn2').addEventListener('click', closeAnnouncementPopup);
-    
-    // 点击遮罩层关闭公告弹窗
-    document.getElementById('announcementOverlay').addEventListener('click', (e) => {
-      if (e.target === document.getElementById('announcementOverlay')) {
-        closeAnnouncementPopup();
-      }
-    });
-    
-    // 下载按钮事件
-    function showDownloadNotification(title, message, progress) {
-      const notification = document.getElementById('downloadNotification');
-      document.getElementById('notificationTitle').textContent = title;
-      document.getElementById('notificationMessage').textContent = message;
-      document.getElementById('notificationProgress').style.width = `${progress}%`;
-      
-      notification.classList.remove('opacity-0');
-      notification.classList.add('opacity-100');
-      
-      // 3秒后自动隐藏
-      setTimeout(() => {
-        notification.classList.remove('opacity-100');
-        notification.classList.add('opacity-0');
-      }, 3000);
-    }
-    
-    function openDownloadUrl(url, title) {
-      showDownloadNotification(`正在下载${title}`, '请等待...', 100);
-      
-      // 模拟下载
-      setTimeout(() => {
-        window.open(url, '_blank');
-      }, 1000);
-    }
-    
-    // 核心工具下载链接
-    const relicDownloadUrl = 'https://wwbq.lanzn.com/iSpJ62ycinid';
-    // 连跳配置下载链接
-    const configDownloadUrl = 'https://wwbq.lanzoup.com/ixtgw2xmwuxi';
-    
-    // 英雄区域下载按钮
-    document.getElementById('downloadBtnHero').addEventListener('click', () => {
-      openDownloadUrl(relicDownloadUrl, '遗迹核心工具');
-    });
-    
-    document.getElementById('downloadConfigBtnHero').addEventListener('click', () => {
-      openDownloadUrl(configDownloadUrl, '超级连跳配置');
-    });
-    
-    // 下载区域下载按钮
-    document.getElementById('downloadBtnSection').addEventListener('click', () => {
-      openDownloadUrl(relicDownloadUrl, '遗迹核心工具');
-    });
-    
-    document.getElementById('downloadConfigBtnSection').addEventListener('click', () => {
-      openDownloadUrl(configDownloadUrl, '超级连跳配置');
-    });
-    
-    document.getElementById('exportBtn').addEventListener('click', () => {
-      openDownloadUrl(relicDownloadUrl, '遗迹核心工具');
-    });
-    
-    document.getElementById('mobileExportBtn').addEventListener('click', () => {
-      openDownloadUrl(relicDownloadUrl, '遗迹核心工具');
-    });
-    
-    // 导航链接点击事件 - 平滑滚动
-    const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
-    
-    navLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
+    // 为下载按钮添加点击反馈
+    document.querySelectorAll('a[href^="https://wwbq.lanzn.com"], a[href^="https://wwbq.lanzoup.com"]').forEach(btn => {
+      btn.addEventListener('click', function(e) {
         e.preventDefault();
-        
-        // 关闭移动端菜单
-        const mobileMenu = document.getElementById('mobileMenu');
-        if (!mobileMenu.classList.contains('hidden')) {
-          mobileMenu.classList.add('hidden');
-        }
-        
-        const targetId = this.getAttribute('data-target');
-        const targetSection = document.getElementById(targetId);
-        
-        if (targetSection) {
-          // 滚动到目标区域
-          targetSection.scrollIntoView({
-            behavior: 'smooth'
-          });
-          
-          // 添加激活状态
-          navLinks.forEach(l => l.classList.remove('active'));
-          this.classList.add('active');
-        }
+        showDownloadNotification();
+        setTimeout(() => window.open(this.href, '_blank'), 500);
       });
     });
-    
-    // 滚动时更新导航激活状态
-    window.addEventListener('scroll', function() {
-      const scrollPosition = window.scrollY;
-      
-      // 定义各区域的偏移量
-      const sections = {
-        hero: document.getElementById('hero').offsetTop - 100,
-        download: document.getElementById('download').offsetTop - 100,
-        community: document.getElementById('community').offsetTop - 100,
-        faq: document.getElementById('faq').offsetTop - 100
-      };
-      
-      // 更新激活状态
-      navLinks.forEach(link => {
-        link.classList.remove('active');
-        
-        const targetId = link.getAttribute('data-target');
-        if (scrollPosition >= sections[targetId]) {
-          link.classList.add('active');
-        }
-      });
-    });
-    
-    // 常见问题手风琴效果
-    const faqQuestions = document.querySelectorAll('.faq-question');
-    faqQuestions.forEach(question => {
-      question.addEventListener('click', () => {
-        const answer = question.nextElementSibling;
-        const icon = question.querySelector('i');
-        
-        // 切换当前问题的展开状态
-        if (answer.style.maxHeight) {
-          answer.style.maxHeight = null;
-          icon.style.transform = 'rotate(0deg)';
-        } else {
-          answer.style.maxHeight = answer.scrollHeight + 'px';
-          icon.style.transform = 'rotate(180deg)';
-        }
-      });
-    });
-    
-    // 生成雪花效果
-    function createSnowflakes() {
-      const snowContainer = document.getElementById('snow-container');
-      const snowflakeCount = window.innerWidth > 768 ? 50 : 30; // 根据屏幕尺寸调整雪花数量
-      
-      for (let i = 0; i < snowflakeCount; i++) {
-        const snowflake = document.createElement('div');
-        snowflake.className = 'snowflake';
-        
-        // 随机大小和位置
-        const size = Math.random() * 15 + 5;
-        const left = Math.random() * 100;
-        const duration = Math.random() * 10 + 10; // 雪花飘落时间
-        const delay = Math.random() * 5; // 雪花延迟飘落
-        
-        snowflake.style.left = `${left}%`;
-        snowflake.style.animationDuration = `${duration}s`;
-        snowflake.style.animationDelay = `${delay}s`;
-        snowflake.style.fontSize = `${size}px`;
-        
-        // 随机雪花类型
-        const snowTypes = ['❅', '❆', '❄️'];
-        const snowType = snowTypes[Math.floor(Math.random() * snowTypes.length)];
-        snowflake.style.content = `'${snowType}'`;
-        
-        snowContainer.appendChild(snowflake);
-        
-        // 雪花到达底部后重新开始
-        snowflake.addEventListener('animationiteration', () => {
-          snowflake.style.left = `${Math.random() * 100}%`;
-        });
-      }
-    }
-    
-    // 页面加载后显示公告和雪花
+
+    // 公告弹窗交互
     document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(showAnnouncementPopup, 1000);
-      createSnowflakes();
+      setTimeout(() => {
+        const overlay = document.getElementById('announcementOverlay');
+        const popup = document.getElementById('announcementPopup');
+        
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+          popup.classList.remove('scale-95');
+          popup.classList.add('scale-100');
+        }, 100);
+        
+        document.body.style.overflow = 'hidden';
+      }, 1000);
+
+      function closeAnnouncementPopup() {
+        const overlay = document.getElementById('announcementOverlay');
+        const popup = document.getElementById('announcementPopup');
+        
+        popup.classList.remove('scale-100');
+        popup.classList.add('scale-95');
+        
+        setTimeout(() => {
+          overlay.classList.add('opacity-0', 'pointer-events-none');
+          document.body.style.overflow = '';
+        }, 300);
+      }
+
+      document.getElementById('closeAnnouncementBtn').addEventListener('click', closeAnnouncementPopup);
+      document.getElementById('closeAnnouncementBtn2').addEventListener('click', closeAnnouncementPopup);
+      document.getElementById('announcementOverlay').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('announcementOverlay')) closeAnnouncementPopup();
+      });
     });
   </script>
 </body>
