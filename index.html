@@ -11,131 +11,265 @@
       theme: {
         extend: {
           colors: {
-            primary: '#FF4D4F', // 红色主色调
-            dark: '#121212',
-            'dark-gray': '#1E1E1E',
+            primary: '#FF4D4F', // 主色调-亮红色
+            secondary: '#7E57C2', // 辅助色-深紫色
+            accent: '#00E5FF', // 强调色-青蓝色
+            dark: '#050505',
+            'dark-gray': '#121212',
+            'medium-gray': '#1E1E1E',
+            'light-gray': '#2A2A2A',
           },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'neon': '0 0 15px rgba(255, 77, 79, 0.5)',
+            'neon-secondary': '0 0 10px rgba(126, 87, 194, 0.3)',
+          }
         },
       }
     }
   </script>
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background-color: #000;
-      color: #f0f0f0;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    a {
-      text-decoration: none;
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-neon {
+        text-shadow: 0 0 8px rgba(255, 77, 79, 0.7);
+      }
+      .bg-glass {
+        background: rgba(10, 10, 10, 0.85);
+        backdrop-filter: blur(10px);
+      }
+      .btn-glow {
+        box-shadow: 0 0 5px currentColor;
+      }
+      .btn-glow:hover {
+        box-shadow: 0 0 15px currentColor;
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+      }
+      .animate-pulse-slow {
+        animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
-<body class="min-h-screen flex items-center justify-center">
-  <div class="container text-center">
-    <div class="mb-8">
-      <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-primary mx-auto mb-4">
-        <i class="fa fa-shield text-2xl"></i>
+<body class="min-h-screen font-inter bg-dark text-gray-100 overflow-x-hidden">
+  <!-- 动态背景粒子 -->
+  <div id="particles" class="fixed inset-0 pointer-events-none"></div>
+
+  <div class="container max-w-md mx-auto px-4 py-8 relative z-10">
+    <!-- 顶部Logo和标题 -->
+    <div class="text-center mb-10 animate-fade-in">
+      <div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-primary mx-auto mb-6 shadow-neon animate-float">
+        <i class="fa fa-shield text-4xl"></i>
       </div>
-      <h1 class="text-2xl font-bold text-white mb-2">遗迹下载</h1>
-      <p class="text-gray-400">生死狙击一代专用辅助工具</p>
+      <h1 class="text-[clamp(2rem,5vw,3rem)] font-extrabold text-white mb-3 text-neon">遗迹下载</h1>
+      <p class="text-gray-400 text-lg mb-4">生死狙击一代专用辅助工具</p>
+      <div class="mt-2 bg-primary/10 text-primary text-sm px-4 py-2 rounded-full inline-block flex items-center">
+        <i class="fa fa-tag mr-2"></i>
+        <span class="font-medium">当前最新版本: 2.2</span>
+      </div>
     </div>
     
     <!-- 图片区域 -->
-    <div class="mb-6">
-      <img src="https://www.task_id_9414914808214018_.com" alt="相关图片" class="w-full h-auto rounded-lg">
+    <div class="mb-12 overflow-hidden rounded-3xl card-shadow relative group">
+      <img src="https://p-flow-review-sign.bytedance.net/tos-cn-i-a9rns2rl98/rc/5274c391113142a89922932110528076.jpeg~tplv-a9rns2rl98-image-qvalue.jpeg?rk3s=49177a0b&x-orig-authkey=aka9rns2rl98&x-orig-expires=2066305498&x-orig-sign=AQRNTgiwikuFEJU68cVtJ5XAATs%3D" 
+           alt="新图片" 
+           class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+      <div class="absolute inset-0 bg-gradient-to-t from-dark to-transparent opacity-40 group-hover:opacity-20 transition-opacity duration-500"></div>
     </div>
     
     <!-- 下载区域 -->
-    <div class="mb-12">
-      <h2 class="text-xl font-semibold text-white mb-4">点击下载</h2>
-      <a href="https://wwbq.lanzn.com/ibfMe2z8o04j" class="block w-full py-3 bg-dark-gray text-primary rounded-lg mb-3 hover:bg-gray-700 transition-colors flex items-center justify-center">
-        <i class="fa fa-download mr-2"></i>
-        <span class="text-red-500 font-medium">遗迹核心工具</span>
+    <div class="mb-12 space-y-4">
+      <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center justify-center">
+        <i class="fa fa-download mr-3 text-primary text-neon"></i>
+        <span>点击下载</span>
+      </h2>
+      
+      <a href="https://wwbq.lanzn.com/ibfMe2z8o04j" class="block w-full py-5 bg-gradient-to-r from-dark-gray to-medium-gray text-primary rounded-2xl mb-4 btn-hover btn-glow flex items-center justify-center shadow-lg hover:shadow-neon">
+        <i class="fa fa-shield mr-4 text-2xl"></i>
+        <span class="font-bold text-lg">遗迹核心工具</span>
       </a>
-      <a href="https://wwbq.lanzoup.com/ixtgw2xmwuxi" class="block w-full py-3 bg-dark-gray text-gray-300 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center">
-        <i class="fa fa-bolt mr-2"></i>
-        连跳下载
+      
+      <a href="https://wwbq.lanzoup.com/ixtgw2xmwuxi" class="block w-full py-5 bg-dark-gray text-gray-300 rounded-2xl mb-4 btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray transition-colors">
+        <i class="fa fa-bolt mr-4 text-2xl text-accent"></i>
+        <span class="font-bold text-lg">连跳下载</span>
+      </a>
+      
+      <!-- 官网链接按钮 -->
+      <a href="https://tianqing567.github.io/XianZhen/" class="block w-full py-5 bg-secondary/20 text-secondary rounded-2xl mb-4 btn-hover btn-glow flex items-center justify-center shadow-lg hover:shadow-neon-secondary">
+        <i class="fa fa-globe mr-4 text-2xl"></i>
+        <span class="font-bold text-lg">陷阵官网</span>
+      </a>
+      
+      <a href="https://alan7760.github.io/PK/" class="block w-full py-5 bg-dark-gray text-gray-300 rounded-2xl btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray transition-colors">
+        <i class="fa fa-rocket mr-4 text-2xl text-accent"></i>
+        <span class="font-bold text-lg">破空官网</span>
       </a>
     </div>
     
     <!-- 官方群区域 -->
-    <div>
-      <h2 class="text-xl font-semibold text-white mb-4">官方交流群</h2>
-      <a href="https://t.me/+dy8r937YxnljZTRl" class="block w-full py-3 bg-dark-gray text-primary rounded-lg mb-3 hover:bg-gray-700 transition-colors flex items-center justify-center" target="_blank">
-        <i class="fa fa-telegram mr-2"></i>
-        生死狙击TG群
+    <div class="mb-12">
+      <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center justify-center">
+        <i class="fa fa-comments mr-3 text-primary text-neon"></i>
+        <span>官方交流群</span>
+      </h2>
+      
+      <a href="https://t.me/+dy8r937YxnljZTRl" class="block w-full py-5 bg-dark-gray text-primary rounded-2xl mb-4 btn-hover btn-glow flex items-center justify-center shadow-lg hover:shadow-neon" target="_blank">
+        <i class="fa fa-telegram mr-4 text-2xl"></i>
+        <span class="font-bold text-lg">生死狙击TG群</span>
       </a>
-      <a href="https://kook.vip/ZCSH5g" class="block w-full py-3 bg-dark-gray text-gray-300 rounded-lg mb-3 hover:bg-gray-700 transition-colors flex items-center justify-center" target="_blank">
-        <i class="fa fa-comments mr-2"></i>
-        生死狙击KOOK群
+      
+      <a href="https://kook.vip/ZCSH5g" class="block w-full py-5 bg-dark-gray text-gray-300 rounded-2xl mb-4 btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray transition-colors" target="_blank">
+        <i class="fa fa-comments mr-4 text-2xl text-accent"></i>
+        <span class="font-bold text-lg">生死狙击KOOK群</span>
       </a>
-      <a href="https://qm.qq.com/q/DSmYyv2Rby" class="block w-full py-3 bg-dark-gray text-gray-300 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center" target="_blank">
-        <i class="fa fa-qq mr-2"></i>
-        生死狙击QQ群
+      
+      <a href="https://qm.qq.com/q/DSmYyv2Rby" class="block w-full py-5 bg-dark-gray text-gray-300 rounded-2xl btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray transition-colors" target="_blank">
+        <i class="fa fa-qq mr-4 text-2xl text-accent"></i>
+        <span class="font-bold text-lg">生死狙击QQ群</span>
       </a>
     </div>
     
     <!-- 底部信息 -->
-    <div class="mt-10 text-gray-500 text-sm">
-      <p>访问密码：6666</p>
-      <p class="mt-2">© 2025 遗迹工具</p>
+    <div class="mt-16 text-center text-gray-500 text-sm">
+      <p class="mb-2">访问密码：6666</p>
+      <p>© 2025 遗迹工具 | <span class="text-primary">安全稳定</span> · <span class="text-secondary">持续更新</span></p>
     </div>
   </div>
 
   <!-- 公告弹窗 -->
-  <div id="announcementOverlay" class="fixed inset-0 z-[60] flex items-center justify-center bg-dark/90 opacity-0 pointer-events-none transition-opacity duration-500">
-    <div id="announcementPopup" class="relative w-full max-w-2xl mx-4 rounded-2xl overflow-hidden transform scale-95 transition-transform duration-500">
-      <div class="relative z-10 p-6 md:p-8 bg-dark-gray">
-        <button id="closeAnnouncementBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-300 transition-colors text-xl">
+  <div id="announcementOverlay" class="fixed inset-0 z-[60] flex items-center justify-center bg-dark/95 opacity-0 pointer-events-none transition-opacity duration-500">
+    <div id="announcementPopup" class="relative w-full max-w-2xl mx-4 rounded-3xl overflow-hidden transform scale-95 transition-all duration-500 bg-glass border border-primary/20">
+      <div class="relative z-10 p-7 md:p-9">
+        <button id="closeAnnouncementBtn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-xl z-20 hover:scale-110">
           <i class="fa fa-times"></i>
         </button>
         
-        <div class="text-center mb-6">
-          <h2 class="text-xl font-bold text-white mb-2">重要公告</h2>
+        <div class="text-center mb-7">
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">重要公告</h2>
           <p class="text-gray-500 text-sm">2025年6月15日</p>
         </div>
         
-        <div class="mb-8 text-gray-300">
-          <p class="mb-3">遗迹QQ群因特殊原因被整治，目前主要交流群为TG群和KOOK群。</p>
-          <p class="mb-3"><span class="font-bold">重要规则：</span>避免在群内讨论任何与外挂相关内容，违规者将被处理。</p>
-          <p class="mb-3"><span class="font-bold">风险提示：</span>开挂属于破坏游戏平衡行为，账号封禁后果自行承担。</p>
-          <p>感谢大家对遗迹社区的支持与维护！</p>
+        <div class="mb-8 text-gray-300 space-y-4 text-sm">
+          <p>遗迹QQ群因特殊原因被整治，目前主要交流群为TG群和KOOK群。</p>
+          <p><span class="font-bold text-primary">重要规则：</span>避免在群内讨论任何与外挂相关内容，违规者将被处理。</p>
+          <p><span class="font-bold text-primary">风险提示：</span>开挂属于破坏游戏平衡行为，账号封禁后果自行承担。</p>
+          <p class="text-gray-400">请各位用户合理使用工具，共同维护社区环境</p>
         </div>
         
         <div class="flex justify-center">
-          <button id="closeAnnouncementBtn2" class="px-8 py-3 text-primary border border-primary rounded-lg hover:bg-primary/10 transition-colors">
+          <button id="closeAnnouncementBtn2" class="px-10 py-3 text-primary border-2 border-primary rounded-xl hover:bg-primary/10 transition-colors btn-hover btn-glow">
             我知道了
           </button>
         </div>
       </div>
+      <!-- 弹窗装饰 -->
+      <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-b from-primary/5 to-transparent -skew-x-12 transform origin-top-right"></div>
     </div>
   </div>
 
   <script>
-    // 下载进度提示（简化版）
+    // 动态背景粒子效果
+    document.addEventListener('DOMContentLoaded', function() {
+      createParticles();
+      setupAnimations();
+      setupDownloadEvents();
+      setupAnnouncement();
+    });
+
+    // 创建背景粒子
+    function createParticles() {
+      const particles = document.getElementById('particles');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        const size = Math.random() * 3 + 1;
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 5;
+        const opacity = Math.random() * 0.5 + 0.1;
+        
+        particle.style.position = 'absolute';
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.background = i % 2 === 0 ? 'rgba(255, 77, 79, ' + opacity + ')' : 'rgba(126, 87, 194, ' + opacity + ')';
+        particle.style.borderRadius = '50%';
+        particle.style.left = `${x}%`;
+        particle.style.top = `${y}%`;
+        particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+        particle.style.zIndex = '0';
+        
+        particles.appendChild(particle);
+      }
+    }
+
+    // 基础动画效果
+    function setupAnimations() {
+      const elements = document.querySelectorAll('.container > div');
+      elements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+        el.style.transitionDelay = `${index * 0.2}s`;
+        setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, 50);
+      });
+    }
+
+    // 下载进度提示
     function showDownloadNotification() {
-      alert('正在打开下载链接...');
+      const notification = document.createElement('div');
+      notification.className = 'fixed bottom-6 right-6 bg-dark-gray text-white px-6 py-3 rounded-2xl shadow-neon z-50 flex items-center transform translate-x-full opacity-0 transition-all duration-500';
+      notification.innerHTML = '<i class="fa fa-spinner fa-spin mr-3 text-lg"></i><span>正在准备下载资源...</span>';
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.classList.remove('translate-x-full', 'opacity-0');
+        notification.classList.add('translate-x-0', 'opacity-100');
+      }, 100);
+      
+      setTimeout(() => {
+        notification.innerHTML = '<i class="fa fa-check mr-3 text-lg text-green-400"></i><span>下载链接已打开</span>';
+        notification.classList.remove('bg-dark-gray');
+        notification.classList.add('bg-green-800');
+      }, 2000);
+      
+      setTimeout(() => {
+        notification.classList.add('translate-x-full', 'opacity-0');
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 500);
+      }, 4000);
     }
     
     // 为下载按钮添加点击反馈
-    document.querySelectorAll('a[href^="https://wwbq.lanzn.com"], a[href^="https://wwbq.lanzoup.com"]').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        showDownloadNotification();
-        setTimeout(() => window.open(this.href, '_blank'), 500);
+    function setupDownloadEvents() {
+      document.querySelectorAll('a[href^="https://wwbq.lanzn.com"], a[href^="https://wwbq.lanzoup.com"], a[href^="https://tianqing567.github.io"], a[href^="https://alan7760.github.io"]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          showDownloadNotification();
+          setTimeout(() => window.open(this.href, '_blank'), 1500);
+        });
       });
-    });
+    }
 
     // 公告弹窗交互
-    document.addEventListener('DOMContentLoaded', function() {
+    function setupAnnouncement() {
       setTimeout(() => {
         const overlay = document.getElementById('announcementOverlay');
         const popup = document.getElementById('announcementPopup');
@@ -147,7 +281,7 @@
         }, 100);
         
         document.body.style.overflow = 'hidden';
-      }, 1000);
+      }, 2000);
 
       function closeAnnouncementPopup() {
         const overlay = document.getElementById('announcementOverlay');
@@ -167,7 +301,7 @@
       document.getElementById('announcementOverlay').addEventListener('click', (e) => {
         if (e.target === document.getElementById('announcementOverlay')) closeAnnouncementPopup();
       });
-    });
+    }
   </script>
 </body>
 </html>
