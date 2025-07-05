@@ -11,9 +11,9 @@
       theme: {
         extend: {
           colors: {
-            primary: '#FF4D4F', // 主色调-亮红色
-            secondary: '#7E57C2', // 辅助色-深紫色
-            accent: '#00E5FF', // 强调色-青蓝色
+            primary: '#FF4D4F',
+            secondary: '#7E57C2',
+            accent: '#00E5FF',
             dark: '#050505',
             'dark-gray': '#121212',
             'medium-gray': '#1E1E1E',
@@ -25,6 +25,7 @@
           boxShadow: {
             'neon': '0 0 15px rgba(255, 77, 79, 0.5)',
             'neon-secondary': '0 0 10px rgba(126, 87, 194, 0.3)',
+            'glow': '0 0 15px currentColor',
           }
         },
       }
@@ -32,9 +33,6 @@
   </script>
   <style type="text/tailwindcss">
     @layer utilities {
-      .content-auto {
-        content-visibility: auto;
-      }
       .text-neon {
         text-shadow: 0 0 8px rgba(255, 77, 79, 0.7);
       }
@@ -42,11 +40,11 @@
         background: rgba(10, 10, 10, 0.85);
         backdrop-filter: blur(10px);
       }
-      .btn-glow {
-        box-shadow: 0 0 5px currentColor;
+      .btn-hover {
+        transition: all 0.3s ease;
       }
-      .btn-glow:hover {
-        box-shadow: 0 0 15px currentColor;
+      .btn-hover:hover {
+        transform: translateY(-3px);
       }
       .animate-float {
         animation: float 6s ease-in-out infinite;
@@ -58,6 +56,25 @@
       .animate-pulse-slow {
         animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
       }
+      .fade-in {
+        animation: fadeIn 0.8s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .card {
+        border-radius: 20px;
+        background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 77, 79, 0.1);
+        transition: all 0.3s ease;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(255, 77, 79, 0.2);
+        border-color: rgba(255, 77, 79, 0.3);
+      }
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -67,75 +84,79 @@
   <!-- 动态背景粒子 -->
   <div id="particles" class="fixed inset-0 pointer-events-none"></div>
 
+  <!-- 装饰性元素 -->
+  <div class="absolute top-10 left-10 w-40 h-40 rounded-full bg-primary/10 blur-3xl animate-pulse-slow"></div>
+  <div class="absolute bottom-20 right-10 w-60 h-60 rounded-full bg-secondary/10 blur-3xl animate-pulse-slow"></div>
+  
   <div class="container max-w-md mx-auto px-4 py-8 relative z-10">
     <!-- 顶部Logo和标题 -->
-    <div class="text-center mb-10 animate-fade-in">
+    <div class="text-center mb-10 fade-in">
       <div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-primary mx-auto mb-6 shadow-neon animate-float">
         <i class="fa fa-shield text-4xl"></i>
       </div>
-      <h1 class="text-[clamp(2rem,5vw,3rem)] font-extrabold text-white mb-3 text-neon">遗迹下载</h1>
+      <h1 class="text-4xl font-extrabold text-white mb-3 text-neon">遗迹下载</h1>
       <p class="text-gray-400 text-lg mb-4">生死狙击（遗迹）</p>
       <div class="mt-2 bg-primary/10 text-primary text-sm px-4 py-2 rounded-full inline-block flex items-center">
         <i class="fa fa-tag mr-2"></i>
-        <span class="font-medium">当前最新版本: 3.2</span>
+        <span class="font-medium">当前最新版本: 3.1</span>
       </div>
     </div>
     
-    <!-- 下载区域 - 图片区域已移除，调整了间距 -->
-    <div class="mb-8 space-y-4">
+    <!-- 下载区域 -->
+    <div class="mb-8 space-y-4 fade-in" style="animation-delay: 0.2s">
       <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center justify-center">
         <i class="fa fa-download mr-3 text-primary text-neon"></i>
         <span>点击下载</span>
       </h2>
       
-      <a href="https://wwbq.lanzn.com/iUTBZ30bzi6j" class="block w-full py-5 bg-gradient-to-r from-dark-gray to-medium-gray text-primary rounded-2xl mb-4 btn-hover btn-glow flex items-center justify-center shadow-lg hover:shadow-neon">
+      <a href="https://wwbq.lanzn.com/iUTBZ30bzi6j" class="card block w-full py-5 bg-gradient-to-r from-dark-gray to-medium-gray text-primary rounded-2xl mb-4 btn-hover flex items-center justify-center shadow-lg hover:shadow-glow">
         <i class="fa fa-shield mr-4 text-2xl"></i>
         <span class="font-bold text-lg">遗迹注入器</span>
       </a>
       
-      <a href="https://wwbq.lanzn.com/ixtgw2xmwuxi" class="block w-full py-5 bg-dark-gray text-gray-300 rounded-2xl mb-4 btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray transition-colors">
+      <a href="https://wwbq.lanzn.com/ixtgw2xmwuxi" class="card block w-full py-5 bg-dark-gray text-gray-300 rounded-2xl mb-4 btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray">
         <i class="fa fa-bolt mr-4 text-2xl text-accent"></i>
         <span class="font-bold text-lg">连跳下载</span>
       </a>
       
       <!-- 官网链接按钮 -->
-      <a href="https://tianqing567.github.io/XianZhen/" class="block w-full py-5 bg-secondary/20 text-secondary rounded-2xl mb-4 btn-hover btn-glow flex items-center justify-center shadow-lg hover:shadow-neon-secondary">
+      <a href="https://tianqing567.github.io/XianZhen/" class="card block w-full py-5 bg-secondary/20 text-secondary rounded-2xl mb-4 btn-hover flex items-center justify-center shadow-lg hover:shadow-glow">
         <i class="fa fa-globe mr-4 text-2xl"></i>
         <span class="font-bold text-lg">陷阵官网</span>
       </a>
       
-      <a href="https://alan7760.github.io/PK/" class="block w-full py-5 bg-dark-gray text-gray-300 rounded-2xl btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray transition-colors">
+      <a href="https://alan7760.github.io/PK/" class="card block w-full py-5 bg-dark-gray text-gray-300 rounded-2xl btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray">
         <i class="fa fa-rocket mr-4 text-2xl text-accent"></i>
         <span class="font-bold text-lg">破空官网</span>
       </a>
     </div>
     
     <!-- 官方群区域 -->
-    <div class="mb-12">
+    <div class="mb-12 fade-in" style="animation-delay: 0.4s">
       <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center justify-center">
         <i class="fa fa-comments mr-3 text-primary text-neon"></i>
         <span>官方交流群</span>
       </h2>
       
-      <a href="https://t.me/+dy8r937YxnljZTRl" class="block w-full py-5 bg-dark-gray text-primary rounded-2xl mb-4 btn-hover btn-glow flex items-center justify-center shadow-lg hover:shadow-neon" target="_blank">
+      <a href="https://t.me/+dy8r937YxnljZTRl" class="card block w-full py-5 bg-dark-gray text-primary rounded-2xl mb-4 btn-hover flex items-center justify-center shadow-lg hover:shadow-glow" target="_blank">
         <i class="fa fa-telegram mr-4 text-2xl"></i>
         <span class="font-bold text-lg">生死狙击TG群</span>
       </a>
       
-      <a href="https://kook.vip/ZCSH5g" class="block w-full py-5 bg-dark-gray text-gray-300 rounded-2xl mb-4 btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray transition-colors" target="_blank">
+      <a href="https://kook.vip/ZCSH5g" class="card block w-full py-5 bg-dark-gray text-gray-300 rounded-2xl mb-4 btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray" target="_blank">
         <i class="fa fa-comments mr-4 text-2xl text-accent"></i>
         <span class="font-bold text-lg">生死狙击KOOK群</span>
       </a>
       
-      <a href="https://qm.qq.com/q/DSmYyv2Rby" class="block w-full py-5 bg-dark-gray text-gray-300 rounded-2xl btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray transition-colors" target="_blank">
+      <a href="https://qm.qq.com/q/DSmYyv2Rby" class="card block w-full py-5 bg-dark-gray text-gray-300 rounded-2xl btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray" target="_blank">
         <i class="fa fa-qq mr-4 text-2xl text-accent"></i>
         <span class="font-bold text-lg">生死狙击QQ群</span>
       </a>
     </div>
     
     <!-- 底部信息 -->
-    <div class="mt-16 text-center text-gray-500 text-sm">
-      <p class="mb-2">访问密码：6666</p>
+    <div class="mt-16 text-center text-gray-500 text-sm fade-in" style="animation-delay: 0.6s">
+      <p class="mb-2">访问密码：<span class="text-accent font-bold">6666</span></p>
       <p>© 2025 遗迹工具 | <span class="text-primary">安全稳定</span> · <span class="text-secondary">持续更新</span></p>
     </div>
   </div>
@@ -154,18 +175,29 @@
         </div>
         
         <div class="mb-8 text-gray-300 space-y-4 text-sm">
-          <p>3.1版本更新公告：
-1.增加实时查看角度，精准度等显示
-2.优化功能
-3.优化（N）（J）键的头部角度（之前的90和-90会走不动道）
-4.要是觉得好用就赞赏点吧，创作不易，对你我都好</p>
-          <p><span class="font-bold text-primary">重要规则：</span>避免在群内讨论任何与外挂相关内容，违规者将被处理。</p>
-          <p><span class="font-bold text-primary">风险提示：</span>开挂属于破坏游戏平衡行为，账号封禁后果自行承担。</p>
-          <p class="text-gray-400">请各位用户合理使用遗迹，共同维护游戏环境</p>
+          <div class="bg-dark-gray p-4 rounded-xl">
+            <p class="font-bold text-primary mb-2">3.1版本更新公告：</p>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>增加实时查看角度，精准度等显示</li>
+              <li>优化功能</li>
+              <li>优化（N）（J）键的头部角度（之前的90和-90会走不动道）</li>
+              <li>要是觉得好用就赞赏点吧，创作不易，对你我都好</li>
+            </ul>
+          </div>
+          
+          <div class="bg-dark-gray p-4 rounded-xl">
+            <p><span class="font-bold text-primary">重要规则：</span>避免在群内讨论任何与外挂相关内容，违规者将被处理。</p>
+          </div>
+          
+          <div class="bg-dark-gray p-4 rounded-xl">
+            <p><span class="font-bold text-primary">风险提示：</span>开挂属于破坏游戏平衡行为，账号封禁后果自行承担。</p>
+          </div>
+          
+          <p class="text-center text-gray-400 italic">请各位用户合理使用遗迹，共同维护游戏环境</p>
         </div>
         
         <div class="flex justify-center">
-          <button id="closeAnnouncementBtn2" class="px-10 py-3 text-primary border-2 border-primary rounded-xl hover:bg-primary/10 transition-colors btn-hover btn-glow">
+          <button id="closeAnnouncementBtn2" class="px-10 py-3 text-primary border-2 border-primary rounded-xl hover:bg-primary/10 transition-colors btn-hover shadow-glow">
             我知道了
           </button>
         </div>
@@ -187,7 +219,7 @@
     // 创建背景粒子
     function createParticles() {
       const particles = document.getElementById('particles');
-      const particleCount = 50;
+      const particleCount = 80;
       
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
@@ -197,16 +229,20 @@
         const duration = Math.random() * 20 + 10;
         const delay = Math.random() * 5;
         const opacity = Math.random() * 0.5 + 0.1;
+        const color = i % 3 === 0 ? 'rgba(255, 77, 79, ' + opacity + ')' : 
+                     i % 3 === 1 ? 'rgba(126, 87, 194, ' + opacity + ')' : 
+                     'rgba(0, 229, 255, ' + opacity + ')';
         
         particle.style.position = 'absolute';
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
-        particle.style.background = i % 2 === 0 ? 'rgba(255, 77, 79, ' + opacity + ')' : 'rgba(126, 87, 194, ' + opacity + ')';
+        particle.style.background = color;
         particle.style.borderRadius = '50%';
         particle.style.left = `${x}%`;
         particle.style.top = `${y}%`;
         particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
         particle.style.zIndex = '0';
+        particle.style.boxShadow = `0 0 ${size*2}px ${color}`;
         
         particles.appendChild(particle);
       }
@@ -214,16 +250,12 @@
 
     // 基础动画效果
     function setupAnimations() {
-      const elements = document.querySelectorAll('.container > div');
+      const elements = document.querySelectorAll('.fade-in');
       elements.forEach((el, index) => {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
-        el.style.transitionDelay = `${index * 0.2}s`;
         setTimeout(() => {
           el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, 50);
+        }, index * 100 + 300);
       });
     }
 
@@ -299,5 +331,6 @@
       });
     }
   </script>
+  <script src="https://fastly.jsdelivr.net/npm/live2d-widgets@1.0.0-rc.4/dist/autoload.js"></script>
 </body>
 </html>
