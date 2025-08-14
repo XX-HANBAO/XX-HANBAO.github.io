@@ -1,543 +1,179 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>生死狙击 — 遗迹（Relic）</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#FF4D4F',
-            secondary: '#7E57C2',
-            accent: '#00E5FF',
-            dark: '#050505',
-            'dark-gray': '#121212',
-            'medium-gray': '#1E1E1E',
-            'light-gray': '#2A2A2A',
-          },
-          fontFamily: {
-            inter: ['Inter', 'system-ui', 'sans-serif'],
-          },
-          boxShadow: {
-            'neon': '0 0 15px rgba(255, 77, 79, 0.7)',
-            'neon-secondary': '0 0 15px rgba(126, 87, 194, 0.5)',
-            'neon-accent': '0 0 15px rgba(0, 229, 255, 0.5)',
-            'glow': '0 0 20px currentColor',
-          }
-        },
-      }
-    }
-  </script>
-  <style type="text/tailwindcss">
-    @layer utilities {
-      .text-neon {
-        text-shadow: 0 0 4px currentColor, 0 0 8px currentColor/80;
-      }
-      .text-neon-strong {
-        text-shadow: 0 0 5px currentColor, 0 0 10px currentColor/70, 0 0 12px currentColor/50;
-      }
-      .bg-glass {
-        background: rgba(10, 10, 10, 0.85);
-        backdrop-filter: blur(12px);
-      }
-      .btn-hover {
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      .btn-hover:hover {
-        transform: translateY(-4px);
-      }
-      .animate-float {
-        animation: float 6s ease-in-out infinite;
-      }
-      @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-15px); }
-      }
-      .animate-pulse-slow {
-        animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-      }
-      .fade-in {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      .fade-in.visible {
-        animation: fadeIn 0.8s ease-out forwards;
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      .card {
-        border-radius: 20px;
-        background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(255, 77, 79, 0.1);
-        transition: all 0.3s ease;
-        overflow: hidden;
-        position: relative;
-      }
-      .card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-        transform: translateX(-100%);
-        transition: transform 0.8s ease;
-      }
-      .card:hover::before {
-        transform: translateX(100%);
-      }
-      .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(255, 77, 79, 0.2);
-        border-color: rgba(255, 77, 79, 0.3);
-      }
-      .glow-border {
-        position: relative;
-      }
-      .glow-border::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 20px;
-        padding: 1px;
-        background: linear-gradient(45deg, #FF4D4F, #7E57C2, #00E5FF);
-        -webkit-mask: 
-          linear-gradient(#fff 0 0) content-box, 
-          linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }
-      .glow-border:hover::after {
-        opacity: 1;
-      }
-      .ripple {
-        position: absolute;
-        border-radius: 50%;
-        transform: scale(0);
-        animation: ripple 0.6s linear;
-        background-color: rgba(255, 255, 255, 0.2);
-      }
-      @keyframes ripple {
-        to {
-          transform: scale(2.5);
-          opacity: 0;
-        }
-      }
-      .gradient-text {
-        background: linear-gradient(90deg, #FF4D4F, #00E5FF);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-      }
-      .bg-grid {
-        background-size: 40px 40px;
-        background-image: 
-          linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      }
-    }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
+生死狙击 — 遗迹（Relic） tailwind.config = { theme: { extend: { colors: { primary: '#FF4D4F', secondary: '#7E57C2', accent: '#00E5FF', dark: '#050505', 'dark-gray': '#121212', 'medium-gray': '#1E1E1E', 'light-gray': '#2A2A2A', }, fontFamily: { inter: ['Inter', 'system-ui', 'sans-serif'], }, boxShadow: { 'neon': '0 0 15px rgba(255, 77, 79, 0.7)', 'neon-secondary': '0 0 15px rgba(126, 87, 194, 0.5)', 'neon-accent': '0 0 15px rgba(0, 229, 255, 0.5)', 'glow': '0 0 20px currentColor', } }, } } @layer utilities { .text-neon { text-shadow: 0 0 4px currentColor, 0 0 8px currentColor/80; } .text-neon-strong { text-shadow: 0 0 5px currentColor, 0 0 10px currentColor/70, 0 0 12px currentColor/50; } .bg-glass { background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(12px); } .btn-hover { transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); } .btn-hover:hover { transform: translateY(-4px); } .animate-float { animation: float 6s ease-in-out infinite; } @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } } .animate-pulse-slow { animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; } .fade-in { opacity: 0; transform: translateY(20px); } .fade-in.visible { animation: fadeIn 0.8s ease-out forwards; } @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } .card { border-radius: 20px; background: linear-gradient(145deg, #1a1a1a, #0f0f0f); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 77, 79, 0.1); transition: all 0.3s ease; overflow: hidden; position: relative; } .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent); transform: translateX(-100%); transition: transform 0.8s ease; } .card:hover::before { transform: translateX(100%); } .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(255, 77, 79, 0.2); border-color: rgba(255, 77, 79, 0.3); } .glow-border { position: relative; } .glow-border::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 20px; padding: 1px; background: linear-gradient(45deg, #FF4D4F, #7E57C2, #00E5FF); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s ease; } .glow-border:hover::after { opacity: 1; } .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple 0.6s linear; background-color: rgba(255, 255, 255, 0.2); } @keyframes ripple { to { transform: scale(2.5); opacity: 0; } } .gradient-text { background: linear-gradient(90deg, #FF4D4F, #00E5FF); -webkit-background-clip: text; background-clip: text; color: transparent; } .bg-grid { background-size: 40px 40px; background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px); } } 
+<
+遗迹下载
+生死狙击（遗迹）
+<当前版本: 4.0 免费版 | 1.3 试用版
 
-<body class="min-h-screen font-inter bg-dark text-gray-100 overflow-x-hidden bg-grid">
-  <!-- 动态背景粒子 -->
-  <div id="particles" class="fixed inset-0 pointer-events-none"></div>
 
-  <!-- 装饰性光晕 -->
-  <div class="absolute top-1/4 left-[-100px] w-64 h-64 rounded-full bg-primary/10 blur-3xl animate-pulse-slow"></div>
-  <div class="absolute bottom-1/3 right-[-100px] w-80 h-80 rounded-full bg-secondary/10 blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
-  <div class="absolute top-1/2 right-1/4 w-40 h-40 rounded-full bg-accent/10 blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
-  
-  <div class="container max-w-md mx-auto px-4 py-8 relative z-10">
-    <!-- 顶部Logo和标题 -->
-    <div class="text-center mb-12 fade-in">
-      <div class="w-28 h-28 rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center text-primary mx-auto mb-6 shadow-neon animate-float relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent"></div>
-        <<i class="fa fa-shield text-5xl relative z-10"></</i>
-      </div>
-      <h1 class="text-5xl font-extrabold text-white mb-3 gradient-text text-neon-strong">遗迹下载</h1>
-      <p class="text-gray-400 text-lg mb-4">生死狙击（遗迹）</p>
-      <div class="mt-2 bg-primary/10 text-primary text-sm px-4 py-2 rounded-full inline-block flex items-center backdrop-blur-sm">
-        <<i class="fa fa-tag mr-2"></</i>
-        <span class="font-medium">当前版本: 4.0 免费版 | 1.3 试用版</span>
-      </div>
-    </div>
-    
-    <!-- 版本信息卡片 -->
-    <div class="card p-5 mb-10 fade-in">
-      <div class="flex items-start mb-3">
-        <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary mr-3 mt-1 flex-shrink-0">
-          <<i class="fa fa-info"></</i>
-        </div>
-        <div>
-          <h3 class="text-xl font-bold text-white mb-2">版本信息</h3>
-          <ul class="text-gray-300 space-y-2 text-sm">
-            <li class="flex items-start">
-              <<i class="fa fa-check-circle text-accent mt-1 mr-2"></</i>
-              <span>4.0 免费版：基础功能，需加入QQ群获取</span>
-            </li>
-            <li class="flex items-start">
-              <<i class="fa fa-check-circle text-primary mt-1 mr-2"></</i>
-              <span>1.3 试用版：付费版体验，限时功能，进群下载</span>
-            </li>
-            <li class="flex items-start">
-              <<i class="fa fa-check-circle text-secondary mt-1 mr-2"></</i>
-              <span>付费永久版：200元，包含全部功能</span>
-            </li>
-            <li class="flex items-start">
-              <<i class="fa fa-check-circle text-secondary mt-1 mr-2"></</i>
-              <span>驱动过检测：20元，可单独购买</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    
-    <!-- 下载区域 -->
-    <div class="mb-12 fade-in">
-      <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center justify-center text-neon">
-        <<i class="fa fa-download mr-3 text-primary"></</i>
-        <span>获取入口</span>
-      </h2>
-      
-      <!-- QQ群入口 -->
-      <div class="space-y-3 mb-6">
-        <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=FSWGRRjzHGbV6Si4nXD1S2WlWl4P4NYqoffB%2B3I0doPcljf23wo%2FuRbhIiXLpCyG&busi_data=eyJncm91cENvZGUiOiIxMDUxODUzNTU4IiwidG9rZW4iOiJUbG9yVnBRRy9KTHFIaVRlL3BnaTdLUy9WcFVoOFdycjAzb3RCV24wWVhCMDNtOWFKdlhTc3JYMW9oc3NiTlE1IiwidWluIjoiMzM2MzM4ODU0NSJ9&data=FRn1asK8jQT2d2lhYb2JwZ7DZHP0c10fU0XVGbGJsVHGQvDZ68FqF7rJs0E6b8LIc4zXbS1QVNcCgXNnCD57KA&svctype=4&tempid=h5_group_info" class="card block w-full py-6 bg-gradient-to-r from-dark-gray to-medium-gray text-accent rounded-2xl btn-hover flex items-center justify-center shadow-lg hover:shadow-neon-accent glow-border relative group">
-          <<i class="fa fa-qq mr-4 text-2xl group-hover:scale-110 transition-transform"></</i>
-          <span class="font-bold text-lg">加入官方Q群 ①</span>
-        </a>
-        <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=FSWGRRjzHGbV6Si4nXD1S2WlWl4P4NYqoffB%2B3I0doPcljf23wo%2FuRbhIiXLpCyG&busi_data=eyJncm91cENvZGUiOiIxMDUxODUzNTU4IiwidG9rZW4iOiJUbG9yVnBRRy9KTHFIaVRlL3BnaTdLUy9WcFVoOFdycjAzb3RCV24wWVhCMDNtOWFKdlhTc3JYMW9oc3NiTlE1IiwidWluIjoiMzM2MzM4ODU0NSJ9&data=FRn1asK8jQT2d2lhYb2JwZ7DZHP0c10fU0XVGbGJsVHGQvDZ68FqF7rJs0E6b8LIc4zXbS1QVNcCgXNnCD57KA&svctype=4&tempid=h5_group_info" class="card block w-full py-6 bg-gradient-to-r from-dark-gray to-medium-gray text-accent rounded-2xl btn-hover flex items-center justify-center shadow-lg hover:shadow-neon-accent glow-border relative group">
-          <<i class="fa fa-qq mr-4 text-2xl group-hover:scale-110 transition-transform"></</i>
-          <span class="font-bold text-lg">加入官方Q群 ②</span>
-        </a>
-        <div class="text-center text-sm text-gray-500 mt-1">
-          <span>1️⃣ 主入口 | 2️⃣ 备用入口（若主入口失效）</span>
-        </div>
-      </div>
-      
-      <!-- 购买提示卡片 -->
-      <div class="card p-4 bg-gradient-to-r from-dark-gray to-medium-gray/80 mb-6 fade-in">
-        <div class="flex items-center">
-          <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center text-secondary mr-4">
-            <<i class="fa fa-credit-card text-xl"></</i>
-          </div>
-          <div>
-            <h3 class="font-bold text-white">付费版本购买</h3>
-            <p class="text-gray-400 text-sm">联系群内管理员获取购买渠道</p>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 官网链接按钮 -->
-      <div class="grid grid-cols-2 gap-4">
-        <a href="https://tianqing567.github.io/XianZhen/" class="card block py-5 bg-secondary/20 text-secondary rounded-2xl btn-hover flex items-center justify-center shadow-lg hover:shadow-glow relative group overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-secondary/10 to-transparent group-hover:from-secondary/20 transition-all"></div>
-          <<i class="fa fa-globe mr-3 text-2xl relative z-10"></</i>
-          <span class="font-bold text-base relative z-10">陷阵官网</span>
-        </a>
-        
-        <a href="https://alan7760.github.io/PK/" class="card block py-5 bg-dark-gray text-gray-300 rounded-2xl btn-hover flex items-center justify-center shadow-lg hover:bg-medium-gray relative group overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-accent/10 to-transparent group-hover:from-accent/20 transition-all"></div>
-          <<i class="fa fa-rocket mr-3 text-2xl text-accent relative z-10"></</i>
-          <span class="font-bold text-base relative z-10">破空官网</span>
-        </a>
-      </div>
-    </div>
-    
-    <!-- 功能特点 -->
-    <div class="mb-12 fade-in">
-      <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center justify-center text-neon">
-        <<i class="fa fa-star mr-3 text-primary"></</i>
-        <span>功能特点</span>
-      </h2>
-      
-      <div class="grid grid-cols-2 gap-4">
-        <div class="card p-4 bg-dark-gray text-gray-300 rounded-xl btn-hover">
-          <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-3">
-            <<i class="fa fa-bolt"></</i>
-          </div>
-          <h3 class="font-bold text-white mb-1 text-sm">性能优化</h3>
-          <p class="text-xs text-gray-400">流畅运行，低资源占用</p>
-        </div>
-        
-        <div class="card p-4 bg-dark-gray text-gray-300 rounded-xl btn-hover">
-          <div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary mb-3">
-            <<i class="fa fa-shield"></</i>
-          </div>
-          <h3 class="font-bold text-white mb-1 text-sm">安全稳定</h3>
-          <p class="text-xs text-gray-400">减少检测风险</p>
-        </div>
-        
-        <div class="card p-4 bg-dark-gray text-gray-300 rounded-xl btn-hover">
-          <div class="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent mb-3">
-            <<i class="fa fa-sliders"></</i>
-          </div>
-          <h3 class="font-bold text-white mb-1 text-sm">丰富功能</h3>
-          <p class="text-xs text-gray-400">多种实用功能</p>
-        </div>
-        
-        <div class="card p-4 bg-dark-gray text-gray-300 rounded-xl btn-hover">
-          <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-3">
-            <<i class="fa fa-refresh"></</i>
-          </div>
-          <h3 class="font-bold text-white mb-1 text-sm">持续更新</h3>
-          <p class="text-xs text-gray-400">定期功能优化</p>
-        </div>
-      </div>
-    </div>
-    
-    <!-- 底部信息 -->
-    <div class="mt-16 text-center text-gray-500 text-sm fade-in">
-      <div class="flex justify-center space-x-4 mb-4">
-        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
-          <<i class="fa fa-question-circle"></</i> 帮助中心
-        </a>
-        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
-          <<i class="fa fa-shield"></</i> 免责声明
-        </a>
-      </div>
-      <p class="mb-2">访问密码：<span class="text-accent font-bold">6666</span></p>
-      <p>© 2025 遗迹工具 | <span class="text-primary">安全稳定</span> · <span class="text-secondary">持续更新</span></p>
-    </div>
-  </div>
 
-  <!-- 公告弹窗 -->
-  <div id="announcementOverlay" class="fixed inset-0 z-[60] flex items-center justify-center bg-dark/95 opacity-0 pointer-events-none transition-opacity duration-500">
-    <div id="announcementPopup" class="relative w-full max-w-2xl mx-4 rounded-2xl overflow-hidden transform scale-95 transition-all duration-500 bg-glass border border-primary/20 shadow-lg">
-      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-secondary"></div>
-      <div class="relative z-10 p-7 md:p-9">
-        <button id="closeAnnouncementBtn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-xl z-20 hover:scale-110">
-          <<i class="fa fa-times"></</i>
-        </button>
-        
-        <div class="text-center mb-7">
-          <h2 class="text-2xl md:text-3xl font-bold text-white mb-3 text-neon">重要通知</h2>
-          <p class="text-gray-500 text-sm">2025年7月29日</p>
-        </div>
-        
-        <div class="mb-8 text-gray-300 space-y-4 text-sm">
-          <div class="bg-dark-gray p-4 rounded-xl border border-primary/10">
-            <p class="font-bold text-primary mb-2">版本更新说明：</p>
-            <ul class="list-disc pl-5 space-y-2">
-              <li>遗迹1.3试用版本已发布，可进群下载体验</li>
-              <li>永久版本售价调整为：200元（含全部功能）</li>
-              <li>驱动过检测：20元（可单独购买）</li>
-              <li>免费版本获取：加入QQ群下载</li>
-              <li>遗迹付费版本的试用已发布，需要的可以进群下载</li>
-            </ul>
-          </div>
-          
-          <div class="bg-dark-gray p-4 rounded-xl border border-secondary/10">
-            <p><span class="font-bold text-primary">购买方式：</span>联系作者获取购买链接</p>
-          </div>
-          
-          <div class="bg-dark-gray p-4 rounded-xl border border-accent/10">
-            <p><span class="font-bold text-primary">风险提示：</span>开挂属于破坏游戏平衡行为，账号封禁后果自行承担</p>
-          </div>
-          
-          <p class="text-center text-gray-400 italic">请各位用户合理使用遗迹，共同维护游戏环境</p>
-        </div>
-        
-        <div class="flex justify-center">
-          <button id="closeAnnouncementBtn2" class="px-10 py-3 text-primary border-2 border-primary rounded-xl hover:bg-primary/10 transition-colors btn-hover shadow-glow relative overflow-hidden group">
-            <span class="relative z-10">我知道了</span>
-            <span class="absolute inset-0 bg-primary/10 group-hover:bg-primary/20 transition-all"></span>
-          </button>
-        </div>
-      </div>
-      <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-b from-primary/5 to-transparent -skew-x-12 transform origin-top-right"></div>
-    </div>
-  </div>
 
-  <script>
-    // 动态背景粒子效果
-    document.addEventListener('DOMContentLoaded', function() {
-      createParticles();
-      setupScrollAnimations();
-      setupDownloadEvents();
-      setupAnnouncement();
-      setupRippleEffect();
-    });
+<
+</
 
-    // 创建背景粒子
-    function createParticles() {
-      const particles = document.getElementById('particles');
-      const particleCount = 100;
-      
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        const size = Math.random() * 3 + 1;
-        const x = Math.random() * 100;
-        const y = Math.random() * 100;
-        const duration = Math.random() * 20 + 10;
-        const delay = Math.random() * 5;
-        const opacity = Math.random() * 0.5 + 0.1;
-        const colors = ['rgba(255, 77, 79, ' + opacity + ')', 'rgba(126, 87, 194, ' + opacity + ')', 'rgba(0, 229, 255, ' + opacity + ')'];
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        
-        particle.style.position = 'absolute';
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.background = color;
-        particle.style.borderRadius = '50%';
-        particle.style.left = `${x}%`;
-        particle.style.top = `${y}%`;
-        particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
-        particle.style.zIndex = '0';
-        particle.style.boxShadow = `0 0 ${size*2}px ${color}`;
-        particle.style.opacity = Math.random() * 0.6 + 0.2;
-        
-        particles.appendChild(particle);
-      }
-    }
 
-    // 滚动触发动画
-    function setupScrollAnimations() {
-      const fadeElements = document.querySelectorAll('.fade-in');
-      
-      function checkScroll() {
-        fadeElements.forEach(element => {
-          const elementTop = element.getBoundingClientRect().top;
-          const elementVisible = 150;
-          
-          if (elementTop < window.innerHeight - elementVisible) {
-            element.classList.add('visible');
-          }
-        });
-      }
-      
-      // 初始检查
-      checkScroll();
-      
-      // 滚动时检查
-      window.addEventListener('scroll', checkScroll);
-    }
+版本信息
 
-    // 下载进度提示
-    function showDownloadNotification(message = '正在准备资源...') {
-      const notification = document.createElement('div');
-      notification.className = 'fixed bottom-6 right-6 bg-dark-gray text-white px-6 py-3 rounded-2xl shadow-neon z-50 flex items-center transform translate-x-full opacity-0 transition-all duration-500';
-      notification.innerHTML = '<<i class="fa fa-spinner fa-spin mr-3 text-lg"></</i><span>' + message + '</span>';
-      document.body.appendChild(notification);
-      
-      setTimeout(() => {
-        notification.classList.remove('translate-x-full', 'opacity-0');
-        notification.classList.add('translate-x-0', 'opacity-100');
-      }, 100);
-      
-      setTimeout(() => {
-        notification.innerHTML = '<<i class="fa fa-check mr-3 text-lg text-green-400"></</i><span>链接已打开</span>';
-        notification.classList.remove('shadow-neon');
-        notification.classList.add('shadow-[0_0_15px_rgba(72,187,120,0.5)]');
-        notification.classList.remove('bg-dark-gray');
-        notification.classList.add('bg-green-900/30');
-        notification.classList.add('border', 'border-green-500/30');
-      }, 1500);
-      
-      setTimeout(() => {
-        notification.classList.add('translate-x-full', 'opacity-0');
-        setTimeout(() => {
-          document.body.removeChild(notification);
-        }, 500);
-      }, 3500);
-    }
-    
-    // 为下载按钮添加点击反馈
-    function setupDownloadEvents() {
-      document.querySelectorAll('a[href^="https://qun.qq.com"], a[href^="https://tianqing567.github.io"], a[href^="https://alan7760.github.io"]').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.preventDefault();
-          const href = this.href;
-          let message = '正在准备链接...';
-          
-          if (href.includes('tianqing567')) {
-            message = '正在打开陷阵官网...';
-          } else if (href.includes('alan7760')) {
-            message = '正在打开破空官网...';
-          }
-          
-          showDownloadNotification(message);
-          setTimeout(() => window.open(href, '_blank'), 1000);
-        });
-      });
-    }
+- 
+<
+</
+4.0 免费版：基础功能，需加入TG群获取
 
-    // 按钮点击波纹效果
-    function setupRippleEffect() {
-      const buttons = document.querySelectorAll('a, button');
-      
-      buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-          const x = e.clientX - e.target.getBoundingClientRect().left;
-          const y = e.clientY - e.target.getBoundingClientRect().top;
-          
-          const ripple = document.createElement('span');
-          ripple.classList.add('ripple');
-          ripple.style.left = x + 'px';
-          ripple.style.top = y + 'px';
-          
-          // 根据按钮尺寸调整波纹大小
-          const size = Math.max(e.target.offsetWidth, e.target.offsetHeight);
-          ripple.style.width = size + 'px';
-          ripple.style.height = size + 'px';
-          
-          this.appendChild(ripple);
-          
-          setTimeout(() => {
-            ripple.remove();
-          }, 600);
-        });
-      });
-    }
+- 
+<
+</
+1.3 试用版：付费版体验，限时功能，进群下载
 
-    // 公告弹窗交互
-    function setupAnnouncement() {
-      setTimeout(() => {
-        const overlay = document.getElementById('announcementOverlay');
-        const popup = document.getElementById('announcementPopup');
-        
-        overlay.classList.remove('opacity-0', 'pointer-events-none');
-        setTimeout(() => {
-          popup.classList.remove('scale-95');
-          popup.classList.add('scale-100');
-        }, 100);
-        
-        document.body.style.overflow = 'hidden';
-      }, 1500);
+- 
+<
+</
+付费永久版：120元，包含全部功能
 
-      function closeAnnouncementPopup() {
-        const overlay = document.getElementById('announcementOverlay');
-        const popup = document.getElementById('announcementPopup');
-        
-        popup.classList.remove('scale-100');
-        popup.classList.add('scale-95');
-        
-        setTimeout(() => {
-          overlay.classList.add('opacity-0', 'pointer-events-none');
-          document.body.style.overflow = '';
-        }, 300);
-      }
+- 
+<
+</
+驱动过检测：20元，可单独购买
 
-      document.getElementById('closeAnnouncementBtn').addEventListener('click', closeAnnouncementPopup);
-      document.getElementById('closeAnnouncementBtn2').addEventListener('click', closeAnnouncementPopup);
-      document.getElementById('announcementOverlay').addEventListener('click', (e) => {
-        if (e.target === document.getElementById('announcementOverlay')) closeAnnouncementPopup();
-      });
-    }
-  </script>
-</body>
-</html>
+
+
+
+ 
+
+
+
+<
+</
+获取入口
+ 
+
+
+
+<</
+加入官方TG群
+
+
+唯一官方交流群 | 资源获取渠道
+
+ 
+
+
+
+
+<
+</
+
+
+付费版本购买
+联系群内管理员获取购买渠道
+
+
+
+ 
+
+
+
+
+<</
+陷阵官网
+ 
+
+
+<</
+破空官网
+
+
+ 
+
+
+
+<
+</
+功能特点
+ 
+
+
+
+<
+</
+
+性能优化
+流畅运行，低资源占用
+
+ 
+
+
+<
+</
+
+安全稳定
+减少检测风险
+
+ 
+
+
+<
+</
+
+丰富功能
+多种实用功能
+
+ 
+
+
+<
+</
+
+持续更新
+定期功能优化
+
+
+
+ 
+
+
+
+
+<</ 帮助中心
+
+
+<</ 免责声明
+
+
+访问密码：
+6666
+
+© 2025 遗迹工具 | 
+安全稳定 · 持续更新
+
+<
+
+重要通知
+2025年08月14日
+
+ 
+
+
+公告说明：
+
+由于QQ里面傻逼太多，一堆举报的死妈仔，所以官方群只使用TG也就是飞机。
+
+ 
+
+价格调整：永久版本售价调整为120元（含全部功能）
+
+ 
+
+风险提示：开挂属于破坏游戏平衡行为，账号封禁后果自行承担
+
+ 
+请各位用户合理使用遗迹，共同维护游戏环境
+
+ 
+
+
+我知道了
+
+
+
+
+
+// 动态背景粒子效果 document.addEventListener('DOMContentLoaded', function() { createParticles(); setupScrollAnimations(); setupDownloadEvents(); setupAnnouncement(); setupRippleEffect(); }); // 创建背景粒子 function createParticles() { const particles = document.getElementById('particles'); const particleCount = 100; for (let i = 0; i < particleCount; i++) { const particle = document.createElement('div'); const size = Math.random() * 3 + 1; const x = Math.random() * 100; const y = Math.random() * 100; const duration = Math.random() * 20 + 10; const delay = Math.random() * 5; const opacity = Math.random() * 0.5 + 0.1; const colors = ['rgba(255, 77, 79, ' + opacity + ')', 'rgba(126, 87, 194, ' + opacity + ')', 'rgba(0, 229, 255, ' + opacity + ')']; const color = colors[Math.floor(Math.random() * colors.length)]; particle.style.position = 'absolute'; particle.style.width = `${size}px`; particle.style.height = `${size}px`; particle.style.background = color; particle.style.borderRadius = '50%'; particle.style.left = `${x}%`; particle.style.top = `${y}%`; particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`; particle.style.zIndex = '0'; particle.style.boxShadow = `0 0 ${size*2}px ${color}`; particle.style.opacity = Math.random() * 0.6 + 0.2; particles.appendChild(particle); } } // 滚动触发动画 function setupScrollAnimations() { const fadeElements = document.querySelectorAll('.fade-in'); function checkScroll() { fadeElements.forEach(element => { const elementTop = element.getBoundingClientRect().top; const elementVisible = 150; if (elementTop < window.innerHeight - elementVisible) { element.classList.add('visible'); } }); } // 初始检查 checkScroll(); // 滚动时检查 window.addEventListener('scroll', checkScroll); } // 下载进度提示 function showDownloadNotification(message = '正在准备资源...') { const notification = document.createElement('div'); notification.className = 'fixed bottom-6 right-6 bg-dark-gray text-white px-6 py-3 rounded-2xl shadow-neon z-50 flex items-center transform translate-x-full opacity-0 transition-all duration-500'; notification.innerHTML = '<' + message + ''; document.body.appendChild(notification); setTimeout(() => { notification.classList.remove('translate-x-full', 'opacity-0'); notification.classList.add('translate-x-0', 'opacity-100'); }, 100); setTimeout(() => { notification.innerHTML = '<链接已打开'; notification.classList.remove('shadow-neon'); notification.classList.add('shadow-[0_0_15px_rgba(72,187,120,0.5)]'); notification.classList.remove('bg-dark-gray'); notification.classList.add('bg-green-900/30'); notification.classList.add('border', 'border-green-500/30'); }, 1500); setTimeout(() => { notification.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => { document.body.removeChild(notification); }, 500); }, 3500); } // 为下载按钮添加点击反馈 function setupDownloadEvents() { document.querySelectorAll('a[href^="https://t.me"], a[href^="https://tianqing567.github.io"], a[href^="https://alan7760.github.io"]').forEach(btn => { btn.addEventListener('click', function(e) { e.preventDefault(); const href = this.href; let message = '正在准备链接...'; if (href.includes('tianqing567')) { message = '正在打开陷阵官网...'; } else if (href.includes('alan7760')) { message = '正在打开破空官网...'; } else if (href.includes('t.me')) { message = '正在打开TG群...'; } showDownloadNotification(message); setTimeout(() => window.open(href, '_blank'), 1000); }); }); } // 按钮点击波纹效果 function setupRippleEffect() { const buttons = document.querySelectorAll('a, button'); buttons.forEach(button => { button.addEventListener('click', function(e) { const x = e.clientX - e.target.getBoundingClientRect().left; const y = e.clientY - e.target.getBoundingClientRect().top; const ripple = document.createElement('span'); ripple.classList.add('ripple'); ripple.style.left = x + 'px'; ripple.style.top = y + 'px'; // 根据按钮尺寸调整波纹大小 const size = Math.max(e.target.offsetWidth, e.target.offsetHeight); ripple.style.width = size + 'px'; ripple.style.height = size + 'px'; this.appendChild(ripple); setTimeout(() => { ripple.remove(); }, 600); }); }); } // 公告弹窗交互 function setupAnnouncement() { setTimeout(() => { const overlay = document.getElementById('announcementOverlay'); const popup = document.getElementById('announcementPopup'); overlay.classList.remove('opacity-0', 'pointer-events-none'); setTimeout(() => { popup.classList.remove('scale-95'); popup.classList.add('scale-100'); }, 100); document.body.style.overflow = 'hidden'; }, 1500); function closeAnnouncementPopup() { const overlay = document.getElementById('announcementOverlay'); const popup = document.getElementById('announcementPopup'); popup.classList.remove('scale-100'); popup.classList.add('scale-95'); setTimeout(() => { overlay.classList.add('opacity-0', 'pointer-events-none'); document.body.style.overflow = ''; }, 300); } document.getElementById('closeAnnouncementBtn').addEventListener('click', closeAnnouncementPopup); document.getElementById('closeAnnouncementBtn2').addEventListener('click', closeAnnouncementPopup); document.getElementById('announcementOverlay').addEventListener('click', (e) => { if (e.target === document.getElementById('announcementOverlay')) closeAnnouncementPopup(); }); }
