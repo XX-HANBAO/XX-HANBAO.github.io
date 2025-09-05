@@ -4,149 +4,340 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>遗迹公告</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#FF4D4F',
-            secondary: '#7E57C2',
-            dark: '#0A0A0A',
-            'dark-gray': '#121212',
-          },
-          fontFamily: {
-            inter: ['Inter', 'system-ui', 'sans-serif'],
-          },
-        },
+  <style>
+    /* 全局样式：禁止网页滚动 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #000;
+      color: #fff;
+      overflow: hidden; /* 核心：禁止页面滚动 */
+      height: 100vh; /* 固定视口高度 */
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 顶部滚动横幅（跑马灯） */
+    .scroll-banner {
+      background-color: rgba(255, 77, 79, 0.15);
+      border-bottom: 1px solid rgba(255, 77, 79, 0.3);
+      height: 40px;
+      line-height: 40px;
+      overflow: hidden;
+      position: relative;
+      z-index: 20;
+    }
+    .scroll-content {
+      position: absolute;
+      white-space: nowrap;
+      left: 100%; /* 初始位置在右侧 */
+      color: #ffccc7; /* 浅红色调，适配emo风格 */
+      font-size: 14px;
+      animation: scroll 20s linear infinite; /* 滚动动画 */
+    }
+    .scroll-content span {
+      margin: 0 20px;
+    }
+    @keyframes scroll {
+      0% { left: 100%; }
+      100% { left: -100%; } /* 滚动到左侧消失，实现循环 */
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 10;
+      flex: 1; /* 占满剩余高度，避免溢出 */
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 标题样式 */
+    h1 {
+      text-align: center;
+      font-size: 3vw;
+      margin-bottom: 15px;
+      color: #FF4D4F;
+      text-shadow: 0 0 10px rgba(255, 77, 79, 0.5);
+      animation: fadeIn 1s ease-in-out forwards;
+      opacity: 0;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(-10px);
       }
     }
-  </script>
-  <style type="text/tailwindcss">
-    @layer utilities {
-      .text-shadow {
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+    /* 公告内容样式 */
+    .announcement-content {
+      margin-bottom: 20px;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    /* 更新日志样式 */
+    .update-log {
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 20px;
+      animation: slideIn 1s ease-in-out forwards;
+      opacity: 0;
+      transform: translateY(10px);
+      max-height: 220px; /* 固定高度，避免溢出 */
+      overflow-y: auto; /* 内部滚动（仅日志区域） */
+    }
+    /* 日志内部滚动条美化 */
+    .update-log::-webkit-scrollbar {
+      width: 6px;
+    }
+    .update-log::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 77, 79, 0.5);
+      border-radius: 3px;
+    }
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
-      .bg-subtle {
-        background-color: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(8px);
+    }
+    .update-item {
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+      font-size: 14px;
+    }
+    .update-item:last-child {
+      border-bottom: none;
+    }
+    .version {
+      color: #FF4D4F;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+
+    /* QQ群按钮样式 */
+    .qq-group-btn {
+      display: block;
+      width: 80%;
+      max-width: 300px;
+      height: 55px;
+      line-height: 55px;
+      text-align: center;
+      background: linear-gradient(45deg, #FF4D4F, #FF2E63);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      margin: 0 auto 25px;
+      transition: transform 0.3s ease;
+      box-shadow: 0 0 20px rgba(255, 77, 79, 0.3);
+      animation: pulse 2s infinite;
+    }
+    .qq-group-btn:hover {
+      transform: scale(1.05);
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 20px rgba(255, 77, 79, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(255, 77, 79, 0.6); }
+      100% { box-shadow: 0 0 20px rgba(255, 77, 79, 0.3); }
+    }
+
+    /* 鼠标/手指跟随特效 */
+    .cursor-follower {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.1s ease;
+      z-index: 100;
+      mix-blend-mode: screen;
+    }
+
+    /* 深夜emo语录样式（新增更多内容） */
+    .emo-quotes {
+      margin-top: auto; /* 固定在容器底部 */
+      padding: 15px 0;
+      font-style: italic;
+      color: #aaa;
+      text-align: center;
+      animation: fadeInUp 1.5s ease-in-out forwards;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
-      .animate-fade-in {
-        animation: fadeIn 2s ease-in-out;
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
+    }
+    .emo-quotes p {
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    /* 粒子背景特效 */
+    #particles-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
-
-<body class="min-h-screen font-inter bg-dark text-gray-300 overflow-x-hidden relative">
-  <!-- 简单背景 -->
-  <div class="fixed inset-0 bg-grid opacity-30 pointer-events-none"></div>
-  <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-primary/5 to-transparent"></div>
-  
-  <!-- 背景音乐：安和桥 - 宋冬野（自动播放设置） -->
-  <audio id="bgMusic" autoplay loop>
-    <source src="https://music.163.com/song/media/outer/url?id=28442874.mp3" type="audio/mpeg">
-  </audio>
-  
-  <!-- 音频播放提示（针对浏览器阻止自动播放的情况） -->
-  <div id="audioPrompt" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-dark-gray/90 text-white px-4 py-3 rounded-full flex items-center z-50 opacity-0 transition-opacity duration-500">
-    <<i class="fa fa-volume-up mr-2 text-primary"></</i>
-    <span>点击开启背景音乐</span>
+<body>
+  <!-- 顶部滚动横幅（跑马灯语录） -->
+  <div class="scroll-banner">
+    <div class="scroll-content">
+      <span>深夜的烟，烧不尽心里的空🤡</span>
+      <span>我笑着说没事，其实快碎了🤡</span>
+      <span>热闹是他们的，我什么都没有🤡</span>
+      <span>熬到天亮，也等不到一句晚安🤡</span>
+      <span>假装快乐，比真难过还累🤡</span>
+    </div>
   </div>
+
+  <canvas id="particles-bg"></canvas>
   
-  <div class="container max-w-2xl mx-auto px-6 py-16 relative z-10">
-    <!-- 标题 -->
-    <div class="text-center mb-12 animate-fade-in">
-      <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 text-shadow">遗迹公告</h1>
-      <div class="text-gray-500 text-lg" id="current-date"></div>
-    </div>
+  <div class="container">
+    <h1>遗迹公告</h1>
     
-    <!-- 公告内容 -->
-    <div class="bg-subtle rounded-2xl p-8 mb-12 border border-gray-800 animate-fade-in" style="animation-delay: 0.3s">
-      <p class="mb-6 leading-relaxed">你们好，各位喜欢用遗迹的哥姐弟妹</p>
-      
-      <p class="mb-6 leading-relaxed">遗迹最新版本已成功问世，有卡密系统</p>
-      
-      <p class="mb-6 leading-relaxed">TG频道和TG的官方群里面也是有傻逼，搁那里冷嘲热讽的，想我欠他的一样，一群臭司马的嘲讽仔</p>
-      
-      <p class="mb-6 leading-relaxed"></p>
+    <div class="announcement-content">
+      <p>各位遗迹的使用者们，感谢大家一直以来的支持！</p>
+      <p>最新版本 <span style="color:#FF4D4F; font-weight:600">v2.1</span> 已上线，修复公益版本打不开的问题，为大家带来更稳定的体验。</p>
     </div>
-    
-    <!-- QQ群号 -->
-    <div class="bg-subtle rounded-2xl p-6 border border-gray-800 animate-fade-in" style="animation-delay: 0.6s">
-      <h2 class="text-xl font-semibold text-white mb-4 flex items-center">
-        <<i class="fa fa-qq text-primary mr-2"></</i> QQ群号
-      </h2>
-      <div class="grid md:grid-cols-2 gap-4">
-        <div class="bg-dark-gray p-4 rounded-xl border border-gray-700 flex items-center">
-          <span class="text-gray-400 mr-3">1.</span>
-          <span class="text-white font-medium">736095733</span>
-        </div>
-        <div class="bg-dark-gray p-4 rounded-xl border border-gray-700 flex items-center">
-          <span class="text-gray-400 mr-3">2.</span>
-          <span class="text-white font-medium">1040444197</span>
-        </div>
-      </div>
+
+    <!-- 更新日志 -->
+    <div class="update-log">
+      <div class="update-item"><span class="version">v2.1</span>：修复公益版本打不开的问题</div>
+      <div class="update-item"><span class="version">v2.0</span>：优化UI设计，新增"藏头"功能</div>
+      <div class="update-item"><span class="version">v1.9</span>：新增旧版本注入器，避免新版本检测；补充使用教程</div>
+      <div class="update-item"><span class="version">v1.8</span>：新增加强插件，提升功能稳定性</div>
+      <div class="update-item"><span class="version">v1.7</span>：优化解析算法，减少加载失败概率</div>
+      <div class="update-item"><span class="version">v1.6</span>：新增网络大片网站入口，丰富资源</div>
+      <div class="update-item"><span class="version">v1.5</span>：优化解析逻辑，增强反自瞄功能</div>
+      <div class="update-item"><span class="version">v1.4</span>：新增公益版本，降低使用门槛</div>
+      <div class="update-item"><span class="version">v1.3</span>：更换注入器核心（原版本为旧版，存在兼容问题）</div>
+      <div class="update-item"><span class="version">v1.2</span>：内置过检测模块，删除已知BUG</div>
+      <div class="update-item"><span class="version">v1.1</span>：优化UI交互逻辑，提升操作流畅度</div>
+      <div class="update-item"><span class="version">v1.0</span>：初始版本，支持卡密登录，包含完整核心功能</div>
     </div>
-    
-    <!-- 底部信息 -->
-    <div class="text-center text-gray-500 text-sm mt-12 animate-fade-in" style="animation-delay: 0.9s">
-      <p>感谢曾经的支持与理解</p>
+
+    <!-- QQ群按钮 -->
+    <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=Vl56edmlN8C5qU0uSuRJw5Wmx9F5RL2PDXXcCvhd5ScRLVY1T58btMpWvbiR1xk2&busi_data=eyJncm91cENvZGUiOiIxMDExMjk0NzkxIiwidG9rZW4iOiJ2ODhON0dGTExzVFJkUUJJQlp5eldGWW5CREZqTlZSV3dnN0QwMWh0QVVZQU5Mc1h5d3JXdDNuVEJTRFRVL1M2IiwidWluIjoiMzM2MzM4ODU0NSJ9&data=nMJUwPHG2TszP15JQFt1fI-AkWK8gkMqa_5jxtg0RO-jGigrLEr2YlfRIFImlB9j8hzy-VknVfI56dF1ibqMAA&svctype=4&tempid=h5_group_info" class="qq-group-btn">加入QQ群</a>
+
+    <!-- 新增更多深夜emo语录 -->
+    <div class="emo-quotes">
+      <p>“深夜的孤独，像无人回应的呐喊，消散在黑暗中🤡。”</p>
+      <p>“回忆是场冷雨，淋透了我，却再也等不到撑伞的人🤡。”</p>
+      <p>“我以为我能习惯孤独，直到深夜的寂静让我窒息🤡。”</p>
+      <p>“屏幕亮了又暗，始终没有我等的那条消息🤡。”</p>
+      <p>“笑着说‘我没事’，转身却红了眼眶🤡。”</p>
+      <p>“深夜的酒，喝不醉心里的愁，只醉了假装坚强的我🤡。”</p>
+      <p>“所有人都在向前走，只有我停在回忆里打转🤡。”</p>
+      <p>“明明很累，却睡不着，心里像压着千斤石头🤡。”</p>
     </div>
   </div>
 
   <script>
-    // 显示当前日期
-    function updateDate() {
-      const now = new Date();
-      const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-      document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', options);
+    // 粒子背景特效
+    const canvas = document.getElementById('particles-bg');
+    const ctx = canvas.getContext('2d');
+    const particles = [];
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * window.innerWidth;
+        this.y = Math.random() * window.innerHeight;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = Math.random() * 0.5 - 0.25; // 减缓速度，更柔和
+        this.speedY = Math.random() * 0.5 - 0.25;
+        this.opacity = Math.random() * 0.5 + 0.2; // 调整透明度，更协调
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        // 边界反弹
+        if (this.x < 0 || this.x > window.innerWidth) this.speedX *= -1;
+        if (this.y < 0 || this.y > window.innerHeight) this.speedY *= -1;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx.fill();
+      }
     }
-    
-    // 处理背景音乐自动播放
-    document.addEventListener('DOMContentLoaded', function() {
-      updateDate();
-      
-      // 简单的背景网格
-      document.body.classList.add('bg-[#0A0A0A]');
-      const style = document.createElement('style');
-      style.textContent = `
-        .bg-grid {
-          background-size: 30px 30px;
-          background-image:
-            linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-        }
-      `;
-      document.head.appendChild(style);
-      
-      // 处理音频播放
-      const audio = document.getElementById('bgMusic');
-      const audioPrompt = document.getElementById('audioPrompt');
-      
-      // 尝试自动播放，处理浏览器限制
-      audio.play().catch(error => {
-        console.log('自动播放被浏览器阻止，等待用户交互:', error);
-        // 显示提示
-        setTimeout(() => {
-          audioPrompt.style.opacity = '1';
-        }, 1000);
+
+    // 初始化粒子
+    function initParticles() {
+      particles.length = 0; // 清空旧粒子
+      const count = Math.floor(window.innerWidth / 15); // 按屏幕宽度适配粒子数量
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    // 粒子动画
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw();
       });
-      
-      // 点击页面任意位置开启音频（针对浏览器阻止的情况）
-      document.body.addEventListener('click', () => {
-        if (audio.paused) {
-          audio.play();
-          audioPrompt.style.opacity = '0';
-        }
-      }, { once: true });
+      requestAnimationFrame(animateParticles);
+    }
+
+    // 鼠标/手指跟随特效
+    const cursor = document.createElement('div');
+    cursor.className = 'cursor-follower';
+    document.body.appendChild(cursor);
+
+    function handleMove(e) {
+      let x, y;
+      if (e.type.includes('touch')) {
+        x = e.touches[0].clientX;
+        y = e.touches[0].clientY;
+      } else {
+        x = e.clientX;
+        y = e.clientY;
+      }
+      cursor.style.left = `${x}px`;
+      cursor.style.top = `${y}px`;
+      cursor.style.opacity = '1';
+    }
+
+    // 事件监听
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('touchmove', handleMove);
+    document.addEventListener('mouseout', () => cursor.style.opacity = '0');
+    document.addEventListener('touchend', () => cursor.style.opacity = '0');
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles();
     });
+
+    // 初始化
+    initParticles();
+    animateParticles();
   </script>
 </body>
 </html>
