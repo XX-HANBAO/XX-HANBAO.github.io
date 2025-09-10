@@ -37,7 +37,7 @@
       left: 100%; /* 初始位置在右侧 */
       color: #ffccc7; /* 浅红色调，适配emo风格 */
       font-size: 14px;
-      animation: scroll 20s linear infinite; /* 滚动动画 */
+      animation: scroll 30s linear infinite; /* 延长滚动时间适配更多内容 */
     }
     .scroll-content span {
       margin: 0 20px;
@@ -175,6 +175,16 @@
       animation: fadeInUp 1.5s ease-in-out forwards;
       opacity: 0;
       transform: translateY(10px);
+      max-height: 180px; /* 限制高度，避免遮挡内容 */
+      overflow-y: auto; /* 内容过多时可滚动 */
+    }
+    /* 语录区域滚动条美化 */
+    .emo-quotes::-webkit-scrollbar {
+      width: 4px;
+    }
+    .emo-quotes::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 77, 79, 0.4);
+      border-radius: 2px;
     }
     @keyframes fadeInUp {
       to {
@@ -196,10 +206,90 @@
       height: 100%;
       z-index: -1;
     }
+
+    /* 新增弹窗样式 */
+    dialog {
+      --dialog-width: 80%;
+      --dialog-max-width: 600px;
+      --dialog-padding: 25px;
+      --dialog-border: 2px solid rgba(255, 77, 79, 0.3);
+      --dialog-radius: 15px;
+      --dialog-bg: #000;
+      --dialog-text-color: #fff;
+      --dialog-button-bg: linear-gradient(45deg, #FF4D4F, #FF2E63);
+      --dialog-button-shadow: 0 0 20px rgba(255, 77, 79, 0.3);
+      
+      width: var(--dialog-width);
+      max-width: var(--dialog-max-width);
+      padding: var(--dialog-padding);
+      border: var(--dialog-border);
+      border-radius: var(--dialog-radius);
+      background-color: var(--dialog-bg);
+      color: var(--dialog-text-color);
+      box-shadow: var(--dialog-button-shadow);
+      animation: fadeIn 0.5s ease-in-out;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+    }
+
+    dialog h2 {
+      color: #FF4D4F;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      text-shadow: 0 0 10px rgba(255, 77, 79, 0.5);
+    }
+
+    dialog p {
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .dialog-button {
+      all: unset;
+      width: 100%;
+      height: 55px;
+      line-height: 55px;
+      text-align: center;
+      background: var(--dialog-button-bg);
+      color: #fff;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      box-shadow: var(--dialog-button-shadow);
+      animation: pulse 2s infinite;
+    }
+
+    .dialog-button:hover {
+      transform: scale(1.05);
+    }
+
+    .close-btn {
+      all: unset;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.5rem;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .close-btn:hover {
+      transform: scale(1.1);
+    }
   </style>
 </head>
 <body>
-  <!-- 顶部滚动横幅（跑马灯语录） -->
+  <!-- 顶部滚动横幅（跑马灯语录）- 新增更多emo语句 -->
   <div class="scroll-banner">
     <div class="scroll-content">
       <span>深夜的烟，烧不尽心里的空🤡</span>
@@ -207,6 +297,15 @@
       <span>热闹是他们的，我什么都没有🤡</span>
       <span>熬到天亮，也等不到一句晚安🤡</span>
       <span>假装快乐，比真难过还累🤡</span>
+      <span>后来啊，连崩溃都要选好时间🤡</span>
+      <span>心里藏着好多事，却没一个能说的人🤡</span>
+      <span>走了很久，发现还是一个人在赶路🤡</span>
+      <span>朋友圈的乐观，都是给别人看的🤡</span>
+      <span>道理都懂，可情绪就是不听话🤡</span>
+      <span>越想靠近谁，就越怕被推开🤡</span>
+      <span>白天是搞笑的废物，晚上是emo的怪物🤡</span>
+      <span>难过的时候，连听歌都像在说自己🤡</span>
+      <span>有些话，只能烂在心里自生自灭🤡</span>
     </div>
   </div>
 
@@ -239,7 +338,7 @@
     <!-- QQ群按钮 -->
     <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=Vl56edmlN8C5qU0uSuRJw5Wmx9F5RL2PDXXcCvhd5ScRLVY1T58btMpWvbiR1xk2&busi_data=eyJncm91cENvZGUiOiIxMDExMjk0NzkxIiwidG9rZW4iOiJ2ODhON0dGTExzVFJkUUJJQlp5eldGWW5CREZqTlZSV3dnN0QwMWh0QVVZQU5Mc1h5d3JXdDNuVEJTRFRVL1M2IiwidWluIjoiMzM2MzM4ODU0NSJ9&data=nMJUwPHG2TszP15JQFt1fI-AkWK8gkMqa_5jxtg0RO-jGigrLEr2YlfRIFImlB9j8hzy-VknVfI56dF1ibqMAA&svctype=4&tempid=h5_group_info" class="qq-group-btn">加入QQ群</a>
 
-    <!-- 新增更多深夜emo语录 -->
+    <!-- 底部emo语录 - 新增更多内容 -->
     <div class="emo-quotes">
       <p>“深夜的孤独，像无人回应的呐喊，消散在黑暗中🤡。”</p>
       <p>“回忆是场冷雨，淋透了我，却再也等不到撑伞的人🤡。”</p>
@@ -249,8 +348,27 @@
       <p>“深夜的酒，喝不醉心里的愁，只醉了假装坚强的我🤡。”</p>
       <p>“所有人都在向前走，只有我停在回忆里打转🤡。”</p>
       <p>“明明很累，却睡不着，心里像压着千斤石头🤡。”</p>
+      <p>“热闹的人群里，我像个透明的影子，没人在意🤡。”</p>
+      <p>“攒了满肚子的话，最后只说了句‘没事’🤡。”</p>
+      <p>“后来学会了把情绪藏在‘哈哈’里，谁也看不见🤡。”</p>
+      <p>“有些人走着走着就散了，连告别都很敷衍🤡。”</p>
+      <p>“越长大越发现，能依靠的只有自己，别无选择🤡。”</p>
+      <p>“那些没说出口的委屈，都变成了深夜的眼泪🤡。”</p>
+      <p>“好像做什么都不对，连呼吸都觉得多余🤡。”</p>
+      <p>“热闹过后的冷清，比一直孤独更让人难受🤡。”</p>
+      <p>“我在等一个人，可连我自己都不知道在等谁🤡。”</p>
+      <p>“把期望降低，把依赖变少，就不会那么难过了吧🤡。”</p>
     </div>
   </div>
+
+  <!-- 新增弹窗结构 -->
+  <dialog id="cs2Alert">
+    <h2>重要更新通知</h2>
+    <p>遗迹已推出CS2专用公益辅助程序！</p>
+    <p>立即加入QQ群获取最新版本，享受稳定辅助体验~</p>
+    <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=Vl56edmlN8C5qU0uSuRJw5Wmx9F5RL2PDXXcCvhd5ScRLVY1T58btMpWvbiR1xk2&busi_data=eyJncm91cENvZGUiOiIxMDExMjk0NzkxIiwidG9rZW4iOiJ2ODhON0dGTExzVFJkUUJJQlp5eldGWW5CREZqTlZSV3dnN0QwMWh0QVVZQU5Mc1h5d3JXdDNuVEJTRFRVL1M2IiwidWluIjoiMzM2MzM4ODU0NSJ9&data=nMJUwPHG2TszP15JQFt1fI-AkWK8gkMqa_5jxtg0RO-jGigrLEr2YlfRIFImlB9j8hzy-VknVfI56dF1ibqMAA&svctype=4&tempid=h5_group_info" class="dialog-button">加入QQ群下载</a>
+    <button class="close-btn">×</button>
+  </dialog>
 
   <script>
     // 粒子背景特效
@@ -338,6 +456,34 @@
     // 初始化
     initParticles();
     animateParticles();
+
+    // 新增弹窗逻辑
+    const dialog = document.getElementById('cs2Alert');
+    const closeBtn = dialog.querySelector('.close-btn');
+
+    // 页面加载后显示弹窗
+    window.addEventListener('DOMContentLoaded', () => {
+      dialog.showModal();
+    });
+
+    // 关闭弹窗
+    closeBtn.addEventListener('click', () => {
+      dialog.close();
+    });
+
+    // 阻止ESC键关闭弹窗
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+      }
+    });
+
+    // 点击外部区域关闭弹窗
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) {
+        dialog.close();
+      }
+    });
   </script>
 </body>
 </html>
