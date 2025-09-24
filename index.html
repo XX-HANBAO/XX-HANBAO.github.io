@@ -2,29 +2,43 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
+  <!-- 优化：添加缓存控制，避免重复加载 -->
+  <meta http-equiv="Cache-Control" content="max-age=3600">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>遗迹公告</title>
   <style>
-    /* 全局样式：禁止网页滚动 */
+    /* 1. 使用CSS变量统一风格，减少重复代码 */
+    :root {
+      --theme-color: #FF4D4F;
+      --theme-light: #ffccc7;
+      --bg-main: #000;
+      --border-light: rgba(255,255,255,0.1);
+      --shadow-theme: 0 0 20px rgba(255,77,79,0.3);
+      --shadow-theme-hover: 0 0 30px rgba(255,77,79,0.6);
+      --transition-base: transform 0.3s ease;
+    }
+
+    /* 2. 全局样式：精简冗余，添加will-change优化动画 */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #000;
+      font-family: 'Inter', Arial, sans-serif; /* 字体降级，避免加载失败 */
+      background-color: var(--bg-main);
       color: #fff;
-      overflow: hidden; /* 核心：禁止页面滚动 */
-      height: 100vh; /* 固定视口高度 */
+      overflow: hidden;
+      height: 100vh;
       display: flex;
       flex-direction: column;
+      will-change: contents;
     }
 
-    /* 顶部滚动横幅（跑马灯） */
+    /* 顶部滚动横幅（跑马灯）- 保留完整内容 */
     .scroll-banner {
-      background-color: rgba(255, 77, 79, 0.15);
-      border-bottom: 1px solid rgba(255, 77, 79, 0.3);
+      background-color: rgba(255,77,79,0.15);
+      border-bottom: 1px solid rgba(255,77,79,0.3);
       height: 40px;
       line-height: 40px;
       overflow: hidden;
@@ -34,17 +48,18 @@
     .scroll-content {
       position: absolute;
       white-space: nowrap;
-      left: 100%; /* 初始位置在右侧 */
-      color: #ffccc7; /* 浅红色调，适配emo风格 */
+      left: 100%;
+      color: var(--theme-light);
       font-size: 14px;
-      animation: scroll 30s linear infinite; /* 延长滚动时间适配更多内容 */
+      animation: scroll 30s linear infinite;
+      will-change: left;
     }
     .scroll-content span {
       margin: 0 20px;
     }
     @keyframes scroll {
       0% { left: 100%; }
-      100% { left: -100%; } /* 滚动到左侧消失，实现循环 */
+      100% { left: -100%; }
     }
 
     .container {
@@ -54,20 +69,21 @@
       padding: 20px;
       position: relative;
       z-index: 10;
-      flex: 1; /* 占满剩余高度，避免溢出 */
+      flex: 1;
       display: flex;
       flex-direction: column;
     }
 
-    /* 标题样式 */
+    /* 标题样式 - 保留动画，优化性能 */
     h1 {
       text-align: center;
-      font-size: 3vw;
+      font-size: clamp(1.8rem, 3vw, 2.5rem); /* 响应式字号 */
       margin-bottom: 15px;
-      color: #FF4D4F;
-      text-shadow: 0 0 10px rgba(255, 77, 79, 0.5);
+      color: var(--theme-color);
+      text-shadow: 0 0 10px rgba(255,77,79,0.5);
       animation: fadeIn 1s ease-in-out forwards;
       opacity: 0;
+      will-change: opacity, transform;
     }
     @keyframes fadeIn {
       to {
@@ -76,31 +92,32 @@
       }
     }
 
-    /* 公告内容样式 */
+    /* 公告内容样式 - 删除GitHub相关描述 */
     .announcement-content {
       margin-bottom: 20px;
       line-height: 1.6;
       font-size: 15px;
+      text-align: center;
     }
 
-    /* 更新日志样式 */
+    /* 更新日志 - 保留完整条目 */
     .update-log {
-      border: 2px solid rgba(255, 255, 255, 0.1);
+      border: 2px solid var(--border-light);
       border-radius: 15px;
       padding: 15px;
       margin-bottom: 20px;
       animation: slideIn 1s ease-in-out forwards;
       opacity: 0;
       transform: translateY(10px);
-      max-height: 220px; /* 固定高度，避免溢出 */
-      overflow-y: auto; /* 内部滚动（仅日志区域） */
+      max-height: 220px;
+      overflow-y: auto;
+      will-change: opacity, transform;
     }
-    /* 日志内部滚动条美化 */
     .update-log::-webkit-scrollbar {
       width: 6px;
     }
     .update-log::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 77, 79, 0.5);
+      background-color: rgba(255,77,79,0.5);
       border-radius: 3px;
     }
     @keyframes slideIn {
@@ -111,46 +128,52 @@
     }
     .update-item {
       padding: 8px 0;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+      border-bottom: 1px dashed var(--border-light);
       font-size: 14px;
     }
     .update-item:last-child {
       border-bottom: none;
     }
     .version {
-      color: #FF4D4F;
+      color: var(--theme-color);
       font-weight: 600;
       margin-right: 10px;
     }
 
-    /* QQ群按钮样式 */
-    .qq-group-btn {
+    /* 按钮样式 - 仅保留QQ群和下载按钮 */
+    .qq-group-btn, .download-btn {
       display: block;
       width: 80%;
       max-width: 300px;
       height: 55px;
       line-height: 55px;
       text-align: center;
-      background: linear-gradient(45deg, #FF4D4F, #FF2E63);
+      background: linear-gradient(45deg, var(--theme-color), #FF2E63);
       color: #fff;
       text-decoration: none;
       border-radius: 30px;
       font-size: 1rem;
-      margin: 0 auto 25px;
-      transition: transform 0.3s ease;
-      box-shadow: 0 0 20px rgba(255, 77, 79, 0.3);
+      margin: 0 auto 15px;
+      transition: var(--transition-base);
+      box-shadow: var(--shadow-theme);
       animation: pulse 2s infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      will-change: transform, box-shadow;
     }
-    .qq-group-btn:hover {
+    .qq-group-btn:hover, .download-btn:hover {
       transform: scale(1.05);
+      box-shadow: var(--shadow-theme-hover);
     }
     @keyframes pulse {
-      0% { box-shadow: 0 0 20px rgba(255, 77, 79, 0.3); }
-      50% { box-shadow: 0 0 30px rgba(255, 77, 79, 0.6); }
-      100% { box-shadow: 0 0 20px rgba(255, 77, 79, 0.3); }
+      0% { box-shadow: var(--shadow-theme); }
+      50% { box-shadow: var(--shadow-theme-hover); }
+      100% { box-shadow: var(--shadow-theme); }
     }
 
-    /* 鼠标/手指跟随特效 */
+    /* 鼠标/手指跟随特效 - 保留完整功能 */
     .cursor-follower {
       position: fixed;
       width: 40px;
@@ -163,11 +186,12 @@
       transition: opacity 0.3s ease, transform 0.1s ease;
       z-index: 100;
       mix-blend-mode: screen;
+      will-change: left, top, opacity;
     }
 
-    /* 深夜emo语录样式（新增更多内容） */
+    /* 深夜emo语录 - 保留完整内容 */
     .emo-quotes {
-      margin-top: auto; /* 固定在容器底部 */
+      margin-top: auto;
       padding: 15px 0;
       font-style: italic;
       color: #aaa;
@@ -175,15 +199,15 @@
       animation: fadeInUp 1.5s ease-in-out forwards;
       opacity: 0;
       transform: translateY(10px);
-      max-height: 180px; /* 限制高度，避免遮挡内容 */
-      overflow-y: auto; /* 内容过多时可滚动 */
+      max-height: 180px;
+      overflow-y: auto;
+      will-change: opacity, transform;
     }
-    /* 语录区域滚动条美化 */
     .emo-quotes::-webkit-scrollbar {
       width: 4px;
     }
     .emo-quotes::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 77, 79, 0.4);
+      background-color: rgba(255,77,79,0.4);
       border-radius: 2px;
     }
     @keyframes fadeInUp {
@@ -197,7 +221,7 @@
       font-size: 14px;
     }
 
-    /* 粒子背景特效 */
+    /* 粒子背景 - 保留完整特效 */
     #particles-bg {
       position: fixed;
       top: 0;
@@ -207,17 +231,15 @@
       z-index: -1;
     }
 
-    /* 新增弹窗样式 */
+    /* 弹窗样式 - 删除GitHub相关内容 */
     dialog {
       --dialog-width: 80%;
       --dialog-max-width: 600px;
       --dialog-padding: 25px;
-      --dialog-border: 2px solid rgba(255, 77, 79, 0.3);
+      --dialog-border: 2px solid rgba(255,77,79,0.3);
       --dialog-radius: 15px;
-      --dialog-bg: #000;
+      --dialog-bg: var(--bg-main);
       --dialog-text-color: #fff;
-      --dialog-button-bg: linear-gradient(45deg, #FF4D4F, #FF2E63);
-      --dialog-button-shadow: 0 0 20px rgba(255, 77, 79, 0.3);
       
       width: var(--dialog-width);
       max-width: var(--dialog-max-width);
@@ -226,25 +248,26 @@
       border-radius: var(--dialog-radius);
       background-color: var(--dialog-bg);
       color: var(--dialog-text-color);
-      box-shadow: var(--dialog-button-shadow);
+      box-shadow: var(--shadow-theme);
       animation: fadeIn 0.5s ease-in-out;
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 1000;
+      will-change: opacity;
     }
 
     dialog::backdrop {
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(10px);
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(5px); /* 降低模糊强度，减少GPU消耗 */
     }
 
     dialog h2 {
-      color: #FF4D4F;
+      color: var(--theme-color);
       font-size: 1.2rem;
       margin-bottom: 15px;
-      text-shadow: 0 0 10px rgba(255, 77, 79, 0.5);
+      text-shadow: 0 0 10px rgba(255,77,79,0.5);
     }
 
     dialog p {
@@ -258,18 +281,20 @@
       height: 55px;
       line-height: 55px;
       text-align: center;
-      background: var(--dialog-button-bg);
+      background: linear-gradient(45deg, var(--theme-color), #FF2E63);
       color: #fff;
       border-radius: 30px;
       font-size: 1rem;
       cursor: pointer;
-      transition: transform 0.3s ease;
-      box-shadow: var(--dialog-button-shadow);
+      transition: var(--transition-base);
+      box-shadow: var(--shadow-theme);
       animation: pulse 2s infinite;
+      will-change: transform, box-shadow;
     }
 
     .dialog-button:hover {
-      transform: scale(1.05);
+      transform: scale(1.03);
+      box-shadow: var(--shadow-theme-hover);
     }
 
     .close-btn {
@@ -287,28 +312,18 @@
       transform: scale(1.1);
     }
   </style>
+  <!-- 加载图标库（用于QQ和下载图标） -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 </head>
 <body>
-  <!-- 顶部滚动横幅（跑马灯语录）- 新增更多emo语句 -->
+  <!-- 顶部滚动横幅（完整内容） -->
   <div class="scroll-banner">
-    <div class="scroll-content">
-      <span>深夜的烟，烧不尽心里的空🤡</span>
-      <span>我笑着说没事，其实快碎了🤡</span>
-      <span>热闹是他们的，我什么都没有🤡</span>
-      <span>熬到天亮，也等不到一句晚安🤡</span>
-      <span>假装快乐，比真难过还累🤡</span>
-      <span>后来啊，连崩溃都要选好时间🤡</span>
-      <span>心里藏着好多事，却没一个能说的人🤡</span>
-      <span>走了很久，发现还是一个人在赶路🤡</span>
-      <span>朋友圈的乐观，都是给别人看的🤡</span>
-      <span>道理都懂，可情绪就是不听话🤡</span>
-      <span>越想靠近谁，就越怕被推开🤡</span>
-      <span>白天是搞笑的废物，晚上是emo的怪物🤡</span>
-      <span>难过的时候，连听歌都像在说自己🤡</span>
-      <span>有些话，只能烂在心里自生自灭🤡</span>
+    <div class="scroll-content" id="scrollContent">
+      <!-- JS动态生成跑马灯内容 -->
     </div>
   </div>
 
+  <!-- 粒子背景 -->
   <canvas id="particles-bg"></canvas>
   
   <div class="container">
@@ -316,11 +331,12 @@
     
     <div class="announcement-content">
       <p>各位遗迹的使用者们，感谢大家一直以来的支持！</p>
-      <p>最新版本 <span style="color:#FF4D4F; font-weight:600">v2.2</span> 已上线，修复公益版本打不开的问题，为大家带来更稳定的体验。</p>
+      <p>最新版本 <span style="color:var(--theme-color); font-weight:600">v2.2</span> 已上线，修复公益版本打不开的问题，为大家带来更稳定的体验。</p>
     </div>
 
-    <!-- 更新日志 -->
+    <!-- 完整更新日志 -->
     <div class="update-log">
+      <div class="update-item"><span class="version">v2.2</span>：修复公益版本兼容性问题，优化核心功能稳定性</div>
       <div class="update-item"><span class="version">v2.1</span>：修复公益版本打不开的问题</div>
       <div class="update-item"><span class="version">v2.0</span>：优化UI设计，新增"藏头"功能</div>
       <div class="update-item"><span class="version">v1.9</span>：新增旧版本注入器，避免新版本检测；补充使用教程</div>
@@ -335,10 +351,17 @@
       <div class="update-item"><span class="version">v1.0</span>：初始版本，支持卡密登录，包含完整核心功能</div>
     </div>
 
-    <!-- QQ群按钮 -->
-    <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=Vl56edmlN8C5qU0uSuRJw5Wmx9F5RL2PDXXcCvhd5ScRLVY1T58btMpWvbiR1xk2&busi_data=eyJncm91cENvZGUiOiIxMDExMjk0NzkxIiwidG9rZW4iOiJ2ODhON0dGTExzVFJkUUJJQlp5eldGWW5CREZqTlZSV3dnN0QwMWh0QVVZQU5Mc1h5d3JXdDNuVEJTRFRVL1M2IiwidWluIjoiMzM2MzM4ODU0NSJ9&data=nMJUwPHG2TszP15JQFt1fI-AkWK8gkMqa_5jxtg0RO-jGigrLEr2YlfRIFImlB9j8hzy-VknVfI56dF1ibqMAA&svctype=4&tempid=h5_group_info" class="qq-group-btn">加入QQ群</a>
+    <!-- 仅保留QQ群和下载按钮 -->
+    <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=Vl56edmlN8C5qU0uSuRJw5Wmx9F5RL2PDXXcCvhd5ScRLVY1T58btMpWvbiR1xk2&busi_data=eyJncm91cENvZGUiOiIxMDExMjk0NzkxIiwidG9rZW4iOiJ2ODhON0dGTExzVFJkUUJJQlp5eldGWW5CREZqTlZSV3dnN0QwMWh0QVVZQU5Mc1h5d3JXdDNuVEJTRFRVL1M2IiwidWluIjoiMzM2MzM4ODU0NSJ9&data=nMJUwPHG2TszP15JQFt1fI-AkWK8gkMqa_5jxtg0RO-jGigrLEr2YlfRIFImlB9j8hzy-VknVfI56dF1ibqMAA&svctype=4&tempid=h5_group_info" class="qq-group-btn" target="_blank" rel="noopener noreferrer">
+      <<<i class="fa fa-qq" aria-hidden="true"></</</i>
+      加入QQ群
+    </a>
+    <a href="https://wwbq.lanzn.com/iLzcb361xxzc" class="download-btn" target="_blank" rel="noopener noreferrer">
+      <<<i class="fa fa-download" aria-hidden="true"></</</i>
+      下载最新版（v2.2）
+    </a>
 
-    <!-- 底部emo语录 - 新增更多内容 -->
+    <!-- 完整emo语录 -->
     <div class="emo-quotes">
       <p>“深夜的孤独，像无人回应的呐喊，消散在黑暗中🤡。”</p>
       <p>“回忆是场冷雨，淋透了我，却再也等不到撑伞的人🤡。”</p>
@@ -354,136 +377,138 @@
       <p>“有些人走着走着就散了，连告别都很敷衍🤡。”</p>
       <p>“越长大越发现，能依靠的只有自己，别无选择🤡。”</p>
       <p>“那些没说出口的委屈，都变成了深夜的眼泪🤡。”</p>
-      <p>“好像做什么都不对，连呼吸都觉得多余🤡。”</p>
-      <p>“热闹过后的冷清，比一直孤独更让人难受🤡。”</p>
-      <p>“我在等一个人，可连我自己都不知道在等谁🤡。”</p>
-      <p>“把期望降低，把依赖变少，就不会那么难过了吧🤡。”</p>
     </div>
   </div>
 
-  <!-- 新增弹窗结构 -->
+  <!-- 弹窗（删除GitHub相关内容） -->
   <dialog id="cs2Alert">
+    <button class="close-btn">×</button>
     <h2>重要更新通知</h2>
     <p>遗迹已推出CS2专用公益辅助程序！</p>
-    <p>立即加入QQ群获取最新版本，享受稳定辅助体验~</p>
-    <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=Vl56edmlN8C5qU0uSuRJw5Wmx9F5RL2PDXXcCvhd5ScRLVY1T58btMpWvbiR1xk2&busi_data=eyJncm91cENvZGUiOiIxMDExMjk0NzkxIiwidG9rZW4iOiJ2ODhON0dGTExzVFJkUUJJQlp5eldGWW5CREZqTlZSV3dnN0QwMWh0QVVZQU5Mc1h5d3JXdDNuVEJTRFRVL1M2IiwidWluIjoiMzM2MzM4ODU0NSJ9&data=nMJUwPHG2TszP15JQFt1fI-AkWK8gkMqa_5jxtg0RO-jGigrLEr2YlfRIFImlB9j8hzy-VknVfI56dF1ibqMAA&svctype=4&tempid=h5_group_info" class="dialog-button">加入QQ群下载</a>
-    <button class="close-btn">×</button>
+    <p>最新v2.2版本修复公益版兼容性问题，体验更稳定~</p>
+    <a href="https://wwbq.lanzn.com/iLzcb361xxzc" class="dialog-button" target="_blank" rel="noopener noreferrer">
+      下载v2.2版本
+    </a>
   </dialog>
 
   <script>
+    // 核心DOM操作与功能初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1. 动态生成跑马灯内容
+      const scrollTexts = [
+        "深夜的烟，烧不尽心里的空🤡", "我笑着说没事，其实快碎了🤡", 
+        "热闹是他们的，我什么都没有🤡", "熬到天亮，也等不到一句晚安🤡", 
+        "假装快乐，比真难过还累🤡", "后来啊，连崩溃都要选好时间🤡", 
+        "心里藏着好多事，却没一个能说的人🤡", "走了很久，发现还是一个人在赶路🤡", 
+        "朋友圈的乐观，都是给别人看的🤡", "道理都懂，可情绪就是不听话🤡", 
+        "越想靠近谁，就越怕被推开🤡", "白天是搞笑的废物，晚上是emo的怪物🤡", 
+        "难过的时候，连听歌都像在说自己🤡", "有些话，只能烂在心里自生自灭🤡"
+      ];
+      const scrollContent = document.getElementById('scrollContent');
+      scrollTexts.forEach(text => {
+        const span = document.createElement('span');
+        span.textContent = text;
+        scrollContent.appendChild(span);
+      });
+
+      // 2. 弹窗逻辑
+      const dialog = document.getElementById('cs2Alert');
+      const closeBtn = dialog.querySelector('.close-btn');
+      dialog.showModal();
+
+      closeBtn.addEventListener('click', () => dialog.close());
+      dialog.addEventListener('keydown', (e) => e.key === 'Escape' && e.preventDefault());
+      dialog.addEventListener('click', (e) => e.target === dialog && dialog.close());
+
+      // 3. 延迟加载粒子背景
+      setTimeout(initParticles, 500);
+
+      // 4. 延迟加载鼠标跟随
+      setTimeout(initCursorFollower, 800);
+    });
+
     // 粒子背景特效
-    const canvas = document.getElementById('particles-bg');
-    const ctx = canvas.getContext('2d');
-    const particles = [];
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * window.innerWidth;
-        this.y = Math.random() * window.innerHeight;
-        this.size = Math.random() * 2 + 1;
-        this.speedX = Math.random() * 0.5 - 0.25; // 减缓速度，更柔和
-        this.speedY = Math.random() * 0.5 - 0.25;
-        this.opacity = Math.random() * 0.5 + 0.2; // 调整透明度，更协调
-      }
-
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        // 边界反弹
-        if (this.x < 0 || this.x > window.innerWidth) this.speedX *= -1;
-        if (this.y < 0 || this.y > window.innerHeight) this.speedY *= -1;
-      }
-
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-        ctx.fill();
-      }
-    }
-
-    // 初始化粒子
     function initParticles() {
-      particles.length = 0; // 清空旧粒子
-      const count = Math.floor(window.innerWidth / 15); // 按屏幕宽度适配粒子数量
-      for (let i = 0; i < count; i++) {
+      const canvas = document.getElementById('particles-bg');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const particles = [];
+      const particleCount = Math.floor(window.innerWidth / 20); // 按屏幕宽度动态调整粒子数
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 2 + 1;
+          this.speedX = Math.random() * 0.4 - 0.2;
+          this.speedY = Math.random() * 0.4 - 0.2;
+          this.opacity = Math.random() * 0.5 + 0.2;
+        }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          if (this.x < 0) this.x = canvas.width;
+          if (this.x > canvas.width) this.x = 0;
+          if (this.y < 0) this.y = canvas.height;
+          if (this.y > canvas.height) this.y = 0;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${this.opacity})`;
+          ctx.fill();
+        }
+      }
+
+      // 初始化粒子
+      for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
       }
-    }
 
-    // 粒子动画
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(particle => {
-        particle.update();
-        particle.draw();
+      // 粒子动画
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(particle => {
+          particle.update();
+          particle.draw();
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      // 窗口resize适配
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
       });
-      requestAnimationFrame(animateParticles);
     }
 
     // 鼠标/手指跟随特效
-    const cursor = document.createElement('div');
-    cursor.className = 'cursor-follower';
-    document.body.appendChild(cursor);
+    function initCursorFollower() {
+      const cursor = document.createElement('div');
+      cursor.className = 'cursor-follower';
+      document.body.appendChild(cursor);
 
-    function handleMove(e) {
-      let x, y;
-      if (e.type.includes('touch')) {
-        x = e.touches[0].clientX;
-        y = e.touches[0].clientY;
-      } else {
-        x = e.clientX;
-        y = e.clientY;
+      function handleMove(e) {
+        let x, y;
+        if (e.type.includes('touch')) {
+          x = e.touches[0].clientX;
+          y = e.touches[0].clientY;
+        } else {
+          x = e.clientX;
+          y = e.clientY;
+        }
+        cursor.style.left = `${x}px`;
+        cursor.style.top = `${y}px`;
+        cursor.style.opacity = '1';
       }
-      cursor.style.left = `${x}px`;
-      cursor.style.top = `${y}px`;
-      cursor.style.opacity = '1';
+
+      document.addEventListener('mousemove', handleMove);
+      document.addEventListener('touchmove', handleMove);
+      document.addEventListener('mouseout', () => cursor.style.opacity = '0');
+      document.addEventListener('touchend', () => cursor.style.opacity = '0');
     }
-
-    // 事件监听
-    document.addEventListener('mousemove', handleMove);
-    document.addEventListener('touchmove', handleMove);
-    document.addEventListener('mouseout', () => cursor.style.opacity = '0');
-    document.addEventListener('touchend', () => cursor.style.opacity = '0');
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      initParticles();
-    });
-
-    // 初始化
-    initParticles();
-    animateParticles();
-
-    // 新增弹窗逻辑
-    const dialog = document.getElementById('cs2Alert');
-    const closeBtn = dialog.querySelector('.close-btn');
-
-    // 页面加载后显示弹窗
-    window.addEventListener('DOMContentLoaded', () => {
-      dialog.showModal();
-    });
-
-    // 关闭弹窗
-    closeBtn.addEventListener('click', () => {
-      dialog.close();
-    });
-
-    // 阻止ESC键关闭弹窗
-    dialog.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-      }
-    });
-
-    // 点击外部区域关闭弹窗
-    dialog.addEventListener('click', (e) => {
-      if (e.target === dialog) {
-        dialog.close();
-      }
-    });
   </script>
 </body>
 </html>
