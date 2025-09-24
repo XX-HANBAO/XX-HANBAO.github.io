@@ -92,12 +92,39 @@
       }
     }
 
-    /* 公告内容样式 - 删除GitHub相关描述 */
+    /* 公告内容样式 */
     .announcement-content {
       margin-bottom: 20px;
       line-height: 1.6;
       font-size: 15px;
       text-align: center;
+    }
+
+    /* 新增：密码显示模块 - 醒目样式，突出密码 */
+    .password-section {
+      text-align: center;
+      margin: 0 auto 20px;
+      padding: 15px;
+      border: 2px dashed var(--theme-color);
+      border-radius: 12px;
+      max-width: 500px;
+      background-color: rgba(255,77,79,0.05);
+      animation: slideIn 1s ease-in-out forwards;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .password-title {
+      color: var(--theme-light);
+      font-size: 16px;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .password-value {
+      color: #fff;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 8px; /* 字符间距放大，增强辨识度 */
+      text-shadow: 0 0 12px rgba(255,77,79,0.6);
     }
 
     /* 更新日志 - 保留完整条目 */
@@ -231,7 +258,7 @@
       z-index: -1;
     }
 
-    /* 弹窗样式 - 删除GitHub相关内容 */
+    /* 弹窗样式 - 保留核心功能 */
     dialog {
       --dialog-width: 80%;
       --dialog-max-width: 600px;
@@ -334,6 +361,12 @@
       <p>最新版本 <span style="color:var(--theme-color); font-weight:600">v2.2</span> 已上线，修复公益版本打不开的问题，为大家带来更稳定的体验。</p>
     </div>
 
+    <!-- 新增：密码显示模块 -->
+    <div class="password-section">
+      <div class="password-title">使用密码</div>
+      <div class="password-value">6666</div>
+    </div>
+
     <!-- 完整更新日志 -->
     <div class="update-log">
       <div class="update-item"><span class="version">v2.2</span>：修复公益版本兼容性问题，优化核心功能稳定性</div>
@@ -353,11 +386,11 @@
 
     <!-- 仅保留QQ群和下载按钮 -->
     <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=Vl56edmlN8C5qU0uSuRJw5Wmx9F5RL2PDXXcCvhd5ScRLVY1T58btMpWvbiR1xk2&busi_data=eyJncm91cENvZGUiOiIxMDExMjk0NzkxIiwidG9rZW4iOiJ2ODhON0dGTExzVFJkUUJJQlp5eldGWW5CREZqTlZSV3dnN0QwMWh0QVVZQU5Mc1h5d3JXdDNuVEJTRFRVL1M2IiwidWluIjoiMzM2MzM4ODU0NSJ9&data=nMJUwPHG2TszP15JQFt1fI-AkWK8gkMqa_5jxtg0RO-jGigrLEr2YlfRIFImlB9j8hzy-VknVfI56dF1ibqMAA&svctype=4&tempid=h5_group_info" class="qq-group-btn" target="_blank" rel="noopener noreferrer">
-      <<<i class="fa fa-qq" aria-hidden="true"></</</i>
+      <<i class="fa fa-qq" aria-hidden="true"></</i>
       加入QQ群
     </a>
     <a href="https://wwbq.lanzn.com/iLzcb361xxzc" class="download-btn" target="_blank" rel="noopener noreferrer">
-      <<<i class="fa fa-download" aria-hidden="true"></</</i>
+      <<i class="fa fa-download" aria-hidden="true"></</i>
       下载最新版（v2.2）
     </a>
 
@@ -380,12 +413,14 @@
     </div>
   </div>
 
-  <!-- 弹窗（删除GitHub相关内容） -->
+  <!-- 弹窗（保留核心功能） -->
   <dialog id="cs2Alert">
     <button class="close-btn">×</button>
     <h2>重要更新通知</h2>
     <p>遗迹已推出CS2专用公益辅助程序！</p>
     <p>最新v2.2版本修复公益版兼容性问题，体验更稳定~</p>
+    <!-- 弹窗内同步添加密码提示 -->
+    <p style="color: var(--theme-light); font-size: 14px; margin-bottom: 20px;">使用密码：<span style="color:#fff; font-weight:600; letter-spacing:4px;">6666</span></p>
     <a href="https://wwbq.lanzn.com/iLzcb361xxzc" class="dialog-button" target="_blank" rel="noopener noreferrer">
       下载v2.2版本
     </a>
