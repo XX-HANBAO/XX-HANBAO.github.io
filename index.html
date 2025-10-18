@@ -309,6 +309,12 @@
       gap: 10px;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255,77,79,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .music-player:hover {
+      background: rgba(0,0,0,0.8);
+      transform: scale(1.05);
     }
 
     .music-btn {
@@ -463,8 +469,8 @@
     </a>
   </dialog>
 
-  <!-- 音频元素 -->
-  <audio id="bgMusic" loop>
+  <!-- 音频元素 - 使用邓紫棋《泡沫》的可靠音频源 -->
+  <audio id="bgMusic" loop preload="metadata">
     <source src="https://music.163.com/song/media/outer/url?id=2714278532.mp3" type="audio/mpeg">
     您的浏览器不支持音频元素。
   </audio>
@@ -516,11 +522,18 @@
       // 点击页面任意位置开始播放音乐
       document.body.addEventListener('click', function() {
         if (!musicStarted) {
+          // 尝试播放音乐
           bgMusic.play().then(() => {
             musicStarted = true;
             playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+            console.log('音乐开始播放');
           }).catch(e => {
-            console.log('自动播放失败，需要用户交互');
+            console.log('自动播放失败，需要用户交互', e);
+            // 如果自动播放失败，显示提示
+            musicPrompt.style.display = 'block';
+            setTimeout(() => {
+              musicPrompt.style.display = 'none';
+            }, 3000);
           });
         }
       });
@@ -529,8 +542,16 @@
       playBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         if (bgMusic.paused) {
-          bgMusic.play();
-          playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+          bgMusic.play().then(() => {
+            playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+            musicStarted = true;
+          }).catch(e => {
+            console.log('播放失败', e);
+            musicPrompt.style.display = 'block';
+            setTimeout(() => {
+              musicPrompt.style.display = 'none';
+            }, 3000);
+          });
         } else {
           bgMusic.pause();
           playBtn.innerHTML = '<i class="fa fa-play"></i>';
@@ -540,6 +561,14 @@
       // 音乐结束时重置按钮状态
       bgMusic.addEventListener('ended', function() {
         playBtn.innerHTML = '<i class="fa fa-play"></i>';
+      });
+
+      // 处理音频加载错误
+      bgMusic.addEventListener('error', function(e) {
+        console.error('音频加载错误:', e);
+        // 尝试备用音频源
+        bgMusic.innerHTML = '<source src="https://freetyst.ml/mp3/2714278532" type="audio/mpeg">';
+        bgMusic.load();
       });
     });
 
