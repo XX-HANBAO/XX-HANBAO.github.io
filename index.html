@@ -2,12 +2,10 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <!-- 优化：添加缓存控制，避免重复加载 -->
   <meta http-equiv="Cache-Control" content="max-age=3600">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>遗迹公告</title>
   <style>
-    /* 1. 使用CSS变量统一风格，减少重复代码 */
     :root {
       --theme-color: #FF4D4F;
       --theme-light: #ffccc7;
@@ -18,14 +16,13 @@
       --transition-base: transform 0.3s ease;
     }
 
-    /* 2. 全局样式：精简冗余，添加will-change优化动画 */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
     body {
-      font-family: 'Inter', Arial, sans-serif; /* 字体降级，避免加载失败 */
+      font-family: 'Inter', Arial, sans-serif;
       background-color: var(--bg-main);
       color: #fff;
       overflow: hidden;
@@ -35,7 +32,6 @@
       will-change: contents;
     }
 
-    /* 顶部滚动横幅（跑马灯）- 保留完整内容 */
     .scroll-banner {
       background-color: rgba(255,77,79,0.15);
       border-bottom: 1px solid rgba(255,77,79,0.3);
@@ -74,10 +70,9 @@
       flex-direction: column;
     }
 
-    /* 标题样式 - 保留动画，优化性能 */
     h1 {
       text-align: center;
-      font-size: clamp(1.8rem, 3vw, 2.5rem); /* 响应式字号 */
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
       margin-bottom: 15px;
       color: var(--theme-color);
       text-shadow: 0 0 10px rgba(255,77,79,0.5);
@@ -92,7 +87,6 @@
       }
     }
 
-    /* 公告内容样式 */
     .announcement-content {
       margin-bottom: 20px;
       line-height: 1.6;
@@ -100,7 +94,6 @@
       text-align: center;
     }
 
-    /* 新增：密码显示模块 - 醒目样式，突出密码 */
     .password-section {
       text-align: center;
       margin: 0 auto 20px;
@@ -123,11 +116,10 @@
       color: #fff;
       font-size: 22px;
       font-weight: 700;
-      letter-spacing: 8px; /* 字符间距放大，增强辨识度 */
+      letter-spacing: 8px;
       text-shadow: 0 0 12px rgba(255,77,79,0.6);
     }
 
-    /* 更新日志 - 保留完整条目 */
     .update-log {
       border: 2px solid var(--border-light);
       border-radius: 15px;
@@ -167,7 +159,6 @@
       margin-right: 10px;
     }
 
-    /* 按钮样式 - 仅保留QQ群和下载按钮 */
     .qq-group-btn, .download-btn {
       display: block;
       width: 80%;
@@ -200,7 +191,6 @@
       100% { box-shadow: var(--shadow-theme); }
     }
 
-    /* 鼠标/手指跟随特效 - 保留完整功能 */
     .cursor-follower {
       position: fixed;
       width: 40px;
@@ -216,39 +206,6 @@
       will-change: left, top, opacity;
     }
 
-    /* 深夜emo语录 - 保留完整内容 */
-    .emo-quotes {
-      margin-top: auto;
-      padding: 15px 0;
-      font-style: italic;
-      color: #aaa;
-      text-align: center;
-      animation: fadeInUp 1.5s ease-in-out forwards;
-      opacity: 0;
-      transform: translateY(10px);
-      max-height: 180px;
-      overflow-y: auto;
-      will-change: opacity, transform;
-    }
-    .emo-quotes::-webkit-scrollbar {
-      width: 4px;
-    }
-    .emo-quotes::-webkit-scrollbar-thumb {
-      background-color: rgba(255,77,79,0.4);
-      border-radius: 2px;
-    }
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    .emo-quotes p {
-      margin: 8px 0;
-      font-size: 14px;
-    }
-
-    /* 粒子背景 - 保留完整特效 */
     #particles-bg {
       position: fixed;
       top: 0;
@@ -258,7 +215,6 @@
       z-index: -1;
     }
 
-    /* 弹窗样式 - 保留核心功能 */
     dialog {
       --dialog-width: 80%;
       --dialog-max-width: 600px;
@@ -287,7 +243,7 @@
 
     dialog::backdrop {
       background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(5px); /* 降低模糊强度，减少GPU消耗 */
+      backdrop-filter: blur(5px);
     }
 
     dialog h2 {
@@ -338,12 +294,93 @@
     .close-btn:hover {
       transform: scale(1.1);
     }
+
+    /* 音乐播放器样式 */
+    .music-player {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 50;
+      background: rgba(0,0,0,0.7);
+      border-radius: 50px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,77,79,0.3);
+    }
+
+    .music-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--theme-color);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+
+    .music-btn:hover {
+      transform: scale(1.1);
+      box-shadow: var(--shadow-theme);
+    }
+
+    .music-info {
+      max-width: 0;
+      overflow: hidden;
+      transition: max-width 0.5s ease;
+      white-space: nowrap;
+    }
+
+    .music-player:hover .music-info {
+      max-width: 200px;
+    }
+
+    .music-title {
+      font-size: 14px;
+      color: white;
+    }
+
+    .music-artist {
+      font-size: 12px;
+      color: var(--theme-light);
+    }
+
+    /* 音乐提示样式 */
+    .music-prompt {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 10px;
+      text-align: center;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--theme-color);
+      box-shadow: var(--shadow-theme);
+      animation: fadeInOut 3s forwards;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; }
+    }
   </style>
-  <!-- 加载图标库（用于QQ和下载图标） -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 </head>
 <body>
-  <!-- 顶部滚动横幅（完整内容） -->
+  <!-- 顶部滚动横幅 -->
   <div class="scroll-banner">
     <div class="scroll-content" id="scrollContent">
       <!-- JS动态生成跑马灯内容 -->
@@ -358,17 +395,19 @@
     
     <div class="announcement-content">
       <p>各位遗迹的使用者们，感谢大家一直以来的支持！</p>
-      <p>最新版本 <span style="color:var(--theme-color); font-weight:600">v2.2</span> 已上线，修复公益版本打不开的问题，为大家带来更稳定的体验。</p>
+      <p>最新版本 <span style="color:var(--theme-color); font-weight:600">v2.4</span> 已上线，新增多项功能优化，为大家带来更稳定的体验。</p>
     </div>
 
-    <!-- 新增：密码显示模块 -->
+    <!-- 密码显示模块 -->
     <div class="password-section">
       <div class="password-title">使用密码</div>
       <div class="password-value">6666</div>
     </div>
 
-    <!-- 完整更新日志 -->
+    <!-- 更新日志 -->
     <div class="update-log">
+      <div class="update-item"><span class="version">v2.4</span>：新增UI优化，添加背景音乐，提升用户体验</div>
+      <div class="update-item"><span class="version">v2.3</span>：优化核心算法，增强稳定性</div>
       <div class="update-item"><span class="version">v2.2</span>：修复公益版本兼容性问题，优化核心功能稳定性</div>
       <div class="update-item"><span class="version">v2.1</span>：修复公益版本打不开的问题</div>
       <div class="update-item"><span class="version">v2.0</span>：优化UI设计，新增"藏头"功能</div>
@@ -384,60 +423,59 @@
       <div class="update-item"><span class="version">v1.0</span>：初始版本，支持卡密登录，包含完整核心功能</div>
     </div>
 
-    <!-- 仅保留QQ群和下载按钮 -->
+    <!-- 按钮 -->
     <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=Vl56edmlN8C5qU0uSuRJw5Wmx9F5RL2PDXXcCvhd5ScRLVY1T58btMpWvbiR1xk2&busi_data=eyJncm91cENvZGUiOiIxMDExMjk0NzkxIiwidG9rZW4iOiJ2ODhON0dGTExzVFJkUUJJQlp5eldGWW5CREZqTlZSV3dnN0QwMWh0QVVZQU5Mc1h5d3JXdDNuVEJTRFRVL1M2IiwidWluIjoiMzM2MzM4ODU0NSJ9&data=nMJUwPHG2TszP15JQFt1fI-AkWK8gkMqa_5jxtg0RO-jGigrLEr2YlfRIFImlB9j8hzy-VknVfI56dF1ibqMAA&svctype=4&tempid=h5_group_info" class="qq-group-btn" target="_blank" rel="noopener noreferrer">
-      <<i class="fa fa-qq" aria-hidden="true"></</i>
+      <i class="fa fa-qq" aria-hidden="true"></i>
       加入QQ群
     </a>
     <a href="https://wwbq.lanzn.com/iLzcb361xxzc" class="download-btn" target="_blank" rel="noopener noreferrer">
-      <<i class="fa fa-download" aria-hidden="true"></</i>
-      下载最新版（v2.2）
+      <i class="fa fa-download" aria-hidden="true"></i>
+      下载最新版（v2.4）
     </a>
+  </div>
 
-    <!-- 完整emo语录 -->
-    <div class="emo-quotes">
-      <p>“深夜的孤独，像无人回应的呐喊，消散在黑暗中🤡。”</p>
-      <p>“回忆是场冷雨，淋透了我，却再也等不到撑伞的人🤡。”</p>
-      <p>“我以为我能习惯孤独，直到深夜的寂静让我窒息🤡。”</p>
-      <p>“屏幕亮了又暗，始终没有我等的那条消息🤡。”</p>
-      <p>“笑着说‘我没事’，转身却红了眼眶🤡。”</p>
-      <p>“深夜的酒，喝不醉心里的愁，只醉了假装坚强的我🤡。”</p>
-      <p>“所有人都在向前走，只有我停在回忆里打转🤡。”</p>
-      <p>“明明很累，却睡不着，心里像压着千斤石头🤡。”</p>
-      <p>“热闹的人群里，我像个透明的影子，没人在意🤡。”</p>
-      <p>“攒了满肚子的话，最后只说了句‘没事’🤡。”</p>
-      <p>“后来学会了把情绪藏在‘哈哈’里，谁也看不见🤡。”</p>
-      <p>“有些人走着走着就散了，连告别都很敷衍🤡。”</p>
-      <p>“越长大越发现，能依靠的只有自己，别无选择🤡。”</p>
-      <p>“那些没说出口的委屈，都变成了深夜的眼泪🤡。”</p>
+  <!-- 音乐播放器 -->
+  <div class="music-player">
+    <button class="music-btn" id="playBtn">
+      <i class="fa fa-play"></i>
+    </button>
+    <div class="music-info">
+      <div class="music-title">泡沫</div>
+      <div class="music-artist">邓紫棋</div>
     </div>
   </div>
 
-  <!-- 弹窗（保留核心功能） -->
+  <!-- 音乐提示 -->
+  <div class="music-prompt" id="musicPrompt" style="display: none;">
+    点击任意位置启用背景音乐<br>
+    <small>《泡沫》- 邓紫棋</small>
+  </div>
+
+  <!-- 弹窗 -->
   <dialog id="cs2Alert">
     <button class="close-btn">×</button>
     <h2>重要更新通知</h2>
     <p>遗迹已推出CS2专用公益辅助程序！</p>
-    <p>最新v2.2版本修复公益版兼容性问题，体验更稳定~</p>
-    <!-- 弹窗内同步添加密码提示 -->
+    <p>最新v2.4版本新增多项功能优化，体验更稳定~</p>
     <p style="color: var(--theme-light); font-size: 14px; margin-bottom: 20px;">使用密码：<span style="color:#fff; font-weight:600; letter-spacing:4px;">6666</span></p>
     <a href="https://wwbq.lanzn.com/iLzcb361xxzc" class="dialog-button" target="_blank" rel="noopener noreferrer">
-      下载v2.2版本
+      下载v2.4版本
     </a>
   </dialog>
 
+  <!-- 音频元素 -->
+  <audio id="bgMusic" loop>
+    <source src="https://y.music.163.com/m/song?id=2714278532" type="audio/mpeg">
+    您的浏览器不支持音频元素。
+  </audio>
+
   <script>
-    // 核心DOM操作与功能初始化
     document.addEventListener('DOMContentLoaded', function() {
       // 1. 动态生成跑马灯内容
       const scrollTexts = [
-        "深夜的烟，烧不尽心里的空🤡", "我笑着说没事，其实快碎了🤡", 
-        "热闹是他们的，我什么都没有🤡", "熬到天亮，也等不到一句晚安🤡", 
-        "假装快乐，比真难过还累🤡", "后来啊，连崩溃都要选好时间🤡", 
-        "心里藏着好多事，却没一个能说的人🤡", "走了很久，发现还是一个人在赶路🤡", 
-        "朋友圈的乐观，都是给别人看的🤡", "道理都懂，可情绪就是不听话🤡", 
-        "越想靠近谁，就越怕被推开🤡", "白天是搞笑的废物，晚上是emo的怪物🤡", 
-        "难过的时候，连听歌都像在说自己🤡", "有些话，只能烂在心里自生自灭🤡"
+        "遗迹v2.4版本已上线，新增背景音乐功能", "使用密码：6666", 
+        "感谢各位使用者的支持", "优化UI设计，提升用户体验",
+        "新增多项功能优化", "修复已知问题，增强稳定性"
       ];
       const scrollContent = document.getElementById('scrollContent');
       scrollTexts.forEach(text => {
@@ -460,6 +498,49 @@
 
       // 4. 延迟加载鼠标跟随
       setTimeout(initCursorFollower, 800);
+
+      // 5. 音乐播放控制
+      const bgMusic = document.getElementById('bgMusic');
+      const playBtn = document.getElementById('playBtn');
+      const musicPrompt = document.getElementById('musicPrompt');
+      let musicStarted = false;
+
+      // 显示音乐提示
+      setTimeout(() => {
+        musicPrompt.style.display = 'block';
+        setTimeout(() => {
+          musicPrompt.style.display = 'none';
+        }, 3000);
+      }, 1000);
+
+      // 点击页面任意位置开始播放音乐
+      document.body.addEventListener('click', function() {
+        if (!musicStarted) {
+          bgMusic.play().then(() => {
+            musicStarted = true;
+            playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+          }).catch(e => {
+            console.log('自动播放失败，需要用户交互');
+          });
+        }
+      });
+
+      // 音乐播放按钮控制
+      playBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (bgMusic.paused) {
+          bgMusic.play();
+          playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+        } else {
+          bgMusic.pause();
+          playBtn.innerHTML = '<i class="fa fa-play"></i>';
+        }
+      });
+
+      // 音乐结束时重置按钮状态
+      bgMusic.addEventListener('ended', function() {
+        playBtn.innerHTML = '<i class="fa fa-play"></i>';
+      });
     });
 
     // 粒子背景特效
@@ -469,7 +550,7 @@
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       const particles = [];
-      const particleCount = Math.floor(window.innerWidth / 20); // 按屏幕宽度动态调整粒子数
+      const particleCount = Math.floor(window.innerWidth / 20);
 
       class Particle {
         constructor() {
@@ -496,12 +577,10 @@
         }
       }
 
-      // 初始化粒子
       for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
       }
 
-      // 粒子动画
       function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particles.forEach(particle => {
@@ -512,7 +591,6 @@
       }
       animate();
 
-      // 窗口resize适配
       window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
