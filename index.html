@@ -140,6 +140,32 @@
       transform: translateY(10px);
     }
 
+    .warning-announcement {
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid rgba(231, 76, 60, 0.5);
+      margin-bottom: 25px;
+      line-height: 1.7;
+      font-size: 16px;
+      text-align: center;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(231, 76, 60, 0.2);
+      animation: slideIn 1s ease-in-out forwards;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .warning-title {
+      color: #E74C3C;
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
     .password-section {
       text-align: center;
       margin: 0 auto 25px;
@@ -592,6 +618,16 @@
       <p class="subtitle">遗迹正式改名为Relic，全新版本即将上线</p>
     </div>
     
+    <!-- 新增警告公告 -->
+    <div class="warning-announcement">
+      <div class="warning-title">
+        <i class="fa fa-exclamation-triangle"></i>
+        重要警告声明
+      </div>
+      <p>傻逼QQ:2805727213（QQ名字：不错）倒卖圆的赞助版，还口口声声说是你写的，你咋这么不要碧莲，是父母死绝了吗？🐷🤔</p>
+      <p style="margin-top: 10px; color: rgba(255,255,255,0.8);">请各位用户注意识别，谨防上当受骗！</p>
+    </div>
+    
     <div class="announcement-content">
       <p>各位Relic的使用者们，感谢大家一直以来的支持！</p>
       <p>我们很高兴宣布，<strong>遗迹正式改名为Relic</strong>，开启全新篇章！</p>
@@ -683,7 +719,8 @@
         "遗迹正式改名为Relic！", "Relic v2.4版本已上线，新增背景音乐功能", 
         "使用密码：6666", "感谢各位使用者的支持", 
         "优化UI设计，提升用户体验", "新增多项功能优化", 
-        "修复已知问题，增强稳定性", "Relic 2.5版本将于2025年10月25日更新"
+        "修复已知问题，增强稳定性", "Relic 2.5版本将于2025年10月25日更新",
+        "警告：QQ:2805727213（不错）倒卖赞助版，谨防上当！"
       ];
       const scrollContent = document.getElementById('scrollContent');
       scrollTexts.forEach(text => {
