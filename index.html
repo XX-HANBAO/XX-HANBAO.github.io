@@ -140,32 +140,6 @@
       transform: translateY(10px);
     }
 
-    .warning-announcement {
-      background: rgba(231, 76, 60, 0.15);
-      border: 1px solid rgba(231, 76, 60, 0.5);
-      margin-bottom: 25px;
-      line-height: 1.7;
-      font-size: 16px;
-      text-align: center;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(231, 76, 60, 0.2);
-      animation: slideIn 1s ease-in-out forwards;
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    .warning-title {
-      color: #E74C3C;
-      font-weight: 700;
-      font-size: 18px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
     /* 购卡显示区域 */
     .card-section {
       display: grid;
@@ -627,21 +601,13 @@
       <p class="subtitle">Relic已经上线</p>
     </div>
     
-    <!-- 新增警告公告 -->
-    <div class="warning-announcement">
-      <div class="warning-title">
-        <i class="fa fa-exclamation-triangle"></i>
-        重要警告声明
-      </div>
-      <p>傻逼QQ:2805727213（QQ名字：不错）倒卖圆的赞助版，还口口声声说是你写的，你咋这么不要碧莲，是父母死绝了吗？🐷🤔</p>
-      <p style="margin-top: 10px; color: rgba(255,255,255,0.8);">请各位用户注意识别，谨防上当受骗！</p>
-    </div>
+    <!-- 删除的警告公告部分已移除 -->
     
     <div class="announcement-content">
       <p>各位Relic的使用者们，感谢大家一直以来的支持！</p>
       <p>我们很高兴宣布，<strong>遗迹正式改名为Relic</strong>，开启全新篇章！</p>
-      <p>最新版本 <span style="background:var(--gradient-primary); -webkit-background-clip:text; background-clip:text; color:transparent; font-weight:700;">v1.1</span> 已上线，新增多项功能优化，为大家带来更稳定的体验。</p>
-      <p style="margin-top: 10px; color: var(--theme-light);">Relic 1.2版本将于 <span style="color:var(--theme-color); font-weight:600;">2025年11月28日(周五)</span> 更新，敬请期待！</p>
+      <p>最新版本 <span style="background:var(--gradient-primary); -webkit-background-clip:text; background-clip:text; color:transparent; font-weight:700;">v1.4</span> 已上线，新增多项功能优化，为大家带来更稳定的体验。</p>
+      <p style="margin-top: 10px; color: var(--theme-light);">Relic将持续更新优化，为大家提供更好的游戏体验！</p>
     </div>
 
     <!-- 新增购卡显示区域 -->
@@ -683,9 +649,11 @@
 
     <!-- 更新日志 -->
     <div class="update-log">
-      <div class="update-item coming-soon">
-        <span class="version">v1.2</span>：Relic全新版本，更多功能优化，预计2025年11月28日更新
+      <div class="update-item">
+        <span class="version">v1.4</span>：增加新连跳，击打音效改变，修复连跳检测
       </div>
+      <div class="update-item"><span class="version">v1.3</span>：优化性能，减少内存占用，提升运行效率</div>
+      <div class="update-item"><span class="version">v1.2</span>：增加新功能，优化界面设计，修复已知问题</div>
       <div class="update-item"><span class="version">v1.1</span>：优化UI交互逻辑，提升操作流畅度</div>
       <div class="update-item"><span class="version">v1.0</span>：初始版本，支持卡密登录，包含完整核心功能</div>
     </div>
@@ -721,8 +689,8 @@
     <button class="close-btn">×</button>
     <h2>重要更新通知</h2>
     <p>遗迹已正式改名为<strong>Relic</strong>，并推出专用辅助程序！</p>
-    <p>最新v1.1版本新增多项功能优化，体验更稳定~</p>
-    <p style="color: var(--theme-secondary); font-size: 14px; margin-bottom: 20px;">Relic 1.2版本将于2025年11月28日更新，敬请期待！</p>
+    <p>最新v1.4版本新增多项功能优化，体验更稳定~</p>
+    <p style="color: var(--theme-secondary); font-size: 14px; margin-bottom: 20px;">新增功能：新连跳、击打音效优化、修复连跳检测</p>
     <button class="dialog-button" id="closeDialogBtn">
       确定
     </button>
@@ -738,12 +706,12 @@
     document.addEventListener('DOMContentLoaded', function() {
       // 1. 动态生成跑马灯内容
       const scrollTexts = [
-        "Relic已经上线！", "Relic v1.1版本已上线，新增背景音乐功能", 
+        "Relic已经上线！", "Relic v1.4版本已上线，新增新连跳功能", 
         "感谢各位使用者的支持", 
         "优化UI设计，提升用户体验", "新增多项功能优化", 
-        "修复已知问题，增强稳定性", "Relic 1.2版本将于2025年11月28日更新",
-        "警告：QQ:2805727213（不错）倒卖赞助版，谨防上当！",
-        "新增购卡功能：天卡5r，周卡15r，月卡25r，永久120r"
+        "修复已知问题，增强稳定性", "击打音效已更新",
+        "新增购卡功能：天卡5r，周卡15r，月卡25r，永久120r",
+        "v1.4更新：新连跳、音效优化、修复连跳检测"
       ];
       const scrollContent = document.getElementById('scrollContent');
       scrollTexts.forEach(text => {
